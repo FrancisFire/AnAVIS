@@ -2,41 +2,34 @@ package com.github.francisfire.anavis.models;
 
 import java.util.Date;
 
-public class RichiestaPrenotazione {
+public class Prenotazione {
 
 	private String id;
 	private UfficioAVIS officePoint;
 	private Donatore donor;
 	private Date hour;
 
-	/**
-	 * 
-	 * @param id
-	 * @param officePoint
-	 * @param donor
-	 * @param hour
-	 */
-	public RichiestaPrenotazione(String id, UfficioAVIS officePoint, Donatore donor, Date hour) {
+	public Prenotazione(String id, UfficioAVIS officePoint, Donatore donor, Date hour) {
 		this.id = id;
 		this.officePoint = officePoint;
 		this.donor = donor;
 		this.hour = hour;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
 
-	public UfficioAVIS getUfficio() {
-		return this.officePoint;
+	public UfficioAVIS getOfficePoint() {
+		return officePoint;
 	}
 
-	public Date getOraData() {
-		return this.hour;
-	}
-	
 	public Donatore getDonor() {
 		return donor;
+	}
+
+	public Date getHour() {
+		return hour;
 	}
 
 }

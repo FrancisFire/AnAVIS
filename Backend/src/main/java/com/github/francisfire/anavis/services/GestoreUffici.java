@@ -32,8 +32,7 @@ public class GestoreUffici {
 	 * @param ufficio
 	 */
 	public Date[] ottieniOrariDonazioni(String ufficio) {
-		// TODO - implement GestoreUffici.ottieniOrariDonazioni
-		throw new UnsupportedOperationException();
+		return getIstanzaUfficio(ufficio).getDonationHours();
 	}
 
 	/**
@@ -41,8 +40,7 @@ public class GestoreUffici {
 	 * @param ufficio
 	 */
 	public UfficioAVIS getIstanzaUfficio(String ufficio) {
-		// TODO - implement GestoreUffici.getIstanzaUfficio
-		throw new UnsupportedOperationException();
+		return uffici.stream().filter(uff -> uff.getName().equals(ufficio)).findFirst().orElse(null);
 	}
 
 }

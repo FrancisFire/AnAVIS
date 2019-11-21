@@ -22,6 +22,10 @@ public class GestoreDonatori {
 		return instance;
 	}
 
+	public boolean addDonor(Donatore donor) {
+		return donors.add(donor);
+	}
+
 	/**
 	 * 
 	 * @param donatore
