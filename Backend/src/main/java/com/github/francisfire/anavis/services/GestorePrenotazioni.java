@@ -1,15 +1,26 @@
 package com.github.francisfire.anavis.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.francisfire.anavis.models.RichiestaPrenotazione;
 
 public class GestorePrenotazioni {
 
 	private static GestorePrenotazioni instance;
-	private RichiestaPrenotazione[] prenotazioni;
+	//TODO add prenotazioni
+	private List<RichiestaPrenotazione> prenotazioni;
 
-	public static GestoreRichieste getInstance() {
-		// TODO - implement GestorePrenotazioni.getInstance
-		throw new UnsupportedOperationException();
+	private GestorePrenotazioni() {
+		this.prenotazioni = new ArrayList<>();
+	}
+	
+	public static GestorePrenotazioni getInstance() {
+		if(instance == null) {
+			instance = new GestorePrenotazioni();
+		}
+		
+		return instance;
 	}
 
 	/**
@@ -17,8 +28,7 @@ public class GestorePrenotazioni {
 	 * @param richiesta
 	 */
 	public boolean addPrenotazione(RichiestaPrenotazione richiesta) {
-		// TODO - implement GestorePrenotazioni.addPrenotazione
-		throw new UnsupportedOperationException();
+		return prenotazioni.add(richiesta);
 	}
 
 }
