@@ -17,7 +17,7 @@ public class OfficeController {
 
 	private static OfficeServices officeServices = OfficeServices.getInstance();
 
-	@GetMapping("/")
+	@GetMapping("")
 	public List<Office> getOffices() {
 		return officeServices.getOffices();
 	}
