@@ -14,4 +14,7 @@ jobs:
           java-version: 11
       - name: Testing con Gradle
         working-directory: ./Backend
-        run: ./gradlew test
+        run: bash ./gradlew test
+      - name: Pubblicazione esito della build
+        working-directory: ./Backend
+        run: bash ./gradlew build --scan
