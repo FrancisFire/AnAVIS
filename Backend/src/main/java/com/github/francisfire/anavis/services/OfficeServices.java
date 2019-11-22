@@ -48,7 +48,7 @@ public class OfficeServices {
 	 * 
 	 * @param office
 	 */
-	public Date[] getDonationsTimeTable(String office) {
+	public List<Date> getDonationsTimeTable(String office) {
 		return getOfficeInstance(office).getDonationTimeTables();
 	}
 

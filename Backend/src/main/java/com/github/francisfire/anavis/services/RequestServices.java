@@ -63,7 +63,7 @@ public class RequestServices {
 	 * @param officeName
 	 */
 	public List<Request> getRequests(String officeName) {
-		return requests.stream().filter(richieste -> richieste.getUfficio().getName().equals(officeName))
+		return requests.stream().filter(richieste -> richieste.getOfficePoint().getName().equals(officeName))
 				.collect(Collectors.toList());
 	}
 

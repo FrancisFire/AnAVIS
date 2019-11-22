@@ -6,6 +6,9 @@ public class Donor {
 	private Office officePoint;
 	private boolean canDonate;
 
+	public Donor() {
+	}
+	
 	/**
 	 * 
 	 * @param mail
@@ -21,12 +24,26 @@ public class Donor {
 		return mail;
 	}
 
-	public String getOfficeId() {
-		return officePoint.getName();
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public Office getOfficePoint() {
+		return officePoint;
+	}
+
+	public void setOfficePoint(Office officePoint) {
+		this.officePoint = officePoint;
+	}
+
+	public boolean isCanDonate() {
+		return canDonate;
+	}
+
+	public void setCanDonate(boolean canDonate) {
+		this.canDonate = canDonate;
 	}
 	
-	public boolean canDonate() {
-		return this.canDonate;
-	}
+	
 
 }

@@ -28,7 +28,7 @@ public class PrenotationServices {
 	 * @param richiesta
 	 */
 	public boolean addPrenotazione(Request richiesta) {
-		Prenotation prenotation = new Prenotation(richiesta.getId(), richiesta.getUfficio(), richiesta.getDonor(),
+		Prenotation prenotation = new Prenotation(richiesta.getId(), richiesta.getOfficePoint(), richiesta.getDonor(),
 				richiesta.getHour());
 		return prenotations.add(prenotation);
 	}
