@@ -9,6 +9,9 @@ public class Request {
 	private Donor donor;
 	private Date hour;
 
+	public Request() {
+	}
+
 	/**
 	 * 
 	 * @param id
@@ -22,21 +25,37 @@ public class Request {
 		this.donor = donor;
 		this.hour = hour;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
 
-	public Office getUfficio() {
-		return this.officePoint;
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Office getOfficePoint() {
+		return officePoint;
+	}
+
+	public void setOfficePoint(Office officePoint) {
+		this.officePoint = officePoint;
 	}
 
 	public Donor getDonor() {
 		return donor;
 	}
 
+	public void setDonor(Donor donor) {
+		this.donor = donor;
+	}
+
 	public Date getHour() {
-		return this.hour;
+		return hour;
+	}
+
+	public void setHour(Date hour) {
+		this.hour = hour;
 	}
 
 }

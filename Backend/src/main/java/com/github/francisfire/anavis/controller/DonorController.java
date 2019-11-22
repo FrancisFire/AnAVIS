@@ -13,7 +13,7 @@ public class DonorController {
 
 	private static DonorServices donorServices = DonorServices.getInstance();
 	
-	@GetMapping("/canDonate/{mail}")
+	@GetMapping("/{mail}/canDonate")
 	public boolean checkDonationPossibility(@PathVariable("mail") String mail) {
 		return donorServices.checkDonationPossibility(mail);
 	}

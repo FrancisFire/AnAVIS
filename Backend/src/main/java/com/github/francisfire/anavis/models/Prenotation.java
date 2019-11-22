@@ -9,6 +9,9 @@ public class Prenotation {
 	private Donor donor;
 	private Date hour;
 
+	public Prenotation() {
+	}
+	
 	public Prenotation(String id, Office officePoint, Donor donor, Date hour) {
 		this.id = id;
 		this.officePoint = officePoint;
@@ -20,16 +23,34 @@ public class Prenotation {
 		return id;
 	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public Office getOfficePoint() {
 		return officePoint;
+	}
+
+	public void setOfficePoint(Office officePoint) {
+		this.officePoint = officePoint;
 	}
 
 	public Donor getDonor() {
 		return donor;
 	}
 
+	public void setDonor(Donor donor) {
+		this.donor = donor;
+	}
+
 	public Date getHour() {
 		return hour;
 	}
+
+	public void setHour(Date hour) {
+		this.hour = hour;
+	}
+	
+	
 
 }

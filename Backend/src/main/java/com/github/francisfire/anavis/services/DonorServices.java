@@ -35,7 +35,7 @@ public class DonorServices {
 	 * @param donor
 	 */
 	public String getOfficeIdByDonor(String donor) {
-		return getDonorInstance(donor).getOfficeId();
+		return getDonorInstance(donor).getOfficePoint().getName();
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class DonorServices {
 	 * @param donor
 	 */
 	public boolean checkDonationPossibility(String donor) {
-		return getDonorInstance(donor).canDonate();
+		return getDonorInstance(donor).isCanDonate();
 	}
 
 	/**
