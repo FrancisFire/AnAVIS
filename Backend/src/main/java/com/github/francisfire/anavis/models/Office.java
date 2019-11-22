@@ -2,7 +2,7 @@ package com.github.francisfire.anavis.models;
 
 import java.util.Date;
 
-public class UfficioAVIS {
+public class Office {
 
 	private String name;
 	private Date[] donationHours;
@@ -12,16 +12,16 @@ public class UfficioAVIS {
 	 * @param nome
 	 * @param donatori
 	 */
-	public UfficioAVIS(String name) {
+	public Office(String name) {
 		this.name = name;
-	}
-
-	public Date[] getDonationHours() {
-		return donationHours;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public Date[] getDonationHours() {
+		return donationHours;
 	}
 
 }

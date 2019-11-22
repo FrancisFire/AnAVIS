@@ -7,9 +7,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.github.francisfire.anavis.models.Donatore;
-import com.github.francisfire.anavis.models.UfficioAVIS;
-import com.github.francisfire.anavis.services.GestoreDonatori;
+import com.github.francisfire.anavis.models.Donor;
+import com.github.francisfire.anavis.models.Office;
+import com.github.francisfire.anavis.services.DonorServices;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,17 +18,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SpringBootTest
 public class DonorServicesTest {
 
-	private static GestoreDonatori donorServices;
+	private static DonorServices donorServices;
 	
 	@BeforeAll
 	public static void setUp() {
-		donorServices = GestoreDonatori.getInstance();
+		donorServices = DonorServices.getInstance();
 	}
 	
 	@Test
 	public void addDonor() {
-		UfficioAVIS avisPineto = new UfficioAVIS("Pineto");
-		assertTrue(donorServices.addDonor(new Donatore("Gianni", avisPineto)));
+		Office avisPineto = new Office("Pineto");
+		assertTrue(donorServices.addDonor(new Donor("Gianni", avisPineto)));
 		assertFalse(donorServices.getDonors().isEmpty());
 	}
 	

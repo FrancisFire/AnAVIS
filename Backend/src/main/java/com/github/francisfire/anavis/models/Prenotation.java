@@ -2,14 +2,14 @@ package com.github.francisfire.anavis.models;
 
 import java.util.Date;
 
-public class Prenotazione {
+public class Prenotation {
 
 	private String id;
-	private UfficioAVIS officePoint;
-	private Donatore donor;
+	private Office officePoint;
+	private Donor donor;
 	private Date hour;
 
-	public Prenotazione(String id, UfficioAVIS officePoint, Donatore donor, Date hour) {
+	public Prenotation(String id, Office officePoint, Donor donor, Date hour) {
 		this.id = id;
 		this.officePoint = officePoint;
 		this.donor = donor;
@@ -20,11 +20,11 @@ public class Prenotazione {
 		return id;
 	}
 
-	public UfficioAVIS getOfficePoint() {
+	public Office getOfficePoint() {
 		return officePoint;
 	}
 
-	public Donatore getDonor() {
+	public Donor getDonor() {
 		return donor;
 	}
 

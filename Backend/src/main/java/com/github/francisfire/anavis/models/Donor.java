@@ -1,9 +1,9 @@
 package com.github.francisfire.anavis.models;
 
-public class Donatore {
+public class Donor {
 
 	private String mail;
-	private UfficioAVIS officePoint;
+	private Office officePoint;
 	private boolean canDonate;
 
 	/**
@@ -11,21 +11,22 @@ public class Donatore {
 	 * @param mail
 	 * @param officePoint
 	 */
-	public Donatore(String mail, UfficioAVIS officePoint) {
+	public Donor(String mail, Office officePoint) {
 		this.mail = mail;
 		this.officePoint = officePoint;
+		this.canDonate = false;
 	}
 
-	public boolean canDonate() {
-		return this.canDonate;
+	public String getMail() {
+		return mail;
 	}
 
 	public String getOfficeId() {
 		return officePoint.getName();
 	}
 	
-	public String getMail() {
-		return mail;
+	public boolean canDonate() {
+		return this.canDonate;
 	}
 
 }
