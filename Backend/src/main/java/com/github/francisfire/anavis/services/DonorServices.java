@@ -32,26 +32,26 @@ public class DonorServices {
 
 	/**
 	 * 
-	 * @param donatore
+	 * @param donor
 	 */
-	public String getOfficeIdByDonor(String donatore) {
-		return getDonorInstance(donatore).getOfficeId();
+	public String getOfficeIdByDonor(String donor) {
+		return getDonorInstance(donor).getOfficeId();
 	}
 
 	/**
 	 * 
-	 * @param donatore
+	 * @param donor
 	 */
-	public boolean checkDonationPossibility(String donatore) {
-		return getDonorInstance(donatore).canDonate();
+	public boolean checkDonationPossibility(String donor) {
+		return getDonorInstance(donor).canDonate();
 	}
 
 	/**
 	 * 
-	 * @param donatore
+	 * @param donor
 	 */
-	private Donor getDonorInstance(String donatore) {
-		return donors.stream().filter(don -> don.getMail().equals(donatore)).findFirst().orElse(null);
+	private Donor getDonorInstance(String donor) {
+		return donors.stream().filter(don -> don.getMail().equals(donor)).findFirst().orElse(null);
 	}
 
 }

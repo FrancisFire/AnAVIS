@@ -33,9 +33,9 @@ public class RequestServicesTest {
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id1", officePineto, donorGianni, new Date());
-		assertTrue(requestServices.addRichiesta(request));
-		assertFalse(requestServices.getRichieste("Pineto").isEmpty());
-		assertNotNull(requestServices.getRichiesta("id1"));
+		assertTrue(requestServices.addRequest(request));
+		assertFalse(requestServices.getRequests("Pineto").isEmpty());
+		assertNotNull(requestServices.getRequest("id1"));
 	}
 
 }

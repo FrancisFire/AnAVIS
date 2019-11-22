@@ -9,10 +9,10 @@ import com.github.francisfire.anavis.models.Request;
 public class RequestServices {
 
 	private static RequestServices instance;
-	private List<Request> richieste;
+	private List<Request> requests;
 
 	private RequestServices() {
-		this.richieste = new ArrayList<>();
+		this.requests = new ArrayList<>();
 	}
 
 	public static RequestServices getInstance() {
@@ -25,45 +25,45 @@ public class RequestServices {
 
 	/**
 	 * 
-	 * @param richiesta
+	 * @param request
 	 */
-	public boolean addRichiesta(Request richiesta) {
-		return richieste.add(richiesta);
+	public boolean addRequest(Request request) {
+		return requests.add(request);
 	}
 
 	/**
 	 * 
 	 * @param id
 	 */
-	public void removeRichiesta(String id) {
-		richieste.remove(getRichiesta(id));
+	public void removeRequest(String id) {
+		requests.remove(getRequest(id));
 	}
 
 	/**
 	 * 
-	 * @param richiesta
+	 * @param request
 	 */
-	public boolean approvaRichiesta(String richiesta) {
+	public boolean approveRequest(String request) {
 		// TODO - implement GestoreRichieste.approvaRichiesta
 		throw new UnsupportedOperationException();
 	}
 	
 	/**
 	 * 
-	 * @param richiesta
+	 * @param request
 	 * @return
 	 */
-	public boolean declinaRichiesta(String richiesta) {
+	public boolean denyRequest(String request) {
 		// TODO - implement GestoreRichieste.declinaRichiesta
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * 
-	 * @param nomeUfficio
+	 * @param officeName
 	 */
-	public List<Request> getRichieste(String nomeUfficio) {
-		return richieste.stream().filter(richieste -> richieste.getUfficio().getName().equals(nomeUfficio))
+	public List<Request> getRequests(String officeName) {
+		return requests.stream().filter(richieste -> richieste.getUfficio().getName().equals(officeName))
 				.collect(Collectors.toList());
 	}
 
@@ -71,8 +71,8 @@ public class RequestServices {
 	 * 
 	 * @param id
 	 */
-	public Request getRichiesta(String id) {
-		return richieste.stream().filter(richiesta -> richiesta.getId().equals(id)).findFirst().orElse(null);
+	public Request getRequest(String id) {
+		return requests.stream().filter(richiesta -> richiesta.getId().equals(id)).findFirst().orElse(null);
 	}
 
 }

@@ -9,10 +9,10 @@ import com.github.francisfire.anavis.models.Request;
 public class PrenotationServices {
 
 	private static PrenotationServices instance;
-	private List<Prenotation> prenotazioni;
+	private List<Prenotation> prenotations;
 
 	private PrenotationServices() {
-		this.prenotazioni = new ArrayList<>();
+		this.prenotations = new ArrayList<>();
 	}
 
 	public static PrenotationServices getInstance() {
@@ -30,7 +30,7 @@ public class PrenotationServices {
 	public boolean addPrenotazione(Request richiesta) {
 		Prenotation prenotation = new Prenotation(richiesta.getId(), richiesta.getUfficio(), richiesta.getDonor(),
 				richiesta.getHour());
-		return prenotazioni.add(prenotation);
+		return prenotations.add(prenotation);
 	}
 
 }

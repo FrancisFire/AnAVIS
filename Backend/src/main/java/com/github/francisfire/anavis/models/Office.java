@@ -5,7 +5,7 @@ import java.util.Date;
 public class Office {
 
 	private String name;
-	private Date[] donationHours;
+	private Date[] donationTimeTables;
 
 	/**
 	 * 
@@ -20,8 +20,8 @@ public class Office {
 		return name;
 	}
 
-	public Date[] getDonationHours() {
-		return donationHours;
+	public Date[] getDonationTimeTables() {
+		return donationTimeTables;
 	}
 
 }
