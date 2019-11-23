@@ -1,17 +1,18 @@
 package com.github.francisfire.anavis.services;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import com.github.francisfire.anavis.models.Donor;
 
 public class DonorServices {
 
 	private static DonorServices instance;
-	private List<Donor> donors;
+	private Set<Donor> donors;
 
 	private DonorServices() {
-		donors = new ArrayList<>();
+		donors = new HashSet<>();
 	}
 
 	public static DonorServices getInstance() {
@@ -26,8 +27,8 @@ public class DonorServices {
 		return donors.add(donor);
 	}
 
-	public List<Donor> getDonors() {
-		return this.donors;
+	public Set<Donor> getDonors() {
+		return new HashSet<>(this.donors);
 	}
 
 	/**
@@ -35,7 +36,8 @@ public class DonorServices {
 	 * @param donor
 	 */
 	public String getOfficeIdByDonor(String donor) {
-		return getDonorInstance(donor).getOfficePoint().getName();
+		Donor don = getDonorInstance(donor);
+		return (don == null) ? "" : don.getOfficePoint().getName();
 	}
 
 	/**
@@ -43,7 +45,8 @@ public class DonorServices {
 	 * @param donor
 	 */
 	public boolean checkDonationPossibility(String donor) {
-		return getDonorInstance(donor).isCanDonate();
+		Donor don = getDonorInstance(donor);
+		return (don == null) ? false : don.isCanDonate();
 	}
 
 	/**

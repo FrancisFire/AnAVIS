@@ -1,6 +1,8 @@
 package com.github.francisfire.anavis;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -30,6 +32,29 @@ public class DonorServicesTest {
 		Office avisPineto = new Office("Pineto");
 		assertTrue(donorServices.addDonor(new Donor("Gianni", avisPineto)));
 		assertFalse(donorServices.getDonors().isEmpty());
+	}
+	
+	@Test
+	public void getOfficeIdByDonor() {
+		Office avisPosillipo = new Office("Posillipo");
+		donorServices.addDonor(new Donor("Lillo", avisPosillipo));
+		assertEquals("Posillipo", donorServices.getOfficeIdByDonor("Lillo"));
+		assertNotEquals("Posillipa", donorServices.getOfficeIdByDonor("Lillo"));
+		assertEquals("", donorServices.getOfficeIdByDonor("Lilla"));
+	}
+	
+	@Test
+	public void checkDonationPossibility() {
+		Office avisSasso = new Office("Sasso");
+		Donor donaone = new Donor("Greg", avisSasso);
+		donorServices.addDonor(donaone);
+		donaone.setCanDonate(true);
+		Donor donatwo = new Donor("Mimmo", avisSasso);
+		donorServices.addDonor(donatwo);
+		donatwo.setCanDonate(false);
+		assertTrue(donorServices.checkDonationPossibility("Greg"));
+		assertFalse(donorServices.checkDonationPossibility("Mimmo"));
+		assertFalse(donorServices.checkDonationPossibility("Gregg"));
 	}
 	
 }

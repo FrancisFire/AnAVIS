@@ -1,7 +1,7 @@
 package com.github.francisfire.anavis.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.github.francisfire.anavis.models.Request;
@@ -9,10 +9,10 @@ import com.github.francisfire.anavis.models.Request;
 public class RequestServices {
 
 	private static RequestServices instance;
-	private List<Request> requests;
+	private Set<Request> requests;
 
 	private RequestServices() {
-		this.requests = new ArrayList<>();
+		this.requests = new HashSet<>();
 	}
 
 	public static RequestServices getInstance() {
@@ -28,15 +28,21 @@ public class RequestServices {
 	 * @param request
 	 */
 	public boolean addRequest(Request request) {
+		if (request == null)
+			return false;
 		return requests.add(request);
 	}
 
 	/**
 	 * 
-	 * @param id
+	 * @param request
 	 */
-	public void removeRequest(String id) {
-		requests.remove(getRequest(id));
+	public boolean removeRequest(String request) {
+		if (request == null || this.getRequestInstance(request) == null) {
+			return false;
+		} else {
+			return requests.remove(getRequestInstance(request));
+		}
 	}
 
 	/**
@@ -44,34 +50,38 @@ public class RequestServices {
 	 * @param request
 	 */
 	public boolean approveRequest(String request) {
-		// TODO - implement GestoreRichieste.approvaRichiesta
-		throw new UnsupportedOperationException();
+		if (request == null || this.getRequestInstance(request) == null) {
+			return false;
+		} else {
+			requests.remove(this.getRequestInstance(request));
+			return PrenotationServices.getInstance().addPrenotation(this.getRequestInstance(request));
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @param request
 	 * @return
 	 */
 	public boolean denyRequest(String request) {
-		// TODO - implement GestoreRichieste.declinaRichiesta
-		throw new UnsupportedOperationException();
+		Request r = this.getRequestInstance(request);
+		return (r == null) ? false : requests.remove(this.getRequestInstance(request));
 	}
 
 	/**
 	 * 
 	 * @param officeName
 	 */
-	public List<Request> getRequests(String officeName) {
+	public Set<Request> getRequestsByOffice(String officeName) {
 		return requests.stream().filter(richieste -> richieste.getOfficePoint().getName().equals(officeName))
-				.collect(Collectors.toList());
+				.collect(Collectors.toSet());
 	}
 
 	/**
 	 * 
 	 * @param id
 	 */
-	public Request getRequest(String id) {
+	public Request getRequestInstance(String id) {
 		return requests.stream().filter(richiesta -> richiesta.getId().equals(id)).findFirst().orElse(null);
 	}
 

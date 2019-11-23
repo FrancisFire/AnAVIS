@@ -43,6 +43,23 @@ public class Donor {
 	public void setCanDonate(boolean canDonate) {
 		this.canDonate = canDonate;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Donor other = (Donor) obj;
+		if (mail == null) {
+			if (other.mail != null)
+				return false;
+		} else if (!mail.equals(other.mail))
+			return false;
+		return true;
+	}
 	
 	
 
