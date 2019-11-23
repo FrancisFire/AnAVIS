@@ -1,9 +1,8 @@
 package com.github.francisfire.anavis.models;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Office {
@@ -11,6 +10,9 @@ public class Office {
 	private String name;
 	private Set<Date> donationTimeTables;
 
+	public Office() {
+	}
+	
 	/**
 	 * 
 	 * @param nome
