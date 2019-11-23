@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class DonorAvis extends StatefulWidget {
   @override
@@ -18,23 +20,23 @@ class _DonorAvisState extends State<DonorAvis> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Flexible(
-                  child: Text(
+                  child: AutoSizeText(
                     'Benvenuto',
-                    textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontSize: 26,
                       color: Colors.red,
-                      fontSize: 26.0,
                     ),
+                    maxLines: 1,
                   ),
                 ),
                 Flexible(
-                  child: Text(
+                  child: AutoSizeText(
                     'John Doe',
-                    textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontSize: 64,
                       color: Colors.red,
-                      fontSize: 64.0,
                     ),
+                    maxLines: 1,
                   ),
                 ),
                 Flexible(
@@ -117,35 +119,105 @@ class _DonorAvisState extends State<DonorAvis> {
             ),
             ringColor: Colors.red,
             fabColor: Colors.red,
-            options: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.calendar_today,
-                ),
-                onPressed: () {},
-                iconSize: 48.0,
-                color: Colors.white,
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.add,
-                ),
-                onPressed: () {},
-                iconSize: 48.0,
-                color: Colors.white,
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.account_circle,
-                ),
-                onPressed: () {},
-                iconSize: 48.0,
-                color: Colors.white,
-              ),
-            ],
+            fabOpenIcon: Icon(
+              FontAwesomeIcons.tint,
+            ),
+            options: buildRaisedButtonFAB(),
           ),
         ],
       ),
     );
+  }
+
+  List<Widget> buildRaisedButtonFAB() {
+    return <Widget>[
+      RotationTransition(
+        turns: new AlwaysStoppedAnimation(10 / 360),
+        child: SizedBox(
+          height: 60,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(64.0),
+              ),
+            ),
+            color: Colors.white,
+            elevation: 28.0,
+            icon: Icon(
+              Icons.calendar_today,
+              color: Colors.red,
+            ),
+            onPressed: () {},
+            label: Text(
+              "Visualizza possibilità \ndi donare",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+      RotationTransition(
+        turns: new AlwaysStoppedAnimation(10 / 360),
+        child: SizedBox(
+          height: 60,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(64.0),
+              ),
+            ),
+            color: Colors.white,
+            elevation: 28.0,
+            icon: Icon(
+              Icons.add,
+              color: Colors.red,
+            ),
+            onPressed: () {},
+            label: Text(
+              "Richiedi prenotazione \ndonazioni",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+      RotationTransition(
+        turns: new AlwaysStoppedAnimation(10 / 360),
+        child: SizedBox(
+          height: 60,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(64.0),
+              ),
+            ),
+            color: Colors.white,
+            elevation: 28.0,
+            icon: Icon(
+              Icons.account_circle,
+              color: Colors.red,
+            ),
+            onPressed: () {},
+            label: Text(
+              "Profilo \nutente",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 }
