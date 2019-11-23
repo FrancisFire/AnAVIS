@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 
@@ -18,23 +19,23 @@ class _OfficeAvisState extends State<OfficeAvis> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Flexible(
-                  child: Text(
+                  child: AutoSizeText(
                     'Ufficio AVIS di',
-                    textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontSize: 26,
                       color: Colors.red,
-                      fontSize: 26.0,
                     ),
+                    maxLines: 1,
                   ),
                 ),
                 Flexible(
-                  child: Text(
+                  child: AutoSizeText(
                     'Fabriano',
-                    textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontSize: 64,
                       color: Colors.red,
-                      fontSize: 64.0,
                     ),
+                    maxLines: 1,
                   ),
                 ),
                 Flexible(
@@ -116,35 +117,102 @@ class _OfficeAvisState extends State<OfficeAvis> {
             ),
             ringColor: Colors.red,
             fabColor: Colors.red,
-            options: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.calendar_today,
-                ),
-                onPressed: () {},
-                iconSize: 48.0,
-                color: Colors.white,
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.check_box,
-                ),
-                onPressed: () {},
-                iconSize: 48.0,
-                color: Colors.white,
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.account_circle,
-                ),
-                onPressed: () {},
-                iconSize: 48.0,
-                color: Colors.white,
-              ),
-            ],
+            options: buildRaisedButtonFAB(),
           ),
         ],
       ),
     );
+  }
+
+  List<Widget> buildRaisedButtonFAB() {
+    return <Widget>[
+      RotationTransition(
+        turns: new AlwaysStoppedAnimation(10 / 360),
+        child: SizedBox(
+          height: 60,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(64.0),
+              ),
+            ),
+            color: Colors.white,
+            elevation: 28.0,
+            icon: Icon(
+              Icons.calendar_today,
+              color: Colors.red,
+            ),
+            onPressed: () {},
+            label: Text(
+              "Visualizza possibilità \ndi donare",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+      RotationTransition(
+        turns: new AlwaysStoppedAnimation(10 / 360),
+        child: SizedBox(
+          height: 60,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(64.0),
+              ),
+            ),
+            color: Colors.white,
+            elevation: 28.0,
+            icon: Icon(
+              Icons.check_circle,
+              color: Colors.red,
+            ),
+            onPressed: () {},
+            label: Text(
+              "Richiedi prenotazione \ndonazioni",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+      RotationTransition(
+        turns: new AlwaysStoppedAnimation(10 / 360),
+        child: SizedBox(
+          height: 60,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(64.0),
+              ),
+            ),
+            color: Colors.white,
+            elevation: 28.0,
+            icon: Icon(
+              Icons.location_city,
+              color: Colors.red,
+            ),
+            onPressed: () {},
+            label: Text(
+              "Profilo \nAVIS",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 }
