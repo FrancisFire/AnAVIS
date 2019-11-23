@@ -2,6 +2,7 @@ import 'package:anavis/pages/donor_avis.dart';
 import 'package:anavis/pages/office_avis.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(Homepage());
 
@@ -47,6 +48,15 @@ class CardLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+    );
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -54,19 +64,21 @@ class CardLogin extends StatelessWidget {
             direction: Axis.vertical,
             children: <Widget>[
               Flexible(
-                flex: 10,
+                flex: 2,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     SizedBox(
                       height: 24,
                     ),
                     Text(
                       "AnAVIS",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                       style: TextStyle(
                         fontSize: 64,
                         color: Colors.white,
+                        fontWeight: FontWeight.bold,
                         backgroundColor: Colors.red,
                       ),
                       textAlign: TextAlign.center,
@@ -74,8 +86,9 @@ class CardLogin extends StatelessWidget {
                     SizedBox(
                       height: 16,
                     ),
-                    AutoSizeText(
+                    Text(
                       "Il futuro è una questione di sangue",
+                      overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(
                         fontSize: 16,
@@ -87,7 +100,7 @@ class CardLogin extends StatelessWidget {
                 ),
               ),
               Flexible(
-                flex: 25,
+                flex: 5,
                 child: Padding(
                   padding: const EdgeInsets.only(
                     left: 26,
@@ -101,7 +114,7 @@ class CardLogin extends StatelessWidget {
                         Radius.circular(26.0),
                       ),
                     ),
-                    elevation: 28,
+                    elevation: 5,
                     child: Column(
                       children: <Widget>[
                         Theme(
@@ -116,8 +129,20 @@ class CardLogin extends StatelessWidget {
                             indicatorColor: Colors.redAccent,
                             labelPadding: EdgeInsets.all(18.0),
                             tabs: <Widget>[
-                              Text("Donatore AVIS"),
-                              Text("Ufficio AVIS"),
+                              Text(
+                                "Donatore AVIS",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.85,
+                                ),
+                              ),
+                              Text(
+                                "Ufficio AVIS",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.85,
+                                ),
+                              ),
                             ],
                           ),
                         ),
