@@ -1,7 +1,7 @@
 package com.github.francisfire.anavis.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.github.francisfire.anavis.models.Prenotation;
 import com.github.francisfire.anavis.models.Request;
@@ -9,10 +9,10 @@ import com.github.francisfire.anavis.models.Request;
 public class PrenotationServices {
 
 	private static PrenotationServices instance;
-	private List<Prenotation> prenotations;
+	private Set<Prenotation> prenotations;
 
 	private PrenotationServices() {
-		this.prenotations = new ArrayList<>();
+		this.prenotations = new HashSet<>();
 	}
 
 	public static PrenotationServices getInstance() {
@@ -27,7 +27,7 @@ public class PrenotationServices {
 	 * 
 	 * @param richiesta
 	 */
-	public boolean addPrenotazione(Request richiesta) {
+	public boolean addPrenotation(Request richiesta) {
 		Prenotation prenotation = new Prenotation(richiesta.getId(), richiesta.getOfficePoint(), richiesta.getDonor(),
 				richiesta.getHour());
 		return prenotations.add(prenotation);

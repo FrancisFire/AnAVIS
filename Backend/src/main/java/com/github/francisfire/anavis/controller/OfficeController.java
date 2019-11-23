@@ -1,7 +1,7 @@
 package com.github.francisfire.anavis.controller;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +18,12 @@ public class OfficeController {
 	private static OfficeServices officeServices = OfficeServices.getInstance();
 
 	@GetMapping("")
-	public List<Office> getOffices() {
+	public Set<Office> getOffices() {
 		return officeServices.getOffices();
 	}
 
 	@GetMapping("/{office}/timeTable")
-	public List<Date> getDonationsTimeTable(@PathVariable("office") String office) {
+	public Set<Date> getDonationsTimeTable(@PathVariable("office") String office) {
 		return officeServices.getDonationsTimeTable(office);
 	}
 

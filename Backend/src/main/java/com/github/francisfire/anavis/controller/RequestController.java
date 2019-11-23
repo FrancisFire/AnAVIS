@@ -1,6 +1,7 @@
 package com.github.francisfire.anavis.controller;
 
-import java.util.List;
+
+import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,13 +26,13 @@ public class RequestController {
 	}
 
 	@GetMapping("/office/{office}")
-	public List<Request> getRequestsByOffice(@PathVariable("office") String office) {
-		return requestServices.getRequests(office);
+	public Set<Request> getRequestsByOffice(@PathVariable("office") String office) {
+		return requestServices.getRequestsByOffice(office);
 	}
 
 	@GetMapping("/{id}")
 	public Request getRequestById(@PathVariable("id") String id) {
-		return requestServices.getRequest(id);
+		return requestServices.getRequestInstance(id);
 	}
 
 	@PutMapping("/{id}/approve")

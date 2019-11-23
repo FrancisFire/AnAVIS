@@ -1,18 +1,18 @@
 package com.github.francisfire.anavis.services;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.github.francisfire.anavis.models.Office;
 
 public class OfficeServices {
 
 	private static OfficeServices instance;
-	private List<Office> offices;
+	private Set<Office> offices;
 
 	private OfficeServices() {
-		this.offices = new ArrayList<>();
+		this.offices = new HashSet<>();
 	}
 
 	/**
@@ -22,9 +22,8 @@ public class OfficeServices {
 	 */
 	public static OfficeServices getInstance() {
 		if (instance == null) {
-
+			instance = new OfficeServices();
 		}
-
 		return instance;
 	}
 
@@ -40,16 +39,20 @@ public class OfficeServices {
 	 * 
 	 * @return uffici
 	 */
-	public List<Office> getOffices() {
-		return this.offices;
+	public Set<Office> getOffices() {
+		return new HashSet<>(this.offices);
 	}
 
 	/**
 	 * 
 	 * @param office
 	 */
-	public List<Date> getDonationsTimeTable(String office) {
-		return getOfficeInstance(office).getDonationTimeTables();
+	public Set<Date> getDonationsTimeTable(String office) {
+		Office of = getOfficeInstance(office);
+		return (of == null) ? new HashSet<>() :getOfficeInstance(office).getDonationTimeTables();
 	}
 
+	public boolean addOffice(Office office) {
+		return this.offices.add(office);
+	}
 }

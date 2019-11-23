@@ -1,7 +1,9 @@
 package com.github.francisfire.anavis;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
@@ -34,8 +36,66 @@ public class RequestServicesTest {
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id1", officePineto, donorGianni, new Date());
 		assertTrue(requestServices.addRequest(request));
-		assertFalse(requestServices.getRequests("Pineto").isEmpty());
-		assertNotNull(requestServices.getRequest("id1"));
+		assertFalse(requestServices.addRequest(request));
+		assertFalse(requestServices.getRequestsByOffice("Pineto").isEmpty());
+		assertFalse(requestServices.addRequest(null));
+	}
+	
+	@Test
+	public void removeRequest() {
+		Office officePineto = new Office("Pineto");
+		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
+		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		requestServices.addRequest(request);
+		assertTrue(requestServices.removeRequest("id1"));
+		assertFalse(requestServices.removeRequest("id1"));
+		assertFalse(requestServices.removeRequest("id2"));
+		assertFalse(requestServices.removeRequest(null));
 	}
 
+	@Test
+	public void approveRequest() {
+		Office officePineto = new Office("Pineto");
+		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
+		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		requestServices.addRequest(request);
+		assertTrue(requestServices.approveRequest("id1"));
+		assertFalse(requestServices.approveRequest("id1"));
+		assertFalse(requestServices.approveRequest("id2"));
+		assertFalse(requestServices.approveRequest(null));
+	}
+	
+	@Test
+	public void denyRequest() {
+		Office officePineto = new Office("Pineto");
+		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
+		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		requestServices.addRequest(request);
+		assertTrue(requestServices.denyRequest("id1"));
+		assertFalse(requestServices.denyRequest("id1"));
+		assertFalse(requestServices.denyRequest("id2"));
+		assertFalse(requestServices.denyRequest(null));
+	}
+	
+	@Test
+	public void getRequestsByOffice() {
+		Office officePineto = new Office("Pineto");
+		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
+		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		requestServices.addRequest(request);
+		assertTrue(requestServices.getRequestsByOffice("Pineto").contains(request));
+		assertTrue(requestServices.getRequestsByOffice("Sasso").isEmpty());
+	}
+	
+	@Test
+	public void getRequestInstance() {
+		Office officePineto = new Office("Pineto");
+		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
+		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		requestServices.addRequest(request);
+		assertEquals(request, requestServices.getRequestInstance("id1"));
+		assertNull(requestServices.getRequestInstance("id2"));
+		requestServices.removeRequest("id1");
+		assertNull(requestServices.getRequestInstance("id1"));
+	}
 }
