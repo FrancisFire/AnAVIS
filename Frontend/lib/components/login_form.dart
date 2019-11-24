@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:progress_indicator_button/progress_button.dart';
 
 class LoginForm extends StatelessWidget {
   final Function onTap;
@@ -47,15 +47,10 @@ class LoginForm extends StatelessWidget {
                     Icons.account_circle,
                   ),
                   placeholder: "Email",
-                  onTap: () {
-                    print('Click');
-                  },
-                  onChanged: (t) {
-                    print(t);
-                  },
-                  onSubmitted: (d) {
-                    print(d.length);
-                  },
+                  maxLines: 1,
+                  onTap: () {},
+                  onChanged: (t) {},
+                  onSubmitted: (d) {},
                 ),
                 SizedBox(
                   height: 12,
@@ -89,15 +84,11 @@ class LoginForm extends StatelessWidget {
                     Icons.lock,
                   ),
                   placeholder: "Password",
-                  onTap: () {
-                    print('Click');
-                  },
-                  onChanged: (t) {
-                    print(t);
-                  },
-                  onSubmitted: (d) {
-                    print(d.length);
-                  },
+                  obscureText: true,
+                  maxLines: 1,
+                  onTap: () {},
+                  onChanged: (t) {},
+                  onSubmitted: (d) {},
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -106,25 +97,25 @@ class LoginForm extends StatelessWidget {
                   child: Center(
                     child: SizedBox(
                       height: 50,
-                      child: RaisedButton.icon(
-                        onPressed: () {
-                          onTap();
+                      width: 100,
+                      child: ProgressButton(
+                        onPressed: (AnimationController controller) async {
+                          controller.forward();
+                          await Future.delayed(Duration(milliseconds: 3000),
+                              () {
+                            onTap();
+                            controller.reset();
+                          });
                         },
-                        elevation: 18.0,
-                        icon: Icon(
-                          FontAwesomeIcons.tint,
-                          color: Colors.red,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(26.0),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(26.0),
-                          ),
-                        ),
-                        color: Colors.white,
-                        label: Text(
-                          "Effettua il login",
+                        strokeWidth: 3,
+                        color: Colors.red,
+                        child: Text(
+                          "Login",
                           style: TextStyle(
-                            color: Colors.red,
+                            color: Colors.white,
                             fontSize: 20.0,
                           ),
                         ),
