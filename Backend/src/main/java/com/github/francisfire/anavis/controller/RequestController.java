@@ -15,7 +15,7 @@ import com.github.francisfire.anavis.models.Request;
 import com.github.francisfire.anavis.services.RequestServices;
 
 @RestController
-@RequestMapping("request")
+@RequestMapping("api/request")
 public class RequestController {
 
 	private static RequestServices requestServices = RequestServices.getInstance();

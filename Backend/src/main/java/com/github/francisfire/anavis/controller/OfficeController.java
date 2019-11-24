@@ -12,7 +12,7 @@ import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.services.OfficeServices;
 
 @RestController
-@RequestMapping("office")
+@RequestMapping("api/office")
 public class OfficeController {
 
 	private static OfficeServices officeServices = OfficeServices.getInstance();

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.francisfire.anavis.services.DonorServices;
 
 @RestController
-@RequestMapping("donor")
+@RequestMapping("api/donor")
 public class DonorController {
 
 	private static DonorServices donorServices = DonorServices.getInstance();
