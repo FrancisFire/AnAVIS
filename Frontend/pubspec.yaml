@@ -13,6 +13,7 @@ dependencies:
   fab_circular_menu: ^0.1.1
   font_awesome_flutter: ^8.5.0
   auto_size_text: ^2.1.0
+  beauty_textfield: ^0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -20,9 +21,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/logo.png
+    - assets/images/logo_homepage.png
+
   fonts:
     - family: Rubik
       fonts:
