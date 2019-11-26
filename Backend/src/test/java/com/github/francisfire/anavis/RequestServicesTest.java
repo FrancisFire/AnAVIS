@@ -1,9 +1,13 @@
 package com.github.francisfire.anavis;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +28,11 @@ public class RequestServicesTest {
 	@BeforeAll
 	public static void setUp() {
 		requestServices = RequestServices.getInstance();
+	}
+	
+	@AfterEach
+	public void clearCollection() {
+		requestServices.getRequests().clear();
 	}
 	
 	@Test

@@ -1,6 +1,7 @@
 package com.github.francisfire.anavis;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,14 +31,13 @@ public class OfficeServicesTest {
 		officeServices = OfficeServices.getInstance();
 	}
 	
-	@Test
-	public static void addOffice() {
-		assertTrue(officeServices.addOffice(new Office("Camerino")));
-		assertFalse(officeServices.addOffice(new Office("Camerino")));
+	@AfterEach
+	public void clearCollection() {
+		officeServices.getOffices().clear();
 	}
-
+	
 	@Test
-	public static void getDonationTimeTable() {
+	public void getDonationTimeTable() {
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		Date today = calendar.getTime();
 		Office of = new Office("Roma Sud");
@@ -49,9 +50,15 @@ public class OfficeServicesTest {
 	}
 	
 	@Test
-	public static void getOffices() {
-		officeServices.addOffice(new Office("Uno"));
+	public void getOffices() {
+		assertTrue(officeServices.addOffice(new Office("Uno")));
 		assertTrue(officeServices.getOffices().contains(new Office("Uno")));
 		assertFalse(officeServices.getOffices().contains(new Office("Due")));
+	}
+
+	@Test
+	public void addOffice() {
+		assertTrue(officeServices.addOffice(new Office("Camerino")));
+		assertFalse(officeServices.addOffice(new Office("Camerino")));
 	}
 }

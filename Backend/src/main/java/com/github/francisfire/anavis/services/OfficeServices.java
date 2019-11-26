@@ -40,7 +40,7 @@ public class OfficeServices {
 	 * @return uffici
 	 */
 	public Set<Office> getOffices() {
-		return new HashSet<>(this.offices);
+		return new HashSet<>(offices);
 	}
 
 	/**
@@ -49,10 +49,10 @@ public class OfficeServices {
 	 */
 	public Set<Date> getDonationsTimeTable(String office) {
 		Office of = getOfficeInstance(office);
-		return (of == null) ? new HashSet<>() :getOfficeInstance(office).getDonationTimeTables();
+		return (of == null) ? new HashSet<>() : getOfficeInstance(office).getDonationTimeTables();
 	}
 
 	public boolean addOffice(Office office) {
-		return this.offices.add(office);
+		return offices.add(office);
 	}
 }

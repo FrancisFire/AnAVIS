@@ -45,22 +45,33 @@ public class Donor {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Donor other = (Donor) obj;
 		if (mail == null) {
-			if (other.mail != null)
+			if (other.mail != null) {
 				return false;
-		} else if (!mail.equals(other.mail))
+			}
+		} else if (!mail.equals(other.mail)) {
 			return false;
+		}
 		return true;
 	}
-	
-	
 
 }

@@ -50,11 +50,12 @@ public class RequestServices {
 	 * @param request
 	 */
 	public boolean approveRequest(String request) {
-		if (request == null || this.getRequestInstance(request) == null) {
+		Request toApprove = this.getRequestInstance(request);
+		if (request == null || toApprove == null) {
 			return false;
 		} else {
-			requests.remove(this.getRequestInstance(request));
-			return PrenotationServices.getInstance().addPrenotation(this.getRequestInstance(request));
+			requests.remove(toApprove);
+			return PrenotationServices.getInstance().addPrenotation(toApprove);
 		}
 	}
 
@@ -64,8 +65,16 @@ public class RequestServices {
 	 * @return
 	 */
 	public boolean denyRequest(String request) {
-		Request r = this.getRequestInstance(request);
-		return (r == null) ? false : requests.remove(this.getRequestInstance(request));
+		Request toApprove = this.getRequestInstance(request);
+		if (request == null || toApprove == null) {
+			return false;
+		} else {
+			return requests.remove(toApprove);
+		}
+	}
+
+	public Set<Request> getRequests() {
+		return requests;
 	}
 
 	/**
