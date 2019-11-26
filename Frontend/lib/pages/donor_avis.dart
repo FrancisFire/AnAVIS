@@ -3,6 +3,8 @@ import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DonorAvis extends StatefulWidget {
   @override
@@ -10,6 +12,25 @@ class DonorAvis extends StatefulWidget {
 }
 
 class _DonorAvisState extends State<DonorAvis> {
+  static String mail = 'stelluti@mail.com';
+  bool _canDonate;
+  final String _canDonateApi =
+      "http://10.0.4.43:8080/api/donor/$mail/canDonate";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _setCanDonate();
+  }
+
+  void _setCanDonate() async {
+    var request = await http.get(_canDonateApi);
+    setState(() {
+      _canDonate = request.body == 'true';
+      print(request.body);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -35,7 +56,7 @@ class _DonorAvisState extends State<DonorAvis> {
                   ),
                   Flexible(
                     child: AutoSizeText(
-                      'Benvenuto',
+                      'Benvenuto,',
                       style: TextStyle(
                         fontSize: 26,
                         color: Colors.red,
@@ -45,7 +66,7 @@ class _DonorAvisState extends State<DonorAvis> {
                   ),
                   Flexible(
                     child: AutoSizeText(
-                      'John Doe',
+                      mail,
                       style: TextStyle(
                         fontSize: 64,
                         color: Colors.red,
@@ -57,19 +78,19 @@ class _DonorAvisState extends State<DonorAvis> {
                     child: Row(
                       children: <Widget>[
                         Chip(
-                          backgroundColor: Colors.red,
+                          backgroundColor:
+                              _canDonate ? Colors.green : Colors.red,
                           elevation: 14,
                           avatar: CircleAvatar(
                             backgroundColor: Colors.white,
-                            child: Text(
-                              'A',
-                              style: TextStyle(
-                                color: Colors.red,
-                              ),
+                            child: Icon(
+                              _canDonate ? Icons.check : Icons.warning,
+                              color: _canDonate ? Colors.green : Colors.red,
+                              size: 18.0,
                             ),
                           ),
                           label: Text(
-                            'Tipo di sangue',
+                            _canDonate ? 'Puoi donare' : 'Non puoi donare',
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -79,13 +100,13 @@ class _DonorAvisState extends State<DonorAvis> {
                           width: 8,
                         ),
                         Chip(
-                          backgroundColor: Colors.red,
+                          backgroundColor: Colors.grey[600],
                           elevation: 14,
                           avatar: CircleAvatar(
                             backgroundColor: Colors.white,
                             child: Icon(
                               Icons.map,
-                              color: Colors.red,
+                              color: Colors.grey[600],
                               size: 18,
                             ),
                           ),
