@@ -4,12 +4,12 @@ import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class OfficeAvis extends StatefulWidget {
+class OfficeView extends StatefulWidget {
   @override
-  _OfficeAvisState createState() => _OfficeAvisState();
+  _OfficeViewState createState() => _OfficeViewState();
 }
 
-class _OfficeAvisState extends State<OfficeAvis> {
+class _OfficeViewState extends State<OfficeView> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(

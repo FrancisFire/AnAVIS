@@ -101,8 +101,7 @@ class LoginForm extends StatelessWidget {
                       child: ProgressButton(
                         onPressed: (AnimationController controller) async {
                           controller.forward();
-                          await Future.delayed(Duration(milliseconds: 3000),
-                              () {
+                          await Future.delayed(Duration(milliseconds: 700), () {
                             onTap();
                             controller.reset();
                           });

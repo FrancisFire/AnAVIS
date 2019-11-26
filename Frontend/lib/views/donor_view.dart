@@ -1,38 +1,53 @@
+import 'package:anavis/model/app_state.dart';
+import 'package:anavis/views/donor_candonate_view.dart';
+import 'package:anavis/views/donor_request_add_views/donor_request_office_view.dart';
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:provider/provider.dart';
 
-class DonorAvis extends StatefulWidget {
+class DonorView extends StatefulWidget {
   @override
-  _DonorAvisState createState() => _DonorAvisState();
+  _DonorViewState createState() => _DonorViewState();
 }
 
-class _DonorAvisState extends State<DonorAvis> {
-  static String mail = 'stelluti@mail.com';
-  bool _canDonate;
-  final String _canDonateApi =
-      "http://10.0.4.43:8080/api/donor/$mail/canDonate";
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _setCanDonate();
-  }
+class _DonorViewState extends State<DonorView> {
+  bool _donorCanDonate;
 
-  void _setCanDonate() async {
-    var request = await http.get(_canDonateApi);
-    setState(() {
-      _canDonate = request.body == 'true';
-      print(request.body);
-    });
+  void _showCanDonatePopup() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor:
+                _donorCanDonate ? Colors.green[100] : Colors.red[100],
+            content: Text(
+              _donorCanDonate ? "Puoi donare" : "Non puoi donare",
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Ok',
+                  style: TextStyle(
+                    color:
+                        _donorCanDonate ? Colors.green[600] : Colors.red[600],
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
+    _donorCanDonate = Provider.of<AppState>(context).getCanDonate();
+
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -66,7 +81,7 @@ class _DonorAvisState extends State<DonorAvis> {
                   ),
                   Flexible(
                     child: AutoSizeText(
-                      mail,
+                      Provider.of<AppState>(context).getDonorMail(),
                       style: TextStyle(
                         fontSize: 64,
                         color: Colors.red,
@@ -79,18 +94,27 @@ class _DonorAvisState extends State<DonorAvis> {
                       children: <Widget>[
                         Chip(
                           backgroundColor:
-                              _canDonate ? Colors.green : Colors.red,
+                              Provider.of<AppState>(context).getCanDonate()
+                                  ? Colors.green
+                                  : Colors.red,
                           elevation: 14,
                           avatar: CircleAvatar(
                             backgroundColor: Colors.white,
                             child: Icon(
-                              _canDonate ? Icons.check : Icons.warning,
-                              color: _canDonate ? Colors.green : Colors.red,
+                              Provider.of<AppState>(context).getCanDonate()
+                                  ? Icons.check
+                                  : Icons.warning,
+                              color:
+                                  Provider.of<AppState>(context).getCanDonate()
+                                      ? Colors.green
+                                      : Colors.red,
                               size: 18.0,
                             ),
                           ),
                           label: Text(
-                            _canDonate ? 'Puoi donare' : 'Non puoi donare',
+                            Provider.of<AppState>(context).getCanDonate()
+                                ? 'Puoi donare'
+                                : 'Non puoi donare',
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -172,7 +196,7 @@ class _DonorAvisState extends State<DonorAvis> {
   List<Widget> buildRaisedButtonFAB() {
     return <Widget>[
       RotationTransition(
-        turns: new AlwaysStoppedAnimation(5 / 360),
+        turns: new AlwaysStoppedAnimation(2 / 360),
         child: SizedBox(
           height: 60,
           child: RaisedButton.icon(
@@ -187,7 +211,9 @@ class _DonorAvisState extends State<DonorAvis> {
               Icons.calendar_today,
               color: Colors.red,
             ),
-            onPressed: () {},
+            onPressed: () {
+              _showCanDonatePopup();
+            },
             label: Text(
               "Visualizza possibilità \ndi donare",
               textAlign: TextAlign.center,
@@ -201,7 +227,7 @@ class _DonorAvisState extends State<DonorAvis> {
         ),
       ),
       RotationTransition(
-        turns: new AlwaysStoppedAnimation(5 / 360),
+        turns: new AlwaysStoppedAnimation(2 / 360),
         child: SizedBox(
           height: 60,
           child: RaisedButton.icon(
@@ -216,7 +242,11 @@ class _DonorAvisState extends State<DonorAvis> {
               Icons.add,
               color: Colors.red,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return DonorRequestOfficeView();
+              }));
+            },
             label: Text(
               "Richiedi prenotazione \ndonazioni",
               textAlign: TextAlign.center,
@@ -230,7 +260,7 @@ class _DonorAvisState extends State<DonorAvis> {
         ),
       ),
       RotationTransition(
-        turns: new AlwaysStoppedAnimation(5 / 360),
+        turns: new AlwaysStoppedAnimation(2 / 360),
         child: SizedBox(
           height: 60,
           child: RaisedButton.icon(
