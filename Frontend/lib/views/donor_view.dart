@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
+import 'package:flushbar/flushbar.dart';
 
 class DonorView extends StatefulWidget {
   @override
@@ -15,34 +16,6 @@ class DonorView extends StatefulWidget {
 
 class _DonorViewState extends State<DonorView> {
   bool _donorCanDonate;
-
-  void _showCanDonatePopup() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor:
-                _donorCanDonate ? Colors.green[100] : Colors.red[100],
-            content: Text(
-              _donorCanDonate ? "Puoi donare" : "Non puoi donare",
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'Ok',
-                  style: TextStyle(
-                    color:
-                        _donorCanDonate ? Colors.green[600] : Colors.red[600],
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +169,7 @@ class _DonorViewState extends State<DonorView> {
   List<Widget> buildRaisedButtonFAB() {
     return <Widget>[
       RotationTransition(
-        turns: new AlwaysStoppedAnimation(2 / 360),
+        turns: new AlwaysStoppedAnimation(5 / 360),
         child: SizedBox(
           height: 60,
           child: RaisedButton.icon(
@@ -212,7 +185,10 @@ class _DonorViewState extends State<DonorView> {
               color: Colors.red,
             ),
             onPressed: () {
-              _showCanDonatePopup();
+              //_showCanDonatePopup();
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return DonorCanDonateView();
+              }));
             },
             label: Text(
               "Visualizza possibilità \ndi donare",
@@ -227,7 +203,7 @@ class _DonorViewState extends State<DonorView> {
         ),
       ),
       RotationTransition(
-        turns: new AlwaysStoppedAnimation(2 / 360),
+        turns: new AlwaysStoppedAnimation(5 / 360),
         child: SizedBox(
           height: 60,
           child: RaisedButton.icon(
@@ -243,9 +219,27 @@ class _DonorViewState extends State<DonorView> {
               color: Colors.red,
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return DonorRequestOfficeView();
-              }));
+              if (_donorCanDonate) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return DonorRequestOfficeView();
+                }));
+              } else {
+                Flushbar(
+                  margin: EdgeInsets.all(8),
+                  borderRadius: 26,
+                  title: "Operazione non consentita",
+                  icon: Icon(
+                    Icons.info_outline,
+                    size: 28.0,
+                    color: Colors.red[600],
+                  ),
+                  message:
+                      "Al momento non puoi richiedere di prenotare una donazione, prova tra un pò di giorni.",
+                  duration: Duration(
+                    seconds: 3,
+                  ),
+                )..show(context);
+              }
             },
             label: Text(
               "Richiedi prenotazione \ndonazioni",
@@ -260,7 +254,7 @@ class _DonorViewState extends State<DonorView> {
         ),
       ),
       RotationTransition(
-        turns: new AlwaysStoppedAnimation(2 / 360),
+        turns: new AlwaysStoppedAnimation(5 / 360),
         child: SizedBox(
           height: 60,
           child: RaisedButton.icon(

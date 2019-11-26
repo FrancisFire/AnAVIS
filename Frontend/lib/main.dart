@@ -1,4 +1,3 @@
-import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

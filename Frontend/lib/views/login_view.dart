@@ -1,10 +1,11 @@
 import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/views/office_view.dart';
+import 'package:anavis/widgets/card_painter.dart';
 import 'package:anavis/widgets/login_form.dart';
+import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -60,7 +61,11 @@ class CardLogin extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: CustomPaint(
-        painter: RedPainter(),
+        painter: Painter(
+          first: Colors.red[100],
+          second: Colors.orange[200],
+          background: Colors.white,
+        ),
         child: Stack(
           children: <Widget>[
             Flex(
@@ -224,79 +229,5 @@ class CardLogin extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class RedPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final height = size.height;
-    final width = size.width;
-    Paint paint = Paint();
-
-    Path mainBackground = Path();
-    mainBackground.addRect(
-      Rect.fromLTRB(0, 0, width, height),
-    );
-    paint.color = Colors.white;
-    canvas.drawPath(mainBackground, paint);
-
-    Path ovalPathRight = Path();
-    Path ovalPathLeft = Path();
-
-    ovalPathRight.moveTo(0, height * 0.2);
-    ovalPathRight.quadraticBezierTo(
-        width * 0.45, height * 0.25, width * 0.51, height * 0.5);
-    ovalPathRight.quadraticBezierTo(
-        width * 0.58, height * 0.8, width * 0.1, height);
-    ovalPathRight.lineTo(0, height);
-    ovalPathRight.close();
-
-    ovalPathLeft.moveTo(height / 2, 0);
-    ovalPathLeft.quadraticBezierTo(
-        width * 0.18, height * 0.5, width * 1.5, height * 0.8);
-    ovalPathLeft.quadraticBezierTo(
-        width * 9, height * 0.13, width * 1.4, height);
-    ovalPathLeft.lineTo(height, 0);
-    ovalPathLeft.close();
-
-    paint.color = Colors.red[100];
-
-    canvas.drawPath(ovalPathRight, paint);
-
-    paint.color = Colors.orange[200];
-
-    canvas.drawPath(ovalPathLeft, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return oldDelegate != this;
-  }
-}
-
-class CardPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint = Paint();
-    paint.color = Colors.red[300];
-    paint.style = PaintingStyle.fill;
-
-    var path = Path();
-
-    path.moveTo(0, size.height * 0.9167);
-    path.quadraticBezierTo(size.width * 0.25, size.height * 0.875,
-        size.width * 0.5, size.height * 0.9167);
-    path.quadraticBezierTo(size.width * 0.75, size.height * 0.9584,
-        size.width * 1.0, size.height * 0.9167);
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return oldDelegate != this;
   }
 }

@@ -6,8 +6,8 @@ import 'dart:core';
 class AppState extends ChangeNotifier {
   AppState() {
     _donorMail = 'stelluti@mail.com';
-    _canDonateApi = "http://10.0.4.43:8080/api/donor/$_donorMail/canDonate";
-    _officeNamesApi = "http://10.0.4.43:8080/api/office";
+    _canDonateApi = "http://10.0.4.250:8080/api/donor/$_donorMail/canDonate";
+    _officeNamesApi = "http://10.0.4.250:8080/api/office";
     setCanDonate();
     setOfficeNames();
   }
@@ -25,7 +25,6 @@ class AppState extends ChangeNotifier {
 
   void setOfficeNames() async {
     var request = await http.get(_officeNamesApi);
-    print(request.body);
     var parsedJson = json.decode(request.body);
     for (var office in parsedJson) {
       _officeNames.add(office['name']);

@@ -112,7 +112,7 @@ class LoginForm extends StatelessWidget {
                         strokeWidth: 3,
                         color: Colors.red,
                         child: Text(
-                          "Login",
+                          "LOGIN",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,
