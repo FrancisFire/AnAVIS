@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,11 +28,6 @@ public class OfficeServicesTest {
 	@BeforeAll
 	public static void setUp() {
 		officeServices = OfficeServices.getInstance();
-	}
-	
-	@AfterEach
-	public void clearCollection() {
-		officeServices.getOffices().clear();
 	}
 	
 	@Test

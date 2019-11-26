@@ -30,7 +30,7 @@ public class PrenotationServicesTest {
 	public void addPrenotation() {
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
-		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		Request request = new Request("id4", officePineto, donorGianni, new Date());
 		assertTrue(prenotationServices.addPrenotation(request));
 	}
 

@@ -50,8 +50,9 @@ public class RequestServices {
 	 * @param request
 	 */
 	public boolean approveRequest(String request) {
+		if(request == null) return false;
 		Request toApprove = this.getRequestInstance(request);
-		if (request == null || toApprove == null) {
+		if (toApprove == null) {
 			return false;
 		} else {
 			requests.remove(toApprove);
@@ -65,8 +66,9 @@ public class RequestServices {
 	 * @return
 	 */
 	public boolean denyRequest(String request) {
+		if(request == null) return false;
 		Request toApprove = this.getRequestInstance(request);
-		if (request == null || toApprove == null) {
+		if (toApprove == null) {
 			return false;
 		} else {
 			return requests.remove(toApprove);
@@ -74,7 +76,7 @@ public class RequestServices {
 	}
 
 	public Set<Request> getRequests() {
-		return requests;
+		return new HashSet<>(requests);
 	}
 
 	/**
