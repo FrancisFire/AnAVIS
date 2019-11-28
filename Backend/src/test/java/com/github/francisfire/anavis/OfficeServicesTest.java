@@ -1,6 +1,7 @@
 package com.github.francisfire.anavis;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
@@ -22,17 +23,19 @@ import com.github.francisfire.anavis.services.OfficeServices;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class OfficeServicesTest {
-	
+
 	private static OfficeServices officeServices;
-	
+
 	@BeforeAll
 	public static void setUp() {
 		officeServices = OfficeServices.getInstance();
 	}
-	
+
 	@Test
 	public void getDonationTimeTable() {
-		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
+		assertThrows(NullPointerException.class, () -> officeServices.getDonationsTimeTable(null));
+
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
 		Date today = calendar.getTime();
 		Office of = new Office("Roma Sud");
 		Set<Date> dates = new HashSet<>();
@@ -42,7 +45,7 @@ public class OfficeServicesTest {
 		assertTrue(officeServices.getDonationsTimeTable("Roma Sud").contains(today));
 		assertFalse(officeServices.getDonationsTimeTable("Roma Nord").contains(today));
 	}
-	
+
 	@Test
 	public void getOffices() {
 		assertTrue(officeServices.addOffice(new Office("Uno")));
@@ -52,6 +55,8 @@ public class OfficeServicesTest {
 
 	@Test
 	public void addOffice() {
+		assertThrows(NullPointerException.class, () -> officeServices.addOffice(null));
+
 		assertTrue(officeServices.addOffice(new Office("Camerino")));
 		assertFalse(officeServices.addOffice(new Office("Camerino")));
 	}

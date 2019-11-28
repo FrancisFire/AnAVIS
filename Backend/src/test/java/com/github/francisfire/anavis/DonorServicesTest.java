@@ -18,30 +18,36 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class DonorServicesTest {
 
 	private static DonorServices donorServices;
-	
+
 	@BeforeAll
 	public static void setUp() {
 		donorServices = DonorServices.getInstance();
 	}
-	
+
 	@Test
 	public void addDonor() {
+		assertThrows(NullPointerException.class, () -> donorServices.addDonor(null));
+
 		Office avisPineto = new Office("Pineto");
 		assertTrue(donorServices.addDonor(new Donor("Gianni", avisPineto)));
 		assertFalse(donorServices.getDonors().isEmpty());
 	}
-	
+
 	@Test
 	public void getOfficeIdByDonor() {
+		assertThrows(NullPointerException.class, () -> donorServices.getOfficeIdByDonor(null));
+
 		Office avisPosillipo = new Office("Posillipo");
 		donorServices.addDonor(new Donor("Lillo", avisPosillipo));
 		assertEquals("Posillipo", donorServices.getOfficeIdByDonor("Lillo"));
 		assertNotEquals("Posillipa", donorServices.getOfficeIdByDonor("Lillo"));
-		assertEquals("", donorServices.getOfficeIdByDonor("Lilla"));
+		assertNull(donorServices.getOfficeIdByDonor("Lilla"));
 	}
-	
+
 	@Test
 	public void checkDonationPossibility() {
+		assertThrows(NullPointerException.class, () -> donorServices.checkDonationPossibility(null));
+
 		Office avisSasso = new Office("Sasso");
 		Donor donaone = new Donor("Greg", avisSasso);
 		donorServices.addDonor(donaone);
@@ -53,5 +59,5 @@ public class DonorServicesTest {
 		assertFalse(donorServices.checkDonationPossibility("Mimmo"));
 		assertFalse(donorServices.checkDonationPossibility("Gregg"));
 	}
-	
+
 }

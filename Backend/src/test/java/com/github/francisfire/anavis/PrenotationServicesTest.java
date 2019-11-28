@@ -18,16 +18,18 @@ import com.github.francisfire.anavis.services.PrenotationServices;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class PrenotationServicesTest {
-	
+
 	private static PrenotationServices prenotationServices;
-	
+
 	@BeforeAll
 	public static void setUp() {
 		prenotationServices = PrenotationServices.getInstance();
 	}
-	
+
 	@Test
 	public void addPrenotation() {
+		assertThrows(NullPointerException.class, () -> prenotationServices.addPrenotation(null));
+
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id4", officePineto, donorGianni, new Date());

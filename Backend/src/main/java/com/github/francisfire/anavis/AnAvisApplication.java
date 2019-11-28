@@ -1,6 +1,8 @@
 package com.github.francisfire.anavis;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.Set;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,9 +24,15 @@ public class AnAvisApplication {
 
 	private static void initData() {
 		Office officeOne = new Office("Osimo");
+		Set<Date> datesOne = Collections.emptySet();
+		datesOne.add(new Date(260000));
+		datesOne.add(new Date(280000));
 		Donor donorOne = new Donor("stelluti@mail.com", officeOne);
 		donorOne.setCanDonate(true);
 		Office officeTwo = new Office("Fabriano");
+		Set<Date> datesTwo = Collections.emptySet();
+		datesTwo.add(new Date(270000));
+		datesTwo.add(new Date(300000));
 		Donor donorTwo = new Donor("coppola@mail.com", officeTwo);
 		DonorServices.getInstance().addDonor(donorOne);
 		DonorServices.getInstance().addDonor(donorTwo);

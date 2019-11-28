@@ -3,6 +3,7 @@ package com.github.francisfire.anavis;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
@@ -21,27 +22,30 @@ import com.github.francisfire.anavis.services.RequestServices;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class RequestServicesTest {
-	
+
 	private static RequestServices requestServices;
-	
+
 	@BeforeAll
 	public static void setUp() {
 		requestServices = RequestServices.getInstance();
 	}
-	
+
 	@Test
 	public void addRequest() {
+		assertThrows(NullPointerException.class, () -> requestServices.addRequest(null));
+
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id1", officePineto, donorGianni, new Date());
 		assertTrue(requestServices.addRequest(request));
 		assertFalse(requestServices.addRequest(request));
 		assertFalse(requestServices.getRequestsByOffice("Pineto").isEmpty());
-		assertFalse(requestServices.addRequest(null));
 	}
-	
+
 	@Test
 	public void removeRequest() {
+		assertThrows(NullPointerException.class, () -> requestServices.removeRequest(null));
+
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id1", officePineto, donorGianni, new Date());
@@ -49,11 +53,12 @@ public class RequestServicesTest {
 		assertTrue(requestServices.removeRequest("id1"));
 		assertFalse(requestServices.removeRequest("id1"));
 		assertFalse(requestServices.removeRequest("id2"));
-		assertFalse(requestServices.removeRequest(null));
 	}
 
 	@Test
 	public void approveRequest() {
+		assertThrows(NullPointerException.class, () -> requestServices.approveRequest(null));
+
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id1", officePineto, donorGianni, new Date());
@@ -61,11 +66,12 @@ public class RequestServicesTest {
 		assertTrue(requestServices.approveRequest("id1"));
 		assertFalse(requestServices.approveRequest("id1"));
 		assertFalse(requestServices.approveRequest("id2"));
-		assertFalse(requestServices.approveRequest(null));
 	}
-	
+
 	@Test
 	public void denyRequest() {
+		assertThrows(NullPointerException.class, () -> requestServices.denyRequest(null));
+
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id1", officePineto, donorGianni, new Date());
@@ -73,11 +79,12 @@ public class RequestServicesTest {
 		assertTrue(requestServices.denyRequest("id1"));
 		assertFalse(requestServices.denyRequest("id1"));
 		assertFalse(requestServices.denyRequest("id2"));
-		assertFalse(requestServices.denyRequest(null));
 	}
-	
+
 	@Test
 	public void getRequestsByOffice() {
+		assertThrows(NullPointerException.class, () -> requestServices.getRequestsByOffice(null));
+
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id1", officePineto, donorGianni, new Date());
@@ -85,9 +92,11 @@ public class RequestServicesTest {
 		assertTrue(requestServices.getRequestsByOffice("Pineto").contains(request));
 		assertTrue(requestServices.getRequestsByOffice("Sasso").isEmpty());
 	}
-	
+
 	@Test
 	public void getRequestInstance() {
+		assertThrows(NullPointerException.class, () -> requestServices.getRequestInstance(null));
+
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
 		Request request = new Request("id1", officePineto, donorGianni, new Date());
