@@ -7,7 +7,7 @@ class BuildDonorRequestWidget extends StatelessWidget {
   final String subtitle;
   final String labelDropDown;
   final Icon icon;
-  final String officeSelected;
+  final String valueSelected;
   final List<DropdownMenuItem> fetchItems;
   final Function onChanged;
 
@@ -16,7 +16,7 @@ class BuildDonorRequestWidget extends StatelessWidget {
     @required this.subtitle,
     @required this.icon,
     @required this.labelDropDown,
-    @required this.officeSelected,
+    @required this.valueSelected,
     @required this.fetchItems,
     @required this.onChanged,
   });
@@ -60,8 +60,8 @@ class BuildDonorRequestWidget extends StatelessWidget {
                 canvasColor: Colors.red,
               ),
               child: ButtonTheme(
-                alignedDropdown: true,
                 child: DropdownButtonFormField(
+                  isExpanded: true,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.red,
@@ -86,7 +86,7 @@ class BuildDonorRequestWidget extends StatelessWidget {
                   iconEnabledColor: Colors.white,
                   elevation: 18,
                   items: fetchItems,
-                  value: officeSelected,
+                  value: valueSelected,
                   onChanged: (newValue) {
                     onChanged(newValue);
                   },
