@@ -1,7 +1,7 @@
 package com.github.francisfire.anavis;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.boot.SpringApplication;
@@ -24,15 +24,17 @@ public class AnAvisApplication {
 
 	private static void initData() {
 		Office officeOne = new Office("Osimo");
-		Set<Date> datesOne = Collections.emptySet();
+		Set<Date> datesOne = new HashSet<>();
 		datesOne.add(new Date(260000));
 		datesOne.add(new Date(280000));
+		officeOne.setDonationTimeTables(datesOne);
 		Donor donorOne = new Donor("stelluti@mail.com", officeOne);
 		donorOne.setCanDonate(true);
 		Office officeTwo = new Office("Fabriano");
-		Set<Date> datesTwo = Collections.emptySet();
+		Set<Date> datesTwo = new HashSet<>();
 		datesTwo.add(new Date(270000));
 		datesTwo.add(new Date(300000));
+		officeTwo.setDonationTimeTables(datesTwo);
 		Donor donorTwo = new Donor("coppola@mail.com", officeTwo);
 		DonorServices.getInstance().addDonor(donorOne);
 		DonorServices.getInstance().addDonor(donorTwo);
