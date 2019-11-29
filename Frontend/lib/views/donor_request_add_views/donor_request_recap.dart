@@ -133,7 +133,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                   ),
                                   TextSpan(
                                     text:
-                                        '\n\nSi desidera proseguire con la prenotazione o delcinare?',
+                                        '\n\nSi desidera proseguire con la prenotazione o declinare?',
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
                                       color: Colors.grey[700],
