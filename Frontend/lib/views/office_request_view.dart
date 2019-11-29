@@ -1,4 +1,6 @@
+import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class OfficeRequestView extends StatefulWidget {
   @override
@@ -6,6 +8,20 @@ class OfficeRequestView extends StatefulWidget {
 }
 
 class _OfficeRequestViewState extends State<OfficeRequestView> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,19 +33,33 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
           ),
         ),
         centerTitle: true,
-        elevation: 16,
+        elevation: 8,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
       ),
-      backgroundColor: Colors.white,
-      body: Stack(children: <Widget>[
-        ListView.builder(
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return CardRequest();
-          },
+      body: CustomPaint(
+        painter: Painter(
+          first: Colors.red[100],
+          second: Colors.orange[200],
+          background: Colors.white,
         ),
-      ]),
+        child: SmartRefresher(
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          enablePullDown: true,
+          enablePullUp: true,
+          header: WaterDropMaterialHeader(
+            backgroundColor: Colors.red,
+          ),
+          child: ListView.builder(
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return CardRequest();
+            },
+          ),
+        ),
+      ),
     );
   }
 }

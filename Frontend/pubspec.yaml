@@ -21,6 +21,7 @@ dependencies:
   flushbar: ^1.9.1
   date_format: ^1.0.8
   wave: ^0.0.8
+  pull_to_refresh: ^1.5.7
 
 dev_dependencies:
   flutter_test:
