@@ -17,6 +17,7 @@ class DonorRequestTimeView extends StatefulWidget {
 
 class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
   String _timeSelected;
+  String _timeFormatted;
 
   void fetchTimeFromOffice() {
     Provider.of<AppState>(context).setOfficeTimeTables(this.widget.office);
@@ -29,12 +30,15 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
         in Provider.of<AppState>(context).getOfficeTimeTables()) {
       String restrictFractionalSeconds(String dateTime) =>
           dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
+      _timeFormatted = formatDate(
+          DateTime.parse(restrictFractionalSeconds(timeString)),
+          ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
+
       listTimeItem.add(new DropdownMenuItem(
         value: timeString,
         child: Container(
           child: Text(
-            formatDate(DateTime.parse(restrictFractionalSeconds(timeString)),
-                ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]),
+            _timeFormatted,
             style: TextStyle(
               color: Colors.white,
             ),
@@ -55,6 +59,7 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
                   return DonorRequestRecap(
                     office: this.widget.office,
                     time: this._timeSelected,
+                    nicerTime: this._timeFormatted,
                   );
                 }));
               },
