@@ -215,7 +215,7 @@ class _DonorViewState extends State<DonorView> {
             color: Colors.white,
             elevation: 28.0,
             icon: Icon(
-              Icons.add,
+              Icons.message,
               color: Colors.red,
             ),
             onPressed: () {

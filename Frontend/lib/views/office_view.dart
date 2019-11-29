@@ -1,3 +1,4 @@
+import 'package:anavis/views/office_request_view.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
@@ -89,7 +90,7 @@ class _OfficeViewState extends State<OfficeView> {
                             ),
                           ),
                           label: Text(
-                            'Numeri utili emergenze',
+                            'Numeri utili',
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -165,9 +166,13 @@ class _OfficeViewState extends State<OfficeView> {
               Icons.calendar_today,
               color: Colors.red,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return OfficeRequestView();
+              }));
+            },
             label: Text(
-              "Visualizza possibilità \ndi donare",
+              "Visualizza richieste \ndi donazioni",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -191,12 +196,12 @@ class _OfficeViewState extends State<OfficeView> {
             color: Colors.white,
             elevation: 28.0,
             icon: Icon(
-              Icons.check_circle,
+              Icons.add,
               color: Colors.red,
             ),
             onPressed: () {},
             label: Text(
-              "Richiedi prenotazione \ndonazioni",
+              "Aggiungi prenotazione \ndonazione",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
