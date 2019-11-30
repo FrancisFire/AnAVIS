@@ -10,11 +10,11 @@ class AnAvis extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'AnAvis',
-        home: ChangeNotifierProvider<AppState>(
-          builder: (_) => AppState(),
-          child: LoginView(),
-        ));
+    return ChangeNotifierProvider<AppState>(
+      builder: (_) => AppState(),
+      child: MaterialApp(
+        home: LoginView(),
+      ),
+    );
   }
 }

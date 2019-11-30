@@ -11,6 +11,7 @@ class OfficeView extends StatefulWidget {
 }
 
 class _OfficeViewState extends State<OfficeView> {
+  String office = 'Osimo';
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -46,7 +47,7 @@ class _OfficeViewState extends State<OfficeView> {
                   ),
                   Flexible(
                     child: AutoSizeText(
-                      'Fabriano',
+                      office,
                       style: TextStyle(
                         fontSize: 64,
                         color: Colors.red,
@@ -168,7 +169,9 @@ class _OfficeViewState extends State<OfficeView> {
             ),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return OfficeRequestView();
+                return OfficeRequestView(
+                  officeName: this.office,
+                );
               }));
             },
             label: Text(

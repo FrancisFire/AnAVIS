@@ -191,7 +191,7 @@ class CardLogin extends StatelessWidget {
                                   children: [
                                     LoginForm(
                                       onTap: () {
-                                        Navigator.push(
+                                        Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) {
@@ -203,7 +203,7 @@ class CardLogin extends StatelessWidget {
                                     ),
                                     LoginForm(
                                       onTap: () {
-                                        Navigator.push(
+                                        Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) {

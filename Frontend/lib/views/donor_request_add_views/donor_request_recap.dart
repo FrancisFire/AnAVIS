@@ -1,11 +1,11 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:flushbar/flushbar.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flushbar/flushbar_route.dart' as route;
 

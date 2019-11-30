@@ -3,17 +3,19 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:http/http.dart';
+
 class AppState extends ChangeNotifier {
   String _donorMail;
   bool _donorCanDonate;
   String _canDonateApi;
   String _officeNamesApi;
   String _officeTimeTablesApi;
+  String _officeRequestsApi;
   String _requestDonor;
   List<String> _officeNames = new List<String>();
   Set<String> _officeTimeTables = new Set<String>();
-
-  static const String ip = "192.168.1.127";
+  static const String ip = "192.168.1.92";
 
   AppState() {
     _donorMail = 'stelluti@mail.com';
@@ -47,6 +49,21 @@ class AppState extends ChangeNotifier {
       _officeTimeTables.add(time);
     }
     notifyListeners();
+  }
+
+  Future<List<dynamic>> getOfficeRequestsJson(String officeName) async {
+    _officeRequestsApi = "http://$ip:8080/api/request/office/$officeName";
+    var request = await http.get(_officeRequestsApi);
+    var parsedJson = json.decode(request.body);
+    return parsedJson;
+  }
+
+  void approveRequestByID(String id) async {
+    await http.put("http://$ip:8080/api/request/$id/approve");
+  }
+
+  void denyRequestByID(String id) async {
+    await http.put("http://$ip:8080/api/request/$id/deny");
   }
 
   void sendRequest(
