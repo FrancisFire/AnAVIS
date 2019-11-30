@@ -33,123 +33,116 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'Rubik',
-        accentColor: Colors.red[400],
-        accentColorBrightness: Brightness.light,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Ufficio di ${widget.officeName}",
-            style: TextStyle(
-              color: Colors.red,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Ufficio di ${widget.officeName}",
+          style: TextStyle(
+            color: Colors.red,
           ),
-          centerTitle: true,
-          elevation: 8,
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
         ),
-        body: CustomPaint(
-          painter: Painter(
-            first: Colors.red[100],
-            second: Colors.orange[200],
-            background: Colors.white,
-          ),
-          child: FutureBuilder<List<dynamic>>(
-            future: Provider.of<AppState>(context)
-                .getOfficeRequestsJson(widget.officeName),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  return new RequestCircularLoading();
-                case ConnectionState.active:
-                case ConnectionState.waiting:
-                  return new RequestCircularLoading();
-                case ConnectionState.done:
-                  if (snapshot.hasError)
-                    return new Text("Errore nel recupero dei dati");
-                  if (snapshot.data.length == 0) {
-                    return new Center(
-                      child: Card(
-                        elevation: 22,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(16.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                  return SmartRefresher(
-                    controller: _refreshController,
-                    onRefresh: _onRefresh,
-                    onLoading: _onRefresh,
-                    enablePullDown: true,
-                    enablePullUp: true,
-                    header: WaterDropMaterialHeader(
-                      backgroundColor: Colors.red,
-                    ),
-                    footer: ClassicFooter(
-                      idleText: "Trascina verso l'alto per caricare",
-                      loadingText: "",
-                      canLoadingText: "Rilascia per aggiornare",
-                      loadStyle: LoadStyle.ShowAlways,
-                      completeDuration: Duration(
-                        milliseconds: 500,
-                      ),
-                    ),
-                    child: ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        return CardRequest(
-                          id: snapshot.data[index]['id'],
-                          email: snapshot.data[index]['donor']['mail'],
-                          hour: formatDate(
-                              DateTime.parse(restrictFractionalSeconds(
-                                snapshot.data[index]['hour'],
-                              )),
-                              [
-                                "Data: ",
-                                dd,
-                                '-',
-                                mm,
-                                '-',
-                                yyyy,
-                                " | Orario: ",
-                                HH,
-                                ":",
-                                nn
-                              ]),
-                        );
-                      },
-                    ),
-                  );
-                default:
+        centerTitle: true,
+        elevation: 8,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+      ),
+      body: CustomPaint(
+        painter: Painter(
+          first: Colors.red[100],
+          second: Colors.orange[200],
+          background: Colors.white,
+        ),
+        child: FutureBuilder<List<dynamic>>(
+          future: Provider.of<AppState>(context)
+              .getOfficeRequestsJson(widget.officeName),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                return new RequestCircularLoading();
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return new RequestCircularLoading();
+              case ConnectionState.done:
+                if (snapshot.hasError)
+                  return new Text("Errore nel recupero dei dati");
+                if (snapshot.data.length == 0) {
                   return new Center(
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "Si è verificato un errore di connesione",
+                    child: Card(
+                      elevation: 22,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(16.0),
                         ),
-                      ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     ),
                   );
-              }
-            },
-          ),
+                }
+                return SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  onLoading: _onRefresh,
+                  enablePullDown: true,
+                  enablePullUp: true,
+                  header: WaterDropMaterialHeader(
+                    backgroundColor: Colors.red,
+                  ),
+                  footer: ClassicFooter(
+                    idleText: "Trascina verso l'alto per caricare",
+                    loadingText: "",
+                    canLoadingText: "Rilascia per aggiornare",
+                    loadStyle: LoadStyle.ShowAlways,
+                    completeDuration: Duration(
+                      milliseconds: 500,
+                    ),
+                  ),
+                  child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return CardRequest(
+                        id: snapshot.data[index]['id'],
+                        email: snapshot.data[index]['donor']['mail'],
+                        hour: formatDate(
+                            DateTime.parse(restrictFractionalSeconds(
+                              snapshot.data[index]['hour'],
+                            )),
+                            [
+                              "Data: ",
+                              dd,
+                              '-',
+                              mm,
+                              '-',
+                              yyyy,
+                              " | Orario: ",
+                              HH,
+                              ":",
+                              nn
+                            ]),
+                      );
+                    },
+                  ),
+                );
+              default:
+                return new Center(
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        "Si è verificato un errore di connesione",
+                      ),
+                    ],
+                  ),
+                );
+            }
+          },
         ),
       ),
     );
@@ -247,7 +240,9 @@ class CardRequest extends StatelessWidget {
                             return ConfirmAlertDialog(
                               confirmFunction: () {
                                 this._denyRequest(id, context);
-                                Navigator.pop(context);
+                                /*   Navigator.popUntil(
+                                    context, ModalRoute.withName('/office'));*/
+                                Navigator.of(context).pop();
                                 Flushbar(
                                   margin: EdgeInsets.all(8),
                                   borderRadius: 26,
@@ -290,6 +285,8 @@ class CardRequest extends StatelessWidget {
                             return ConfirmAlertDialog(
                               confirmFunction: () {
                                 this._confirmRequest(id, context);
+                                /* Navigator.popUntil(
+                                    context, ModalRoute.withName('/office'));*/
                                 Navigator.pop(context);
                                 Flushbar(
                                   margin: EdgeInsets.all(8),
@@ -365,6 +362,7 @@ class ConfirmAlertDialog extends StatelessWidget {
           ),
           child: Text("Annulla"),
           onPressed: () {
+            // Navigator.popUntil(context, ModalRoute.withName('/office'));
             Navigator.pop(context);
             Flushbar(
               margin: EdgeInsets.all(8),
