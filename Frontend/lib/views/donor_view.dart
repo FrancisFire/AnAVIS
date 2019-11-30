@@ -187,9 +187,10 @@ class _DonorViewState extends State<DonorView> {
             ),
             onPressed: () {
               //_showCanDonatePopup();
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+              Navigator.pushNamed(context, '/donor/candonate');
+              /*  Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return DonorCanDonateView();
-              }));
+              }));*/
             },
             label: Text(
               "Visualizza possibilità \ndi donare",
@@ -221,9 +222,10 @@ class _DonorViewState extends State<DonorView> {
             ),
             onPressed: () {
               if (_donorCanDonate) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                Navigator.pushNamed(context, '/donor/officerequest');
+                /* Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return DonorRequestOfficeView();
-                }));
+                }));*/
               } else {
                 Flushbar(
                   margin: EdgeInsets.all(8),

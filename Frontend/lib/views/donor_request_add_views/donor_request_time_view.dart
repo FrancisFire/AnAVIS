@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/donor_request_recap_args.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_office_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_recap.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
@@ -56,23 +57,29 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
       floatingActionButton: _timeSelected != null
           ? FABRightArrow(
               onPressed: () {
-                Navigator.pushReplacement(context,
+                Navigator.pushReplacementNamed(
+                    context, '/donor/officerequest/recap',
+                    arguments: new DonorRequestRecapArgs(this.widget.office,
+                        this._timeSelected, this._timeFormatted));
+                /*  Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) {
                   return DonorRequestRecap(
                     office: this.widget.office,
                     time: this._timeSelected,
                     nicerTime: this._timeFormatted,
                   );
-                }));
+                }));*/
               },
             )
           : FABLeftArrow(
               nameOffice: widget.office,
               onPressed: () {
-                Navigator.pushReplacement(context,
+                Navigator.popUntil(
+                    context, ModalRoute.withName('DonorRequestOfficeView'));
+                /* Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) {
                   return DonorRequestOfficeView();
-                }));
+                }));*/
               },
             ),
       backgroundColor: Colors.white,

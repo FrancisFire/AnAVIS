@@ -15,49 +15,75 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => LoginView());
+        return MaterialPageRoute(
+            builder: (_) => LoginView(),
+            settings: RouteSettings(
+              name: 'LoginView',
+            ));
 
       case '/donor':
-        return MaterialPageRoute(builder: (_) => DonorView());
+        return MaterialPageRoute(
+            builder: (_) => DonorView(),
+            settings: RouteSettings(
+              name: 'DonorView',
+            ));
 
       case '/office':
-        return MaterialPageRoute(builder: (_) => OfficeView());
+        return MaterialPageRoute(
+            builder: (_) => OfficeView(),
+            settings: RouteSettings(
+              name: 'OfficeView',
+            ));
 
-      case '/office/requests':
+      case "/office/requests":
         if (args is String) {
           return MaterialPageRoute(
-            builder: (_) => OfficeRequestView(
-              officeName: args,
-            ),
-          );
+              builder: (_) => OfficeRequestView(
+                    officeName: args,
+                  ),
+              settings: RouteSettings(
+                name: 'OfficeRequestView',
+              ));
         }
         return _errorRoute();
 
       case '/donor/candonate':
-        return MaterialPageRoute(builder: (_) => DonorCanDonateView());
+        return MaterialPageRoute(
+            builder: (_) => DonorCanDonateView(),
+            settings: RouteSettings(
+              name: 'DonorCanDonateView',
+            ));
 
       case '/donor/officerequest':
-        return MaterialPageRoute(builder: (_) => DonorRequestOfficeView());
+        return MaterialPageRoute(
+            builder: (_) => DonorRequestOfficeView(),
+            settings: RouteSettings(
+              name: 'DonorRequestOfficeView',
+            ));
 
       case '/donor/officerequest/timeview':
         if (args is String) {
           return MaterialPageRoute(
-            builder: (_) => DonorRequestTimeView(
-              office: args,
-            ),
-          );
+              builder: (_) => DonorRequestTimeView(
+                    office: args,
+                  ),
+              settings: RouteSettings(
+                name: 'DonorRequestTimeView',
+              ));
         }
         return _errorRoute();
 
       case '/donor/officerequest/recap':
         if (args is DonorRequestRecapArgs) {
           return MaterialPageRoute(
-            builder: (_) => DonorRequestRecap(
-              office: args.getOffice(),
-              time: args.getTime(),
-              nicerTime: args.getNicerTime(),
-            ),
-          );
+              builder: (_) => DonorRequestRecap(
+                    office: args.getOffice(),
+                    time: args.getTime(),
+                    nicerTime: args.getNicerTime(),
+                  ),
+              settings: RouteSettings(
+                name: 'DonorRequestRecap',
+              ));
         }
         return _errorRoute();
       default:
@@ -72,7 +98,8 @@ class RouteGenerator {
           title: Text('Errore nel routing'),
         ),
         body: Center(
-          child: Text('ERRORE NEL ROUTING'),
+          child: Image.network(
+              'http://docenti.unicam.it/imgprof/1103/img_1078.jpg'),
         ),
       );
     });

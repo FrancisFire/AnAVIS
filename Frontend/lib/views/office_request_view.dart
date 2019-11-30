@@ -240,9 +240,9 @@ class CardRequest extends StatelessWidget {
                             return ConfirmAlertDialog(
                               confirmFunction: () {
                                 this._denyRequest(id, context);
-                                /*   Navigator.popUntil(
-                                    context, ModalRoute.withName('/office'));*/
-                                Navigator.of(context).pop();
+                                Navigator.popUntil(
+                                    context, ModalRoute.withName('OfficeView'));
+                                //Navigator.pop(context);
                                 Flushbar(
                                   margin: EdgeInsets.all(8),
                                   borderRadius: 26,
@@ -285,9 +285,9 @@ class CardRequest extends StatelessWidget {
                             return ConfirmAlertDialog(
                               confirmFunction: () {
                                 this._confirmRequest(id, context);
-                                /* Navigator.popUntil(
-                                    context, ModalRoute.withName('/office'));*/
-                                Navigator.pop(context);
+                                Navigator.popUntil(
+                                    context, ModalRoute.withName('OfficeView'));
+                                //Navigator.pop(context);
                                 Flushbar(
                                   margin: EdgeInsets.all(8),
                                   borderRadius: 26,
@@ -362,8 +362,8 @@ class ConfirmAlertDialog extends StatelessWidget {
           ),
           child: Text("Annulla"),
           onPressed: () {
-            // Navigator.popUntil(context, ModalRoute.withName('/office'));
-            Navigator.pop(context);
+            Navigator.popUntil(context, ModalRoute.withName('OfficeView'));
+            //Navigator.pop(context);
             Flushbar(
               margin: EdgeInsets.all(8),
               borderRadius: 26,

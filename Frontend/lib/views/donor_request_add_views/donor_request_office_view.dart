@@ -37,10 +37,13 @@ class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
       floatingActionButton: _officeSelected != null
           ? FABRightArrow(
               onPressed: () {
-                Navigator.pushReplacement(context,
+                Navigator.pushReplacementNamed(
+                    context, '/donor/officerequest/timeview',
+                    arguments: _officeSelected);
+                /*Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) {
                   return DonorRequestTimeView(office: _officeSelected);
-                }));
+                }));*/
               },
             )
           : null,
