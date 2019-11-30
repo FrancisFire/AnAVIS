@@ -1,5 +1,6 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/widgets/painter.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -15,16 +16,20 @@ class OfficeRequestView extends StatefulWidget {
 class _OfficeRequestViewState extends State<OfficeRequestView> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+
   void _onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 1000));
+    updateReq();
     _refreshController.refreshCompleted();
   }
 
-  void _onLoading() async {
-    await Future.delayed(Duration(milliseconds: 1000));
-    if (mounted) setState(() {});
-    _refreshController.loadComplete();
+  void updateReq() {
+    setState(() {
+      Provider.of<AppState>(context).getOfficeRequestsJson(widget.officeName);
+    });
   }
+
+  String restrictFractionalSeconds(String dateTime) =>
+      dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
 
   @override
   Widget build(BuildContext context) {
@@ -53,50 +58,98 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
             second: Colors.orange[200],
             background: Colors.white,
           ),
-          child: SmartRefresher(
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              enablePullDown: true,
-              enablePullUp: true,
-              header: WaterDropMaterialHeader(
-                backgroundColor: Colors.red,
-              ),
-              footer: ClassicFooter(
-                idleText: "Trascina verso l'alto per caricare",
-                loadingText: "",
-                canLoadingText: "Rilascia per aggiornare",
-                loadStyle: LoadStyle.ShowAlways,
-                completeDuration: Duration(
-                  milliseconds: 500,
-                ),
-              ),
-              child: FutureBuilder<List<dynamic>>(
-                future: Provider.of<AppState>(context)
-                    .getOfficeRequestsJson(widget.officeName),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      return new RequestCircularLoading();
-                    case ConnectionState.active:
-                    case ConnectionState.waiting:
-                      return new RequestCircularLoading();
-                    case ConnectionState.done:
-                      if (snapshot.hasError)
-                        return new Text("Errore nel recupero dei dati");
-                      return ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return CardRequest(
-                            id: snapshot.data[index]['id'],
-                            email: snapshot.data[index]['donor']['mail'],
-                            hour: snapshot.data[index]['hour'],
-                          );
-                        },
-                      );
+          child: FutureBuilder<List<dynamic>>(
+            future: Provider.of<AppState>(context)
+                .getOfficeRequestsJson(widget.officeName),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return new RequestCircularLoading();
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return new RequestCircularLoading();
+                case ConnectionState.done:
+                  if (snapshot.hasError)
+                    return new Text("Errore nel recupero dei dati");
+                  if (snapshot.data.length == 0) {
+                    return new Center(
+                      child: Card(
+                        elevation: 22,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
                   }
-                },
-              )),
+                  return SmartRefresher(
+                    controller: _refreshController,
+                    onRefresh: _onRefresh,
+                    onLoading: _onRefresh,
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    header: WaterDropMaterialHeader(
+                      backgroundColor: Colors.red,
+                    ),
+                    footer: ClassicFooter(
+                      idleText: "Trascina verso l'alto per caricare",
+                      loadingText: "",
+                      canLoadingText: "Rilascia per aggiornare",
+                      loadStyle: LoadStyle.ShowAlways,
+                      completeDuration: Duration(
+                        milliseconds: 500,
+                      ),
+                    ),
+                    child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return CardRequest(
+                          id: snapshot.data[index]['id'],
+                          email: snapshot.data[index]['donor']['mail'],
+                          hour: formatDate(
+                              DateTime.parse(restrictFractionalSeconds(
+                                snapshot.data[index]['hour'],
+                              )),
+                              [
+                                "Data: ",
+                                dd,
+                                '-',
+                                mm,
+                                '-',
+                                yyyy,
+                                " | Orario: ",
+                                HH,
+                                ":",
+                                nn
+                              ]),
+                        );
+                      },
+                    ),
+                  );
+                default:
+                  return new Center(
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Si è verificato un errore di connesione",
+                        ),
+                      ],
+                    ),
+                  );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -109,11 +162,11 @@ class CardRequest extends StatelessWidget {
   final String hour;
 
   Future<void> _confirmRequest(String requestId, BuildContext context) async {
-    await Provider.of<AppState>(context).approveRequestByID(requestId);
+    return Provider.of<AppState>(context).approveRequestByID(requestId);
   }
 
   Future<void> _denyRequest(String requestId, BuildContext context) async {
-    await Provider.of<AppState>(context).denyRequestByID(requestId);
+    return Provider.of<AppState>(context).denyRequestByID(requestId);
   }
 
   CardRequest({
@@ -189,20 +242,35 @@ class CardRequest extends StatelessWidget {
                       ),
                       onPressed: () {
                         showDialog(
-                            context: context,
-                            builder: (context) {
-                              return ConfirmAlertDialog(
-                                confirmFunction: () {
-                                  this._denyRequest(id, context);
-
-                                  Navigator.pop(context);
-                                  Flushbar(
-                                    message: "La scelta è stata confermata",
-                                    duration: Duration(seconds: 3),
-                                  ).show(context);
-                                },
-                              );
-                            });
+                          context: context,
+                          builder: (context) {
+                            return ConfirmAlertDialog(
+                              confirmFunction: () {
+                                this._denyRequest(id, context);
+                                Navigator.pop(context);
+                                Flushbar(
+                                  margin: EdgeInsets.all(8),
+                                  borderRadius: 26,
+                                  shouldIconPulse: true,
+                                  title: "Operazione confermata",
+                                  icon: Icon(
+                                    Icons.check,
+                                    size: 28.0,
+                                    color: Colors.green[600],
+                                  ),
+                                  message:
+                                      "L'operazione è stata confermata correttamente",
+                                  duration: Duration(
+                                    seconds: 6,
+                                  ),
+                                  isDismissible: true,
+                                  dismissDirection:
+                                      FlushbarDismissDirection.HORIZONTAL,
+                                ).show(context);
+                              },
+                            );
+                          },
+                        );
                       },
                     ),
                     FlatButton(
@@ -217,20 +285,35 @@ class CardRequest extends StatelessWidget {
                       ),
                       onPressed: () {
                         showDialog(
-                            context: context,
-                            builder: (context) {
-                              return ConfirmAlertDialog(
-                                confirmFunction: () {
-                                  this._confirmRequest(id, context);
-
-                                  Navigator.pop(context);
-                                  Flushbar(
-                                    message: "La scelta è stata confermata",
-                                    duration: Duration(seconds: 3),
-                                  ).show(context);
-                                },
-                              );
-                            });
+                          context: context,
+                          builder: (context) {
+                            return ConfirmAlertDialog(
+                              confirmFunction: () {
+                                this._confirmRequest(id, context);
+                                Navigator.pop(context);
+                                Flushbar(
+                                  margin: EdgeInsets.all(8),
+                                  borderRadius: 26,
+                                  shouldIconPulse: true,
+                                  title: "Operazione confermata",
+                                  icon: Icon(
+                                    Icons.check,
+                                    size: 28.0,
+                                    color: Colors.green[600],
+                                  ),
+                                  message:
+                                      "L'operazione è stata confermata correttamente",
+                                  duration: Duration(
+                                    seconds: 6,
+                                  ),
+                                  isDismissible: true,
+                                  dismissDirection:
+                                      FlushbarDismissDirection.HORIZONTAL,
+                                ).show(context);
+                              },
+                            );
+                          },
+                        );
                       },
                     ),
                   ],
@@ -260,25 +343,55 @@ class RequestCircularLoading extends StatelessWidget {
 }
 
 class ConfirmAlertDialog extends StatelessWidget {
-  Function confirmFunction;
-  ConfirmAlertDialog({@required this.confirmFunction});
+  final Function confirmFunction;
+  ConfirmAlertDialog({
+    @required this.confirmFunction,
+  });
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(26.0),
+        ),
+      ),
       content: Text("Confermare la scelta?"),
       actions: <Widget>[
         new FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(26.0),
+            ),
+          ),
           child: Text("Annulla"),
           onPressed: () {
             Navigator.pop(context);
             Flushbar(
-              message: "La scelta è stata annullata",
-              duration: Duration(seconds: 3),
+              margin: EdgeInsets.all(8),
+              borderRadius: 26,
+              shouldIconPulse: true,
+              title: "Operazione annullata",
+              icon: Icon(
+                Icons.info_outline,
+                size: 28.0,
+                color: Colors.red[600],
+              ),
+              message: "L'operazione è stata annulata correttamente",
+              duration: Duration(
+                seconds: 6,
+              ),
+              isDismissible: true,
+              dismissDirection: FlushbarDismissDirection.HORIZONTAL,
             ).show(context);
           },
           color: Colors.red,
         ),
         new FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(26.0),
+            ),
+          ),
           child: Text("Conferma"),
           onPressed: confirmFunction,
           color: Colors.green,
