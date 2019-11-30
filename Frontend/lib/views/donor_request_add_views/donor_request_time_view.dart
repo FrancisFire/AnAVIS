@@ -1,7 +1,8 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/views/donor_request_add_views/donor_request_office_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_recap.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
-import 'package:anavis/widgets/fab_right.dart';
+import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:date_format/date_format.dart';
@@ -55,7 +56,8 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
       floatingActionButton: _timeSelected != null
           ? FABRightArrow(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
                   return DonorRequestRecap(
                     office: this.widget.office,
                     time: this._timeSelected,
@@ -64,7 +66,15 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
                 }));
               },
             )
-          : null,
+          : FABLeftArrow(
+              nameOffice: widget.office,
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
+                  return DonorRequestOfficeView();
+                }));
+              },
+            ),
       backgroundColor: Colors.white,
       body: BuildDonorRequestWidget(
         fetchItems: createListItem(),

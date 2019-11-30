@@ -1,6 +1,7 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_office_view.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
@@ -227,6 +228,7 @@ class _DonorViewState extends State<DonorView> {
                 Flushbar(
                   margin: EdgeInsets.all(8),
                   borderRadius: 26,
+                  shouldIconPulse: true,
                   title: "Operazione non consentita",
                   icon: Icon(
                     Icons.info_outline,
@@ -236,8 +238,10 @@ class _DonorViewState extends State<DonorView> {
                   message:
                       "Al momento non puoi richiedere di prenotare una donazione, prova tra un pò di giorni.",
                   duration: Duration(
-                    seconds: 3,
+                    seconds: 6,
                   ),
+                  isDismissible: true,
+                  dismissDirection: FlushbarDismissDirection.HORIZONTAL,
                 )..show(context);
               }
             },

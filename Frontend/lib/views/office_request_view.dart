@@ -24,39 +24,55 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Ufficio di Osimo",
-          style: TextStyle(
-            color: Colors.red,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 8,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+    return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Rubik',
+        accentColor: Colors.red[400],
+        accentColorBrightness: Brightness.light,
       ),
-      body: CustomPaint(
-        painter: Painter(
-          first: Colors.red[100],
-          second: Colors.orange[200],
-          background: Colors.white,
-        ),
-        child: SmartRefresher(
-          controller: _refreshController,
-          onRefresh: _onRefresh,
-          onLoading: _onLoading,
-          enablePullDown: true,
-          enablePullUp: true,
-          header: WaterDropMaterialHeader(
-            backgroundColor: Colors.red,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Ufficio di Osimo",
+            style: TextStyle(
+              color: Colors.red,
+            ),
           ),
-          child: ListView.builder(
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return CardRequest();
-            },
+          centerTitle: true,
+          elevation: 8,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+        ),
+        body: CustomPaint(
+          painter: Painter(
+            first: Colors.red[100],
+            second: Colors.orange[200],
+            background: Colors.white,
+          ),
+          child: SmartRefresher(
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            onLoading: _onLoading,
+            enablePullDown: true,
+            enablePullUp: true,
+            header: WaterDropMaterialHeader(
+              backgroundColor: Colors.red,
+            ),
+            footer: ClassicFooter(
+              idleText: "Trascina verso l'alto per caricare",
+              loadingText: "",
+              canLoadingText: "Rilascia per aggiornare",
+              loadStyle: LoadStyle.ShowAlways,
+              completeDuration: Duration(
+                milliseconds: 500,
+              ),
+            ),
+            child: ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return CardRequest();
+              },
+            ),
           ),
         ),
       ),
@@ -82,11 +98,11 @@ class CardRequest extends StatelessWidget {
         padding: const EdgeInsets.only(
           right: 12.0,
           left: 12.0,
-          top: 3.0,
-          bottom: 3.0,
+          top: 4.0,
+          bottom: 4.0,
         ),
         child: Card(
-          elevation: 22,
+          elevation: 16,
           shape: RoundedRectangleBorder(
             borderRadius: const BorderRadius.all(
               Radius.circular(16.0),

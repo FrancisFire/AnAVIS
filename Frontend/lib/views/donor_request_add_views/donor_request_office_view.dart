@@ -1,7 +1,7 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_time_view.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
-import 'package:anavis/widgets/fab_right.dart';
+import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +37,8 @@ class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
       floatingActionButton: _officeSelected != null
           ? FABRightArrow(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
                   return DonorRequestTimeView(office: _officeSelected);
                 }));
               },
