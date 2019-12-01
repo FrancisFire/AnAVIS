@@ -1,0 +1,20 @@
+name: Spring Boot Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up del JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Testing con Gradle
+        working-directory: ./Backend
+        run: bash ./gradlew test
+      - name: Pubblicazione esito della build
+        working-directory: ./Backend
+        run: bash ./gradlew build --scan
