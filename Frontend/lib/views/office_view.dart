@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OfficeView extends StatefulWidget {
@@ -100,30 +101,6 @@ class _OfficeViewState extends State<OfficeView> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Flexible(
-                    flex: 7,
-                    fit: FlexFit.tight,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(26.0),
-                        ),
-                      ),
-                      elevation: 28,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text(
-                            "Possiamo mostrare delle cose qui che possono essere un grafico o un calendario",
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -131,7 +108,42 @@ class _OfficeViewState extends State<OfficeView> {
               child: Container(
                 child: Center(
                   child: Stack(
-                    children: <Widget>[],
+                    children: <Widget>[
+                      Positioned.fill(
+                        top: (MediaQuery.of(context).size.height / 3.5),
+                        bottom: 8,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Swiper(
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                color: Colors.white,
+                                elevation: 7,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(26.0),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "Possiamo mostrare delle cose qui che possono essere un grafico o un calendario",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: 10,
+                            itemWidth: 330.0,
+                            itemHeight:
+                                (MediaQuery.of(context).size.height / 1.6),
+                            layout: SwiperLayout.STACK,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

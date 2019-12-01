@@ -4,6 +4,8 @@ import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'donor_request_time_view.dart';
+
 class DonorRequestOfficeView extends StatefulWidget {
   @override
   _DonorRequestOfficeViewState createState() => _DonorRequestOfficeViewState();
@@ -36,13 +38,13 @@ class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
       floatingActionButton: _officeSelected != null
           ? FABRightArrow(
               onPressed: () {
-                Navigator.pushReplacementNamed(
-                    context, '/donor/officerequest/timeview',
-                    arguments: _officeSelected);
-                /*Navigator.pushReplacement(context,
+                // Navigator.pushReplacementNamed(
+                //     context, '/donor/officerequest/timeview',
+                //     arguments: _officeSelected);
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) {
                   return DonorRequestTimeView(office: _officeSelected);
-                }));*/
+                }));
               },
             )
           : null,

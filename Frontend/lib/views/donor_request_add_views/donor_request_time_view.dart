@@ -1,10 +1,12 @@
 import 'package:anavis/model/app_state.dart';
-import 'package:anavis/model/donor_request_recap_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:date_format/date_format.dart';
+
+import 'donor_request_office_view.dart';
+import 'donor_request_recap.dart';
 
 class DonorRequestTimeView extends StatefulWidget {
   final String office;
@@ -55,29 +57,29 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
       floatingActionButton: _timeSelected != null
           ? FABRightArrow(
               onPressed: () {
-                Navigator.pushReplacementNamed(
-                    context, '/donor/officerequest/recap',
-                    arguments: new DonorRequestRecapArgs(this.widget.office,
-                        this._timeSelected, this._timeFormatted));
-                /*  Navigator.pushReplacement(context,
+                // Navigator.pushReplacementNamed(
+                //     context, '/donor/officerequest/recap',
+                //     arguments: new DonorRequestRecapArgs(this.widget.office,
+                //         this._timeSelected, this._timeFormatted));
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) {
                   return DonorRequestRecap(
                     office: this.widget.office,
                     time: this._timeSelected,
                     nicerTime: this._timeFormatted,
                   );
-                }));*/
+                }));
               },
             )
           : FABLeftArrow(
               nameOffice: widget.office,
               onPressed: () {
-                Navigator.popUntil(
-                    context, ModalRoute.withName('DonorRequestOfficeView'));
-                /* Navigator.pushReplacement(context,
+                // Navigator.popUntil(
+                //     context, ModalRoute.withName('DonorRequestOfficeView'));
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) {
                   return DonorRequestOfficeView();
-                }));*/
+                }));
               },
             ),
       backgroundColor: Colors.white,

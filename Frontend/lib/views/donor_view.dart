@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
+import 'donor_candonate_view.dart';
+import 'donor_request_add_views/donor_request_office_view.dart';
+
 class DonorView extends StatefulWidget {
   @override
   _DonorViewState createState() => _DonorViewState();
@@ -112,7 +115,7 @@ class _DonorViewState extends State<DonorView> {
                               color: Colors.white,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -196,10 +199,10 @@ class _DonorViewState extends State<DonorView> {
             ),
             onPressed: () {
               //_showCanDonatePopup();
-              Navigator.pushNamed(context, '/donor/candonate');
-              /*  Navigator.push(context, MaterialPageRoute(builder: (context) {
+              // Navigator.pushNamed(context, '/donor/candonate');
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return DonorCanDonateView();
-              }));*/
+              }));
             },
             label: Text(
               "Visualizza possibilità \ndi donare",
@@ -231,10 +234,10 @@ class _DonorViewState extends State<DonorView> {
             ),
             onPressed: () {
               if (_donorCanDonate) {
-                Navigator.pushNamed(context, '/donor/officerequest');
-                /* Navigator.push(context, MaterialPageRoute(builder: (context) {
+                // Navigator.pushNamed(context, '/donor/officerequest');
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return DonorRequestOfficeView();
-                }));*/
+                }));
               } else {
                 Flushbar(
                   margin: EdgeInsets.all(8),

@@ -13,7 +13,7 @@ class AppState extends ChangeNotifier {
   String _requestDonor;
   List<String> _officeNames = new List<String>();
   Set<String> _officeTimeTables = new Set<String>();
-  static const String ip = "192.168.1.127";
+  static const String ip = "46.101.201.248";
 
   AppState() {
     _donorMail = 'stelluti@mail.com';
