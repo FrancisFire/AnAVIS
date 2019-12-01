@@ -2,7 +2,7 @@ class DonorRequestRecapArgs {
   DonorRequestRecapArgs(String office, String time, String nicerTime) {
     this._office = office;
     this._time = time;
-    this._nicerTime;
+    this._nicerTime = nicerTime;
   }
   String _office;
   String _time;

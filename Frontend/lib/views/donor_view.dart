@@ -1,7 +1,4 @@
 import 'package:anavis/model/app_state.dart';
-import 'package:anavis/views/donor_candonate_view.dart';
-import 'package:anavis/views/donor_request_add_views/donor_request_office_view.dart';
-
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class DonorView extends StatefulWidget {
   @override
@@ -118,30 +116,6 @@ class _DonorViewState extends State<DonorView> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Flexible(
-                    flex: 7,
-                    fit: FlexFit.tight,
-                    child: Card(
-                      elevation: 14,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(26.0),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text(
-                            "Possiamo mostrare delle cose qui che possono essere un grafico o un calendario",
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -149,7 +123,42 @@ class _DonorViewState extends State<DonorView> {
               child: Container(
                 child: Center(
                   child: Stack(
-                    children: <Widget>[],
+                    children: <Widget>[
+                      Positioned.fill(
+                        top: (MediaQuery.of(context).size.height / 4),
+                        bottom: 8,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Swiper(
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                color: Colors.white,
+                                elevation: 7,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(26.0),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "Possiamo mostrare delle cose qui che possono essere un grafico o un calendario",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: 10,
+                            itemWidth: 330.0,
+                            itemHeight:
+                                (MediaQuery.of(context).size.height / 1.6),
+                            layout: SwiperLayout.STACK,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

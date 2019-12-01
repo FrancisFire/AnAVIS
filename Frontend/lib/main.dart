@@ -1,8 +1,4 @@
 import 'package:anavis/route_generator.dart';
-import 'package:anavis/views/donor_view.dart';
-import 'package:anavis/views/login_view.dart';
-import 'package:anavis/views/office_request_view.dart';
-import 'package:anavis/views/office_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +11,7 @@ class AnAvis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppState>(
-      create: (_) => AppState(),
+      builder: (_) => AppState(),
       child: MaterialApp(
         theme: ThemeData(
           fontFamily: 'Rubik',

@@ -95,11 +95,25 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Errore nel routing'),
+          backgroundColor: Colors.red,
+          automaticallyImplyLeading: false,
+          elevation: 26,
+          title: Text(
+            'Errore nel routing',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ),
-        body: Center(
-          child: Image.network(
-              'http://docenti.unicam.it/imgprof/1103/img_1078.jpg'),
+        body: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: Image.network(
+                'http://docenti.unicam.it/imgprof/1103/img_1078.jpg',
+                fit: BoxFit.fill,
+              ),
+            ),
+          ],
         ),
       );
     });

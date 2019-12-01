@@ -67,20 +67,27 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                   return new Text("Errore nel recupero dei dati");
                 if (snapshot.data.length == 0) {
                   return new Center(
-                    child: Card(
-                      elevation: 22,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(16.0),
-                        ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                        18.0,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
+                      child: Card(
+                        elevation: 42,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(
+                            16.0,
+                          ),
+                          child: Text(
+                            "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
