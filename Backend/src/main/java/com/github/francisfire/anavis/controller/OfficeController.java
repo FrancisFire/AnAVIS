@@ -22,9 +22,9 @@ public class OfficeController {
 		return officeServices.getOffices();
 	}
 
-	@GetMapping("/{office}/timeTable")
-	public Set<Date> getDonationsTimeTable(@PathVariable("office") String office) {
-		return officeServices.getDonationsTimeTable(office);
+	@GetMapping("/{officeId}/timeTable")
+	public Set<Date> getDonationsTimeTable(@PathVariable("officeId") String officeId) {
+		return officeServices.getDonationsTimeTable(officeId);
 	}
 
 }

@@ -26,22 +26,22 @@ public class RequestController {
 	}
 
 	@GetMapping("/office/{office}")
-	public Set<Request> getRequestsByOffice(@PathVariable("office") String office) {
-		return requestServices.getRequestsByOffice(office);
+	public Set<Request> getRequestsByOffice(@PathVariable("office") String officeId) {
+		return requestServices.getRequestsByOffice(officeId);
 	}
 
-	@GetMapping("/{id}")
-	public Request getRequestById(@PathVariable("id") String id) {
-		return requestServices.getRequestInstance(id);
+	@GetMapping("/{requestId}")
+	public Request getRequestById(@PathVariable("requestId") String requestId) {
+		return requestServices.getRequestInstance(requestId);
 	}
 
-	@PutMapping("/{id}/approve")
-	public boolean approveRequest(@PathVariable("id") String id) {
+	@PutMapping("/{requestId}/approve")
+	public boolean approveRequest(@PathVariable("requestId") String id) {
 		return requestServices.approveRequest(id);
 	}
 	
-	@PutMapping("/{id}/deny")
-	public boolean denyRequest(@PathVariable("id") String id) {
+	@PutMapping("/{requestId}/deny")
+	public boolean denyRequest(@PathVariable("requestId") String id) {
 		return requestServices.denyRequest(id);
 	}
 

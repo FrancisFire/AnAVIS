@@ -12,10 +12,10 @@ import com.github.francisfire.anavis.services.DonorServices;
 public class DonorController {
 
 	private static DonorServices donorServices = DonorServices.getInstance();
-	
-	@GetMapping("/{mail}/canDonate")
-	public boolean checkDonationPossibility(@PathVariable("mail") String mail) {
-		return donorServices.checkDonationPossibility(mail);
+
+	@GetMapping("/{donorId}/canDonate")
+	public boolean checkDonationPossibility(@PathVariable("donorId") String donorId) {
+		return donorServices.checkDonationPossibility(donorId);
 	}
-	
+
 }
