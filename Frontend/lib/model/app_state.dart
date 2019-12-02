@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:http/http.dart';
+
 class AppState extends ChangeNotifier {
   String _donorMail;
   bool _donorCanDonate;
@@ -11,6 +13,7 @@ class AppState extends ChangeNotifier {
   String _officeTimeTablesApi;
   String _officeRequestsApi;
   String _requestDonor;
+  bool _statusBody;
   List<String> _officeNames = new List<String>();
   Set<String> _officeTimeTables = new Set<String>();
   static const String ip = "46.101.201.248";
@@ -64,10 +67,14 @@ class AppState extends ChangeNotifier {
     await http.put("http://$ip:8080/api/request/$id/deny");
   }
 
-  void sendRequest(
-      String id, String officePoint, String donor, String hour) async {
+  Future<dynamic> sendRequest(
+    String id,
+    String officePoint,
+    String donor,
+    String hour,
+  ) async {
     _requestDonor = "http://$ip:8080/api/request";
-    await http.post(
+    return await http.post(
       Uri.encodeFull(_requestDonor),
       body: json.encode({
         "id": id,
@@ -83,11 +90,20 @@ class AppState extends ChangeNotifier {
         "content-type": "application/json",
         "accept": "application/json",
       },
-    );
+    ).then((res) {
+      _statusBody = res.body == 'true';
+    }).catchError((err) {
+      _statusBody = false;
+    });
+    notifyListeners();
   }
 
   bool getCanDonate() {
     return _donorCanDonate;
+  }
+
+  bool getStatusBody() {
+    return _statusBody;
   }
 
   List<String> getOfficeNames() {
