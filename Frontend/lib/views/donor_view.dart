@@ -12,6 +12,11 @@ import 'donor_candonate_view.dart';
 import 'donor_request_add_views/donor_request_office_view.dart';
 
 class DonorView extends StatefulWidget {
+  final String email;
+  DonorView({
+    this.email,
+  });
+
   @override
   _DonorViewState createState() => _DonorViewState();
 }
@@ -56,7 +61,7 @@ class _DonorViewState extends State<DonorView> {
                   ),
                   Flexible(
                     child: AutoSizeText(
-                      Provider.of<AppState>(context).getDonorMail(),
+                      widget.email,
                       style: TextStyle(
                         fontSize: 64,
                         color: Colors.red,

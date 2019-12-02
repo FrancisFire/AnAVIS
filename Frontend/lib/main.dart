@@ -15,7 +15,7 @@ class AnAvis extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           fontFamily: 'Rubik',
-          accentColor: Colors.red[400],
+          accentColor: Colors.orangeAccent[400],
           accentColorBrightness: Brightness.light,
         ),
         onGenerateRoute: RouteGenerator.generateRoute,

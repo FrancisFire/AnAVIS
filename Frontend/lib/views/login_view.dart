@@ -1,3 +1,4 @@
+import 'package:anavis/model/app_state.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/views/office_view.dart';
 import 'package:anavis/widgets/card_painter.dart';
@@ -6,6 +7,7 @@ import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -39,13 +41,11 @@ class _LoginViewState extends State<LoginView>
 }
 
 class CardLogin extends StatelessWidget {
-  const CardLogin({
-    Key key,
-    @required TabController controller,
-  })  : _controller = controller,
-        super(key: key);
+  final TabController controller;
 
-  final TabController _controller;
+  CardLogin({
+    @required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +163,7 @@ class CardLogin extends StatelessWidget {
                                   highlightColor: Colors.transparent,
                                 ),
                                 child: TabBar(
-                                  controller: _controller,
+                                  controller: controller,
                                   labelColor: Colors.red,
                                   indicatorColor: Colors.redAccent,
                                   labelPadding: EdgeInsets.all(18.0),
@@ -187,7 +187,7 @@ class CardLogin extends StatelessWidget {
                               ),
                               Expanded(
                                 child: TabBarView(
-                                  controller: _controller,
+                                  controller: controller,
                                   children: [
                                     LoginForm(
                                       onTap: () {
@@ -195,7 +195,15 @@ class CardLogin extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) {
-                                              return DonorView();
+                                              return DonorView(
+                                                  email: Provider.of<AppState>(
+                                                                  context)
+                                                              .getDonorMail() !=
+                                                          null
+                                                      ? Provider.of<AppState>(
+                                                              context)
+                                                          .getDonorMail()
+                                                      : "stelluti@mail.it");
                                             },
                                           ),
                                         );
@@ -207,7 +215,15 @@ class CardLogin extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) {
-                                              return OfficeView();
+                                              return OfficeView(
+                                                  office: Provider.of<AppState>(
+                                                                  context)
+                                                              .getOfficeName() !=
+                                                          null
+                                                      ? Provider.of<AppState>(
+                                                              context)
+                                                          .getOfficeName()
+                                                      : "Osimo");
                                             },
                                           ),
                                         );

@@ -1,7 +1,6 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:flushbar/flushbar.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';

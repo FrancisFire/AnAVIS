@@ -1,12 +1,21 @@
+import 'package:anavis/model/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 import 'package:progress_indicator_button/progress_button.dart';
+import 'package:provider/provider.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   final Function onTap;
 
-  LoginForm({this.onTap});
+  LoginForm({
+    @required this.onTap,
+  });
 
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return ScrollConfiguration(
@@ -49,7 +58,10 @@ class LoginForm extends StatelessWidget {
                   placeholder: "Email",
                   maxLines: 1,
                   onTap: () {},
-                  onChanged: (t) {},
+                  onChanged: (t) {
+                    Provider.of<AppState>(context).setEmail(t);
+                    Provider.of<AppState>(context).setOffice(t);
+                  },
                   onSubmitted: (d) {},
                 ),
                 SizedBox(
@@ -102,7 +114,7 @@ class LoginForm extends StatelessWidget {
                         onPressed: (AnimationController controller) async {
                           controller.forward();
                           await Future.delayed(Duration(milliseconds: 700), () {
-                            onTap();
+                            widget.onTap();
                             controller.reset();
                           });
                         },

@@ -3,10 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:http/http.dart';
-
 class AppState extends ChangeNotifier {
   String _donorMail;
+  String _officeName;
   bool _donorCanDonate;
   String _canDonateApi;
   String _officeNamesApi;
@@ -19,10 +18,19 @@ class AppState extends ChangeNotifier {
   static const String ip = "46.101.201.248";
 
   AppState() {
-    _donorMail = 'stelluti@mail.com';
     _canDonateApi = "http://$ip:8080/api/donor/$_donorMail/canDonate";
     setCanDonate();
     setOfficeNames();
+  }
+
+  void setEmail(String email) {
+    _donorMail = email;
+    notifyListeners();
+  }
+
+  void setOffice(String office) {
+    _officeName = office;
+    notifyListeners();
   }
 
   void setCanDonate() async {
@@ -92,10 +100,11 @@ class AppState extends ChangeNotifier {
       },
     ).then((res) {
       _statusBody = res.body == 'true';
+      notifyListeners();
     }).catchError((err) {
       _statusBody = false;
+      notifyListeners();
     });
-    notifyListeners();
   }
 
   bool getCanDonate() {
@@ -116,5 +125,9 @@ class AppState extends ChangeNotifier {
 
   String getDonorMail() {
     return _donorMail;
+  }
+
+  String getOfficeName() {
+    return _officeName;
   }
 }

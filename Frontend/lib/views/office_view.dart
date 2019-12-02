@@ -7,12 +7,15 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OfficeView extends StatefulWidget {
+  final String office;
+  OfficeView({
+    this.office,
+  });
   @override
   _OfficeViewState createState() => _OfficeViewState();
 }
 
 class _OfficeViewState extends State<OfficeView> {
-  String office = 'Osimo';
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -48,7 +51,7 @@ class _OfficeViewState extends State<OfficeView> {
                   ),
                   Flexible(
                     child: AutoSizeText(
-                      office,
+                      widget.office,
                       style: TextStyle(
                         fontSize: 64,
                         color: Colors.red,
@@ -182,7 +185,7 @@ class _OfficeViewState extends State<OfficeView> {
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return OfficeRequestView(
-                  officeName: this.office,
+                  officeName: widget.office,
                 );
               }));
             },
