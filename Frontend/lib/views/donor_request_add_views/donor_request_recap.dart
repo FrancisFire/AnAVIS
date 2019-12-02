@@ -1,6 +1,7 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
@@ -31,7 +32,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
       RegExp(r"Data: ?.+? ?\| ?Orario: ?(\d\d:\d\d)").firstMatch(hour).group(1);
 
   String dayValue, hourValue;
-  Flushbar confirm, decline;
+  Flushbar confirm, decline, err;
 
   @override
   void initState() {
@@ -46,8 +47,8 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
     });
   }
 
-  void postRequest() {
-    Provider.of<AppState>(context)
+  Future<dynamic> postRequest() async {
+    await Provider.of<AppState>(context)
         .sendRequest("1", widget.office, "stelluti@mail.com", widget.time);
   }
 
@@ -250,27 +251,54 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                       size: 42,
                                     ),
                                     onPressed: () {
-                                      this.postRequest();
-                                      confirm = new Flushbar(
-                                        margin: EdgeInsets.all(8),
-                                        shouldIconPulse: true,
-                                        borderRadius: 26,
-                                        title: "Prenotazione effettuata",
-                                        icon: Icon(
-                                          Icons.check,
-                                          size: 28.0,
-                                          color: Colors.green,
-                                        ),
-                                        message:
-                                            "La prenotazione è stata effettuata con successo, ci vedremo presto!",
-                                        duration: Duration(
-                                          seconds: 6,
-                                        ),
-                                        isDismissible: true,
-                                        dismissDirection:
-                                            FlushbarDismissDirection.HORIZONTAL,
-                                      );
-                                      this.showFlushbar(this.confirm);
+                                      this.postRequest().then((_) {
+                                        if (Provider.of<AppState>(context)
+                                            .getStatusBody()) {
+                                          confirm = new Flushbar(
+                                            margin: EdgeInsets.all(8),
+                                            shouldIconPulse: true,
+                                            borderRadius: 26,
+                                            title: "Prenotazione effettuata",
+                                            icon: Icon(
+                                              Icons.check,
+                                              size: 28.0,
+                                              color: Colors.green,
+                                            ),
+                                            message:
+                                                "La prenotazione è stata effettuata con successo, ci vedremo presto!",
+                                            duration: Duration(
+                                              seconds: 6,
+                                            ),
+                                            isDismissible: true,
+                                            dismissDirection:
+                                                FlushbarDismissDirection
+                                                    .HORIZONTAL,
+                                          );
+                                          this.showFlushbar(this.confirm);
+                                        } else {
+                                          err = new Flushbar(
+                                            margin: EdgeInsets.all(8),
+                                            shouldIconPulse: true,
+                                            borderRadius: 26,
+                                            title: "Impossibile prenotare",
+                                            icon: Icon(
+                                              Icons.error,
+                                              size: 28.0,
+                                              color: Colors.red,
+                                            ),
+                                            message:
+                                                "Non è stato possibile effettuare la prenotazione, riprova più tardi",
+                                            duration: Duration(
+                                              seconds: 6,
+                                            ),
+                                            isDismissible: true,
+                                            dismissDirection:
+                                                FlushbarDismissDirection
+                                                    .HORIZONTAL,
+                                          );
+                                          this.showFlushbar(this.err);
+                                        }
+                                      });
                                     },
                                   ),
                                 ),
