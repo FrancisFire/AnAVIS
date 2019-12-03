@@ -11,7 +11,7 @@ public class RequestServices {
 
 	private static RequestServices instance;
 	private Set<Request> requests;
-
+	
 	private RequestServices() {
 		this.requests = new HashSet<>();
 	}

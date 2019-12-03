@@ -1,13 +1,9 @@
-import 'package:anavis/model/app_state.dart';
-import 'package:anavis/views/donor_view.dart';
-import 'package:anavis/views/office_view.dart';
 import 'package:anavis/widgets/card_painter.dart';
 import 'package:anavis/widgets/login_form.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -36,16 +32,12 @@ class _LoginViewState extends State<LoginView>
 class CardLogin extends StatelessWidget {
   final TabController controller;
 
-  final String email = 'stelluti@mail.com';
-  final String officeName = 'Osimo';
   CardLogin({
     @required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AppState>(context).setEmail(email);
-    Provider.of<AppState>(context).setOffice(officeName);
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

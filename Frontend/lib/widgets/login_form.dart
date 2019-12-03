@@ -18,6 +18,9 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
+    Provider.of<AppState>(context).setEmail('stelluti@mail.com');
+    Provider.of<AppState>(context).setOffice('Osimo');
+
     return ScrollConfiguration(
       behavior: RemoveGlow(),
       child: SingleChildScrollView(
@@ -62,7 +65,10 @@ class _LoginFormState extends State<LoginForm> {
                     Provider.of<AppState>(context).setEmail(t);
                     Provider.of<AppState>(context).setOffice(t);
                   },
-                  onSubmitted: (d) {},
+                  onSubmitted: (d) {
+                    Provider.of<AppState>(context).setEmail(d);
+                    Provider.of<AppState>(context).setOffice(d);
+                  },
                 ),
                 SizedBox(
                   height: 12,
