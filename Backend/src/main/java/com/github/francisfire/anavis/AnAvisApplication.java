@@ -36,8 +36,11 @@ public class AnAvisApplication {
 		datesTwo.add(new Date(300000));
 		officeTwo.setDonationTimeTables(datesTwo);
 		Donor donorTwo = new Donor("coppola@mail.com", officeTwo);
+		Donor donorThree = new Donor("clelio@mail.com", officeTwo);
+		donorThree.setCanDonate(true);
 		DonorServices.getInstance().addDonor(donorOne);
 		DonorServices.getInstance().addDonor(donorTwo);
+		DonorServices.getInstance().addDonor(donorThree);
 		OfficeServices.getInstance().addOffice(officeOne);
 		OfficeServices.getInstance().addOffice(officeTwo);
 		Request requestOne = new Request("one", officeOne, donorOne, new Date());

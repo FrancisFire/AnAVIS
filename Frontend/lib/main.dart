@@ -11,7 +11,7 @@ class AnAvis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppState>(
-      builder: (_) => AppState(),
+      create: (_) => AppState(),
       child: MaterialApp(
         theme: ThemeData(
           fontFamily: 'Rubik',

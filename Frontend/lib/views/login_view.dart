@@ -17,7 +17,6 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView>
     with SingleTickerProviderStateMixin {
   TabController _controller;
-
   @override
   void initState() {
     super.initState();
@@ -30,25 +29,23 @@ class _LoginViewState extends State<LoginView>
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'Rubik',
-        primaryColor: Colors.white,
-      ),
-      home: CardLogin(controller: _controller),
-    );
+    return CardLogin(controller: _controller);
   }
 }
 
 class CardLogin extends StatelessWidget {
   final TabController controller;
 
+  final String email = 'stelluti@mail.com';
+  final String officeName = 'Osimo';
   CardLogin({
     @required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<AppState>(context).setEmail(email);
+    Provider.of<AppState>(context).setOffice(officeName);
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -191,42 +188,14 @@ class CardLogin extends StatelessWidget {
                                   children: [
                                     LoginForm(
                                       onTap: () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return DonorView(
-                                                  email: Provider.of<AppState>(
-                                                                  context)
-                                                              .getDonorMail() !=
-                                                          null
-                                                      ? Provider.of<AppState>(
-                                                              context)
-                                                          .getDonorMail()
-                                                      : "stelluti@mail.it");
-                                            },
-                                          ),
-                                        );
+                                        Navigator.pushReplacementNamed(
+                                            context, '/donor');
                                       },
                                     ),
                                     LoginForm(
                                       onTap: () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return OfficeView(
-                                                  office: Provider.of<AppState>(
-                                                                  context)
-                                                              .getOfficeName() !=
-                                                          null
-                                                      ? Provider.of<AppState>(
-                                                              context)
-                                                          .getOfficeName()
-                                                      : "Osimo");
-                                            },
-                                          ),
-                                        );
+                                        Navigator.pushReplacementNamed(
+                                            context, '/office');
                                       },
                                     ),
                                   ],

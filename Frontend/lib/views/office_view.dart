@@ -1,23 +1,22 @@
-import 'package:anavis/views/office_request_view.dart';
+import 'package:anavis/model/app_state.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class OfficeView extends StatefulWidget {
-  final String office;
-  OfficeView({
-    this.office,
-  });
   @override
   _OfficeViewState createState() => _OfficeViewState();
 }
 
 class _OfficeViewState extends State<OfficeView> {
+  String _officeName;
   @override
   Widget build(BuildContext context) {
+    _officeName = Provider.of<AppState>(context).getOfficeName();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -51,7 +50,7 @@ class _OfficeViewState extends State<OfficeView> {
                   ),
                   Flexible(
                     child: AutoSizeText(
-                      widget.office,
+                      _officeName,
                       style: TextStyle(
                         fontSize: 64,
                         color: Colors.red,
@@ -183,11 +182,16 @@ class _OfficeViewState extends State<OfficeView> {
               color: Colors.red,
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+              Navigator.pushNamed(
+                context,
+                '/office/requests',
+                arguments: _officeName,
+              );
+              /* Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return OfficeRequestView(
                   officeName: widget.office,
                 );
-              }));
+              }));*/
             },
             label: Text(
               "Visualizza richieste \ndi donazioni",

@@ -7,24 +7,23 @@ class AppState extends ChangeNotifier {
   String _donorMail;
   String _officeName;
   bool _donorCanDonate;
-  String _canDonateApi;
   String _officeNamesApi;
   String _officeTimeTablesApi;
   String _officeRequestsApi;
+  String _canDonateApi;
   String _requestDonor;
   bool _statusBody;
   List<String> _officeNames = new List<String>();
   Set<String> _officeTimeTables = new Set<String>();
   static const String ip = "46.101.201.248";
-
   AppState() {
-    _canDonateApi = "http://$ip:8080/api/donor/$_donorMail/canDonate";
-    setCanDonate();
+    //setCanDonate();
     setOfficeNames();
   }
 
   void setEmail(String email) {
     _donorMail = email;
+    this.setCanDonate();
     notifyListeners();
   }
 
@@ -34,6 +33,7 @@ class AppState extends ChangeNotifier {
   }
 
   void setCanDonate() async {
+    _canDonateApi = "http://$ip:8080/api/donor/$_donorMail/canDonate";
     var request = await http.get(_canDonateApi);
     _donorCanDonate = request.body == 'true';
     notifyListeners();
