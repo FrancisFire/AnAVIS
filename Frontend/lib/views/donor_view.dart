@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/widgets/clip_path.dart';
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
@@ -23,8 +24,8 @@ class _DonorViewState extends State<DonorView> {
     _donorCanDonate = Provider.of<AppState>(context).getCanDonate();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.red,
+        statusBarIconBrightness: Brightness.light,
         systemNavigationBarColor: Colors.transparent,
         systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarDividerColor: Colors.transparent,
@@ -34,6 +35,13 @@ class _DonorViewState extends State<DonorView> {
       body: SafeArea(
         child: Stack(
           children: <Widget>[
+            ClipPath(
+              clipper: CustomShapeClipper(),
+              child: Container(
+                height: (MediaQuery.of(context).size.height / 3),
+                color: Colors.red,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 46, left: 16, right: 16),
               child: Column(
@@ -47,7 +55,7 @@ class _DonorViewState extends State<DonorView> {
                       'Benvenuto,',
                       style: TextStyle(
                         fontSize: 26,
-                        color: Colors.red,
+                        color: Colors.white,
                       ),
                       maxLines: 1,
                     ),
@@ -56,8 +64,8 @@ class _DonorViewState extends State<DonorView> {
                     child: AutoSizeText(
                       _email,
                       style: TextStyle(
-                        fontSize: 64,
-                        color: Colors.red,
+                        fontSize: 52,
+                        color: Colors.white,
                       ),
                       maxLines: 1,
                     ),
@@ -154,7 +162,7 @@ class _DonorViewState extends State<DonorView> {
                             itemCount: 10,
                             itemWidth: 330.0,
                             itemHeight:
-                                (MediaQuery.of(context).size.height / 1.6),
+                                (MediaQuery.of(context).size.height / 1.8),
                             layout: SwiperLayout.STACK,
                           ),
                         ),

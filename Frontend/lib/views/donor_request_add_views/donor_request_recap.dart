@@ -1,5 +1,6 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/views/donor_view.dart';
+import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
@@ -72,18 +73,15 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'Rubik',
-      ),
-      onGenerateRoute: (_) => MaterialPageRoute(
-        builder: (context) {
-          return DonorView();
-        },
-      ),
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: CustomPaint(
+        painter: Painter(
+          background: Colors.white,
+          first: Colors.deepOrange,
+          second: Colors.redAccent,
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[

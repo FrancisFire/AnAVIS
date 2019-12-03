@@ -11,10 +11,13 @@ class AnAvis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppState>(
-      create: (_) => AppState(),
+      builder: (_) => AppState(),
       child: MaterialApp(
         theme: ThemeData(
           fontFamily: 'Rubik',
+          accentIconTheme: IconThemeData(
+            color: Colors.white,
+          ),
           accentColor: Colors.orangeAccent[400],
           accentColorBrightness: Brightness.light,
         ),
