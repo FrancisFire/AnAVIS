@@ -28,7 +28,7 @@ public class PrenotationServicesTest {
 
 	@Test
 	public void addPrenotation() {
-		assertThrows(NullPointerException.class, () -> prenotationServices.addPrenotation(null));
+		assertThrows(NullPointerException.class, () -> prenotationServices.addPrenotation((Request) null));
 
 		Office officePineto = new Office("Pineto");
 		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);

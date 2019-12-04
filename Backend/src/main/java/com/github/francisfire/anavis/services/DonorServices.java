@@ -3,6 +3,7 @@ package com.github.francisfire.anavis.services;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.github.francisfire.anavis.models.Donor;
 
@@ -77,6 +78,29 @@ public class DonorServices {
 	public boolean checkDonationPossibility(String donorId) {
 		Donor donor = getDonorInstance(Objects.requireNonNull(donorId));
 		return (donor == null) ? false : donor.isCanDonate();
+	}
+
+	/**
+	 * TODO
+	 * @param officeId
+	 * @return
+	 */
+	public Set<Donor> getDonorsByOfficeId(String officeId) {
+		Objects.requireNonNull(officeId);
+		return donors.stream().filter(donor -> donor.getOfficePoint().getName().equalsIgnoreCase(officeId))
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * TODO
+	 * @param officeId
+	 * @return
+	 */
+	public Set<Donor> getAvailableDonorsByOfficeId(String officeId) {
+		Objects.requireNonNull(officeId);
+		return donors.stream()
+				.filter(donor -> donor.getOfficePoint().getName().equalsIgnoreCase(officeId) && donor.isCanDonate())
+				.collect(Collectors.toSet());
 	}
 
 	/**

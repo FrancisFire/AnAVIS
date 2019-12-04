@@ -3,6 +3,7 @@ package com.github.francisfire.anavis.services;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.github.francisfire.anavis.models.Prenotation;
 import com.github.francisfire.anavis.models.Request;
@@ -45,6 +46,85 @@ public class PrenotationServices {
 		Prenotation prenotation = new Prenotation(request.getId(), request.getOfficePoint(), request.getDonor(),
 				request.getHour());
 		return prenotations.add(prenotation);
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @return
+	 */
+	public Set<Prenotation> getPrenotations() {
+		return new HashSet<>(prenotations);
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param prenotation
+	 * @return
+	 */
+	public boolean addPrenotation(Prenotation prenotation) {
+		Objects.requireNonNull(prenotation);
+		return prenotations.add(prenotation);
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param prenotationId
+	 * @return
+	 */
+	public boolean removePrenotation(String prenotationId) {
+		Objects.requireNonNull(prenotationId);
+		return prenotations.remove(getPrenotationInstance(prenotationId));
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param prenotationId
+	 * @param prenotation
+	 * @return
+	 */
+	public boolean updatePrenotation(String prenotationId, Prenotation prenotation) {
+		Objects.requireNonNull(prenotationId);
+		Objects.requireNonNull(prenotation);
+		prenotations.remove(getPrenotationInstance(prenotationId));
+		return prenotations.add(prenotation);
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param officeId
+	 * @return
+	 */
+	public Set<Prenotation> getPrenotationsByOffice(String officeId) {
+		return prenotations.stream()
+				.filter(prenotation -> prenotation.getOfficePoint().getName().equalsIgnoreCase(officeId))
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * TODO
+	 * @param donorId
+	 * @return
+	 */
+	public Set<Prenotation> getPrenotationsByDonor(String donorId) {
+		return prenotations.stream().filter(prenotation -> prenotation.getDonor().getMail().equalsIgnoreCase(donorId))
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param prenotationId
+	 * @return
+	 */
+	private Object getPrenotationInstance(String prenotationId) {
+		Objects.requireNonNull(prenotationId);
+		return prenotations.stream().filter(prenotation -> prenotation.getId().equals(prenotationId)).findFirst()
+				.orElse(null);
 	}
 
 }

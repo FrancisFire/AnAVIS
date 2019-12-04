@@ -8,6 +8,7 @@ public class Prenotation {
 	private Office officePoint;
 	private Donor donor;
 	private Date hour;
+	private boolean confirmed;
 
 	public Prenotation() {
 	}
@@ -49,6 +50,14 @@ public class Prenotation {
 
 	public void setHour(Date hour) {
 		this.hour = hour;
+	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
 	}
 
 	@Override
