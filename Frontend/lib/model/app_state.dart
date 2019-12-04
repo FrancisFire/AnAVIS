@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -135,5 +136,32 @@ class AppState extends ChangeNotifier {
 
   String getOfficeName() {
     return _officeName;
+  }
+
+  void showFlushbar(
+      String title, String message, bool isGood, BuildContext context) {
+    Flushbar(
+      margin: EdgeInsets.all(8),
+      borderRadius: 26,
+      shouldIconPulse: true,
+      title: title,
+      icon: isGood
+          ? Icon(
+              Icons.check,
+              size: 28.0,
+              color: Colors.green[600],
+            )
+          : Icon(
+              Icons.info_outline,
+              size: 28.0,
+              color: Colors.red[600],
+            ),
+      message: message,
+      duration: Duration(
+        seconds: 6,
+      ),
+      isDismissible: true,
+      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+    ).show(context);
   }
 }

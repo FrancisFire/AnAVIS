@@ -1,7 +1,6 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
@@ -250,7 +249,12 @@ class CardRequest extends StatelessWidget {
                                 Navigator.popUntil(
                                     context, ModalRoute.withName('OfficeView'));
                                 //Navigator.pop(context);
-                                Flushbar(
+                                Provider.of<AppState>(context).showFlushbar(
+                                    "Operazione effettuata",
+                                    "L'operazione è stata effettuata correttamente",
+                                    true,
+                                    context);
+                                /*  Flushbar(
                                   margin: EdgeInsets.all(8),
                                   borderRadius: 26,
                                   shouldIconPulse: true,
@@ -268,7 +272,7 @@ class CardRequest extends StatelessWidget {
                                   isDismissible: true,
                                   dismissDirection:
                                       FlushbarDismissDirection.HORIZONTAL,
-                                ).show(context);
+                                ).show(context);*/
                               },
                             );
                           },
@@ -297,7 +301,12 @@ class CardRequest extends StatelessWidget {
                                     Navigator.popUntil(context,
                                         ModalRoute.withName('OfficeView'));
                                     //Navigator.pop(context);
-                                    Flushbar(
+                                    Provider.of<AppState>(context).showFlushbar(
+                                        "Operazione effettuata",
+                                        "L'operazione è stata effettuata correttamente",
+                                        true,
+                                        context);
+                                    /* Flushbar(
                                       margin: EdgeInsets.all(8),
                                       borderRadius: 26,
                                       shouldIconPulse: true,
@@ -315,12 +324,17 @@ class CardRequest extends StatelessWidget {
                                       isDismissible: true,
                                       dismissDirection:
                                           FlushbarDismissDirection.HORIZONTAL,
-                                    ).show(context);
+                                    ).show(context);*/
                                   } else {
                                     Navigator.popUntil(context,
                                         ModalRoute.withName('OfficeView'));
                                     //Navigator.pop(context);
-                                    Flushbar(
+                                    Provider.of<AppState>(context).showFlushbar(
+                                        "Operazione annullata",
+                                        "L'operazione è stata annulata correttamente",
+                                        false,
+                                        context);
+                                    /*  Flushbar(
                                       margin: EdgeInsets.all(8),
                                       borderRadius: 26,
                                       shouldIconPulse: true,
@@ -338,7 +352,7 @@ class CardRequest extends StatelessWidget {
                                       isDismissible: true,
                                       dismissDirection:
                                           FlushbarDismissDirection.HORIZONTAL,
-                                    ).show(context);
+                                    ).show(context);*/
                                   }
                                 });
                               },
@@ -398,7 +412,9 @@ class ConfirmAlertDialog extends StatelessWidget {
           onPressed: () {
             Navigator.popUntil(context, ModalRoute.withName('OfficeView'));
             // Navigator.pop(context);
-            Flushbar(
+            Provider.of<AppState>(context).showFlushbar("Operazione annullata",
+                "L'operazione è stata annulata correttamente", false, context);
+            /*Flushbar(
               margin: EdgeInsets.all(8),
               borderRadius: 26,
               shouldIconPulse: true,
@@ -414,7 +430,7 @@ class ConfirmAlertDialog extends StatelessWidget {
               ),
               isDismissible: true,
               dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-            ).show(context);
+            ).show(context);*/
           },
           color: Colors.red,
         ),
