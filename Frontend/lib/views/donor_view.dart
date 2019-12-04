@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class DonorView extends StatefulWidget {
@@ -245,7 +244,12 @@ class _DonorViewState extends State<DonorView> {
                   return DonorRequestOfficeView();
                 }));*/
               } else {
-                Flushbar(
+                Provider.of<AppState>(context).showFlushbar(
+                    "Operazione non consentita",
+                    "Al momento non puoi richiedere di prenotare una donazione, prova tra un pò di giorni.",
+                    false,
+                    context);
+                /*   Flushbar(
                   margin: EdgeInsets.all(8),
                   borderRadius: 26,
                   shouldIconPulse: true,
@@ -262,7 +266,7 @@ class _DonorViewState extends State<DonorView> {
                   ),
                   isDismissible: true,
                   dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                )..show(context);
+                ).show(context);*/
               }
             },
             label: Text(

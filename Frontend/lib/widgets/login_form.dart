@@ -18,7 +18,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
-    Provider.of<AppState>(context).setEmail('clelio@mail.com');
+    Provider.of<AppState>(context).setEmail('coppola@mail.com');
     Provider.of<AppState>(context).setOffice('Osimo');
 
     return ScrollConfiguration(
