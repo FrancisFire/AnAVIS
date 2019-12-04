@@ -215,7 +215,7 @@ class CardRequest extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         right: 85.0,
                       ),
-                      child: Chip(
+                      /* child: Chip(
                         avatar: CircleAvatar(
                           backgroundColor: Colors.grey.shade800,
                           child: Text(
@@ -228,7 +228,7 @@ class CardRequest extends StatelessWidget {
                         label: Text(
                           id,
                         ),
-                      ),
+                      ),*/
                     ),
                     FlatButton(
                       shape: RoundedRectangleBorder(
@@ -291,29 +291,56 @@ class CardRequest extends StatelessWidget {
                           builder: (context) {
                             return ConfirmAlertDialog(
                               confirmFunction: () {
-                                this._confirmRequest(id, context);
-                                Navigator.popUntil(
-                                    context, ModalRoute.withName('OfficeView'));
-                                //Navigator.pop(context);
-                                Flushbar(
-                                  margin: EdgeInsets.all(8),
-                                  borderRadius: 26,
-                                  shouldIconPulse: true,
-                                  title: "Operazione confermata",
-                                  icon: Icon(
-                                    Icons.check,
-                                    size: 28.0,
-                                    color: Colors.green[600],
-                                  ),
-                                  message:
-                                      "L'operazione è stata confermata correttamente",
-                                  duration: Duration(
-                                    seconds: 6,
-                                  ),
-                                  isDismissible: true,
-                                  dismissDirection:
-                                      FlushbarDismissDirection.HORIZONTAL,
-                                ).show(context);
+                                this._confirmRequest(id, context).then((_) {
+                                  if (Provider.of<AppState>(context)
+                                      .getStatusBody()) {
+                                    Navigator.popUntil(context,
+                                        ModalRoute.withName('OfficeView'));
+                                    //Navigator.pop(context);
+                                    Flushbar(
+                                      margin: EdgeInsets.all(8),
+                                      borderRadius: 26,
+                                      shouldIconPulse: true,
+                                      title: "Operazione effettuata",
+                                      icon: Icon(
+                                        Icons.check,
+                                        size: 28.0,
+                                        color: Colors.green[600],
+                                      ),
+                                      message:
+                                          "L'operazione è stata effettuata correttamente",
+                                      duration: Duration(
+                                        seconds: 6,
+                                      ),
+                                      isDismissible: true,
+                                      dismissDirection:
+                                          FlushbarDismissDirection.HORIZONTAL,
+                                    ).show(context);
+                                  } else {
+                                    Navigator.popUntil(context,
+                                        ModalRoute.withName('OfficeView'));
+                                    //Navigator.pop(context);
+                                    Flushbar(
+                                      margin: EdgeInsets.all(8),
+                                      borderRadius: 26,
+                                      shouldIconPulse: true,
+                                      title: "Operazione non effettuata",
+                                      icon: Icon(
+                                        Icons.info_outline,
+                                        size: 28.0,
+                                        color: Colors.red[600],
+                                      ),
+                                      message:
+                                          "L'operazione non è stata effettuata correttamente",
+                                      duration: Duration(
+                                        seconds: 6,
+                                      ),
+                                      isDismissible: true,
+                                      dismissDirection:
+                                          FlushbarDismissDirection.HORIZONTAL,
+                                    ).show(context);
+                                  }
+                                });
                               },
                             );
                           },

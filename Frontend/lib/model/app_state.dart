@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:http/http.dart';
+
 class AppState extends ChangeNotifier {
   String _donorMail;
   String _officeName;
@@ -68,11 +70,15 @@ class AppState extends ChangeNotifier {
   }
 
   void approveRequestByID(String id) async {
-    await http.put("http://$ip:8080/api/request/$id/approve");
+    Response res = await http.put("http://$ip:8080/api/request/$id/approve");
+    _statusBody = res.body == 'true';
+    notifyListeners();
   }
 
   void denyRequestByID(String id) async {
-    await http.put("http://$ip:8080/api/request/$id/deny");
+    Response res = await http.put("http://$ip:8080/api/request/$id/deny");
+    _statusBody = res.body == 'true';
+    notifyListeners();
   }
 
   Future<dynamic> sendRequest(
