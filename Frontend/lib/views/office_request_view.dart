@@ -2,6 +2,7 @@ import 'package:anavis/model/app_state.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +33,11 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(

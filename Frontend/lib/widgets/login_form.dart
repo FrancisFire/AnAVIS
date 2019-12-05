@@ -62,6 +62,11 @@ class _LoginFormState extends State<LoginForm> {
                   maxLines: 1,
                   onTap: () {},
                   onChanged: (t) {
+                    // if (t.isEmpty) {
+                    //   Provider.of<AppState>(context)
+                    //       .setEmail('coppola@mail.com');
+                    //   Provider.of<AppState>(context).setOffice('Osimo');
+                    // }
                     Provider.of<AppState>(context).setEmail(t);
                     Provider.of<AppState>(context).setOffice(t);
                   },
