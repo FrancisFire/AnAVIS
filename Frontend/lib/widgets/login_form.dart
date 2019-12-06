@@ -20,7 +20,6 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     Provider.of<AppState>(context).setEmail('coppola@mail.com');
     Provider.of<AppState>(context).setOffice('Osimo');
-
     return ScrollConfiguration(
       behavior: RemoveGlow(),
       child: SingleChildScrollView(
@@ -62,6 +61,9 @@ class _LoginFormState extends State<LoginForm> {
                   maxLines: 1,
                   onTap: () {},
                   onChanged: (t) {
+                    /*
+                     * Indivisuato bug per il setter del login 
+                     */
                     // if (t.isEmpty) {
                     //   Provider.of<AppState>(context)
                     //       .setEmail('coppola@mail.com');
