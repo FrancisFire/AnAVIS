@@ -4,6 +4,8 @@ import 'package:anavis/views/donor_request_add_views/donor_request_recap.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_time_view.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/views/login_view.dart';
+import 'package:anavis/views/office_prenotation_add_views/office_prenotation_donor_view.dart';
+import 'package:anavis/views/office_prenotation_add_views/office_prenotation_time_view.dart';
 import 'package:anavis/views/office_request_view.dart';
 import 'package:anavis/views/office_view.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +45,28 @@ class RouteGenerator {
                   ),
               settings: RouteSettings(
                 name: 'OfficeRequestView',
+              ));
+        }
+        return _errorRoute();
+
+      case '/office/prenotations':
+        if (args is String) {
+          return MaterialPageRoute(
+              builder: (_) => OfficePrenotationDonorView(officeName: args),
+              settings: RouteSettings(
+                name: 'OfficePrenotationView',
+              ));
+        }
+        return _errorRoute();
+
+      case '/office/prenotations/timeview':
+        if (args is String) {
+          return MaterialPageRoute(
+              builder: (_) => OfficePrenotationTimeView(
+                    donor: args,
+                  ),
+              settings: RouteSettings(
+                name: 'OfficePrenotationTimeView',
               ));
         }
         return _errorRoute();

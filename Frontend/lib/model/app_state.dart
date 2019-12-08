@@ -11,14 +11,16 @@ class AppState extends ChangeNotifier {
   String _officeName;
   bool _donorCanDonate;
   String _officeNamesApi;
+  String _donorsAvailableNamesApi;
   String _officeTimeTablesApi;
   String _officeRequestsApi;
   String _canDonateApi;
   String _requestDonor;
   bool _statusBody;
   List<String> _officeNames = new List<String>();
+  Set<String> _availableDonorsByOffice = new Set<String>();
   Set<String> _officeTimeTables = new Set<String>();
-  static const String ip = "46.101.201.248";
+  static const String ip = "10.0.12.194";
   AppState() {
     //setCanDonate();
     setOfficeNames();
@@ -48,6 +50,17 @@ class AppState extends ChangeNotifier {
     var parsedJson = json.decode(request.body);
     for (var office in parsedJson) {
       _officeNames.add(office['name']);
+    }
+    notifyListeners();
+  }
+
+  void setAvailableDonorsByOffice(String officeName) async {
+    _donorsAvailableNamesApi =
+        "http://$ip:8080/api/donor/office/$officeName/available";
+    var request = await http.get(_donorsAvailableNamesApi);
+    var parsedJson = json.decode(request.body);
+    for (var office in parsedJson) {
+      _availableDonorsByOffice.add(office['mail']);
     }
     notifyListeners();
   }
@@ -124,6 +137,10 @@ class AppState extends ChangeNotifier {
 
   List<String> getOfficeNames() {
     return _officeNames;
+  }
+
+  Set<String> getDonorsByOffice() {
+    return _availableDonorsByOffice;
   }
 
   Set<String> getOfficeTimeTables() {

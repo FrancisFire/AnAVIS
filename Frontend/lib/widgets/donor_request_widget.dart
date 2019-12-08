@@ -1,6 +1,7 @@
 import 'package:anavis/widgets/painter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BuildDonorRequestWidget extends StatelessWidget {
   final String title;
@@ -23,6 +24,11 @@ class BuildDonorRequestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
     return CustomPaint(
       painter: Painter(
         first: Colors.red[100],
@@ -61,7 +67,6 @@ class BuildDonorRequestWidget extends StatelessWidget {
               ),
               child: ButtonTheme(
                 child: DropdownButtonFormField(
-                  isExpanded: true,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.red,

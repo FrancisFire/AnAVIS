@@ -210,7 +210,7 @@ class _DonorViewState extends State<DonorView> {
       ),
       BuildRaisedButtonFAB(
         icon: Icon(
-          Icons.message,
+          Icons.add,
           color: Colors.white,
         ),
         onPressed: () {
