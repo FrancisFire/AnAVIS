@@ -46,4 +46,13 @@ public class PrenotationController {
 		return prenotationServices.removePrenotation(prenotationId);
 	}
 
+	@PutMapping("/{prenotationId}/acceptChange")
+	public boolean acceptPrenotationChange(@PathVariable("prenotationId") String prenotationId) {
+		return prenotationServices.acceptPrenotationChange(prenotationId);
+	}
+
+	@PutMapping("/{prenotationId}/denyChange")
+	public boolean denyPrenotationChange(@PathVariable("prenotationId") String prenotationId) {
+		return prenotationServices.denyPrenotationChange(prenotationId);
+	}
 }

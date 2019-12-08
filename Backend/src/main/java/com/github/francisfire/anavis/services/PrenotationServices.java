@@ -122,8 +122,12 @@ public class PrenotationServices {
 	 * @param prenotationId
 	 * @return
 	 */
-	public boolean acceptPrenotationModification(String prenotationId) {
+	public boolean acceptPrenotationChange(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
+		Prenotation prenotation = getPrenotationInstance(prenotationId);
+		if (prenotation == null || prenotation.isConfirmed()) {
+			return false;
+		}
 		getPrenotationInstance(prenotationId).setConfirmed(true);
 		return true;
 	}
@@ -134,8 +138,12 @@ public class PrenotationServices {
 	 * @param prenotationId
 	 * @return
 	 */
-	public boolean denyPrenotationModification(String prenotationId) {
+	public boolean denyPrenotationChange(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
+		Prenotation prenotation = getPrenotationInstance(prenotationId);
+		if (prenotation == null || prenotation.isConfirmed()) {
+			return false;
+		}
 		return prenotations.remove(getPrenotationInstance(prenotationId));
 	}
 
