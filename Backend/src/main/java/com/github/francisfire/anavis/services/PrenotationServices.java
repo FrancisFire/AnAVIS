@@ -107,6 +107,7 @@ public class PrenotationServices {
 
 	/**
 	 * TODO
+	 * 
 	 * @param donorId
 	 * @return
 	 */
@@ -121,7 +122,30 @@ public class PrenotationServices {
 	 * @param prenotationId
 	 * @return
 	 */
-	private Object getPrenotationInstance(String prenotationId) {
+	public boolean acceptPrenotationModification(String prenotationId) {
+		Objects.requireNonNull(prenotationId);
+		getPrenotationInstance(prenotationId).setConfirmed(true);
+		return true;
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param prenotationId
+	 * @return
+	 */
+	public boolean denyPrenotationModification(String prenotationId) {
+		Objects.requireNonNull(prenotationId);
+		return prenotations.remove(getPrenotationInstance(prenotationId));
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param prenotationId
+	 * @return
+	 */
+	private Prenotation getPrenotationInstance(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
 		return prenotations.stream().filter(prenotation -> prenotation.getId().equals(prenotationId)).findFirst()
 				.orElse(null);
