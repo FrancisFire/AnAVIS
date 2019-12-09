@@ -9,9 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.Office;
+import com.github.francisfire.anavis.models.Prenotation;
 import com.github.francisfire.anavis.models.Request;
 import com.github.francisfire.anavis.services.DonorServices;
 import com.github.francisfire.anavis.services.OfficeServices;
+import com.github.francisfire.anavis.services.PrenotationServices;
 import com.github.francisfire.anavis.services.RequestServices;
 
 @SpringBootApplication
@@ -38,14 +40,27 @@ public class AnAvisApplication {
 		Donor donorTwo = new Donor("coppola@mail.com", officeTwo);
 		Donor donorThree = new Donor("clelio@mail.com", officeTwo);
 		donorThree.setCanDonate(true);
+		Office officeThree = new Office("Casette Verdini");
+		Donor donorFour = new Donor("zamponi@mail.com", officeThree);
+		Office officeFour = new Office("Tolentino");
+		Donor donorFive = new Donor("sasso@mail.com", officeFour);
+		
 		DonorServices.getInstance().addDonor(donorOne);
 		DonorServices.getInstance().addDonor(donorTwo);
 		DonorServices.getInstance().addDonor(donorThree);
+		DonorServices.getInstance().addDonor(donorFour);
+		DonorServices.getInstance().addDonor(donorFive);
 		OfficeServices.getInstance().addOffice(officeOne);
 		OfficeServices.getInstance().addOffice(officeTwo);
+		OfficeServices.getInstance().addOffice(officeThree);
+		OfficeServices.getInstance().addOffice(officeFour);
 		Request requestOne = new Request("one", officeOne, donorOne, new Date());
 		Request requestTwo = new Request("two", officeTwo, donorTwo, new Date());
 		RequestServices.getInstance().addRequest(requestOne);
 		RequestServices.getInstance().addRequest(requestTwo);
+		Prenotation prenotationOne = new Prenotation("ciccio", officeThree, donorFour, new Date(1575200000));
+		Prenotation prenotationTwo = new Prenotation("ciccia", officeFour, donorFive, new Date(1575800000));
+		PrenotationServices.getInstance().addPrenotation(prenotationOne);
+		PrenotationServices.getInstance().addPrenotation(prenotationTwo);
 	}
 }
