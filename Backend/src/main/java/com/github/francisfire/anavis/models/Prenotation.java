@@ -10,8 +10,7 @@ public class Prenotation {
 	private Date hour;
 	private boolean confirmed;
 
-	public Prenotation() {
-	}
+	public Prenotation() {}
 	
 	public Prenotation(String id, Office officePoint, Donor donor, Date hour) {
 		this.id = id;

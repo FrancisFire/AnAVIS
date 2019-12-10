@@ -81,9 +81,12 @@ public class DonorServices {
 	}
 
 	/**
-	 * TODO
-	 * @param officeId
-	 * @return
+	 * Returns a collection of donors whose officePoint is the one associated to the
+	 * id given to the method
+	 * 
+	 * @throws NullPointerException if officeId is null
+	 * @param officeId id of the office
+	 * @return collection of donors associated to the office
 	 */
 	public Set<Donor> getDonorsByOfficeId(String officeId) {
 		Objects.requireNonNull(officeId);
@@ -92,9 +95,12 @@ public class DonorServices {
 	}
 
 	/**
-	 * TODO
-	 * @param officeId
-	 * @return
+	 * Returns a collection of donors whose officePoint is the one associated to the
+	 * id given to the method and that can donate
+	 * 
+	 * @throws NullPointerException if officeId is null
+	 * @param officeId id of the office
+	 * @return collection of donors associated to the office and that can donate
 	 */
 	public Set<Donor> getAvailableDonorsByOfficeId(String officeId) {
 		Objects.requireNonNull(officeId);

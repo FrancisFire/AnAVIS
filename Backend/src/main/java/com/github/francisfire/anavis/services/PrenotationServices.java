@@ -49,19 +49,22 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO
+	 * Returns a view of the collection of prenotations, modifying this view won't
+	 * have effects on the original collection, however modifying the objects in it
+	 * will have effects on the objects contained in the original collection.
 	 * 
-	 * @return
+	 * @return a view of the prenotation collection
 	 */
 	public Set<Prenotation> getPrenotations() {
 		return new HashSet<>(prenotations);
 	}
 
 	/**
-	 * TODO
+	 * Adds a prenotation to the prenotation collection
 	 * 
-	 * @param prenotation
-	 * @return
+	 * @throws NullPointerException if prenotation is null
+	 * @param prenotation the prenotation to add
+	 * @return true if the collection didn't contain the added prenotation
 	 */
 	public boolean addPrenotation(Prenotation prenotation) {
 		Objects.requireNonNull(prenotation);
@@ -69,10 +72,12 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO
+	 * Removes the prenotation assigned to the prenotationId from the prenotation
+	 * collection
 	 * 
-	 * @param prenotationId
-	 * @return
+	 * @throws NullPointerException if prenotationId is null
+	 * @param prenotationId the id of the prenotation to remove
+	 * @return true if the collections contained the prenotation
 	 */
 	public boolean removePrenotation(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
@@ -80,11 +85,13 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO
+	 * Updates the prenotation passed in input to the method in the prenotation
+	 * collection
 	 * 
-	 * @param prenotationId
-	 * @param prenotation
-	 * @return
+	 * @throws NullPointerException if prenotation is null
+	 * @param prenotation the prenotation to update
+	 * @return true if prenotation was present and updated successfully, false
+	 *         otherwise
 	 */
 	public boolean updatePrenotation(Prenotation prenotation) {
 		Objects.requireNonNull(prenotation);
@@ -96,10 +103,11 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO
+	 * Returns a collection of prenotations related to an office passed in input
 	 * 
-	 * @param officeId
-	 * @return
+	 * @throws NullPointerException if officeId is null
+	 * @param officeId id of the office
+	 * @return collection of prenotations related to the office passed in input
 	 */
 	public Set<Prenotation> getPrenotationsByOffice(String officeId) {
 		Objects.requireNonNull(officeId);
@@ -109,10 +117,11 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO
+	 * Returns a collection of prenotations related to a donor passed in input
 	 * 
-	 * @param donorId
-	 * @return
+	 * @throws NullPointerException if prenotationId is null
+	 * @param donorId id of the donor
+	 * @returna collection of prenotations related to the donor passed in input
 	 */
 	public Set<Prenotation> getPrenotationsByDonor(String donorId) {
 		Objects.requireNonNull(donorId);
@@ -121,10 +130,13 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO
+	 * Accepts the changes made to the prenotation associated to the id given to the
+	 * method
 	 * 
-	 * @param prenotationId
-	 * @return
+	 * @throws NullPointerException if prenotationId is null
+	 * @param prenotationId id of the prenotation
+	 * @return false if prenotation was present and not already confirmed, true
+	 *         otherwise
 	 */
 	public boolean acceptPrenotationChange(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
@@ -137,10 +149,13 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO
+	 * Denies the changes made to the prenotation associated to the id given to the
+	 * method and deletes such prenotation
 	 * 
-	 * @param prenotationId
-	 * @return
+	 * @throws NullPointerException if prenotationId is null
+	 * @param prenotationId id of the prenotation
+	 * @return true if prenotation was present and succesfully removed, false
+	 *         otherwise
 	 */
 	public boolean denyPrenotationChange(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
@@ -152,19 +167,17 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO
+	 * Gets the Prenotation instance associated to the id that has been passed in
+	 * input to the method
 	 * 
-	 * @param prenotationId
-	 * @return
+	 * @throws NullPointerException if prenotationId is null
+	 * @param prenotationId id of the request
+	 * @return the Prenotation object if present in the collection, null otherwise
 	 */
-	private Prenotation getPrenotationInstance(String prenotationId) {
+	public Prenotation getPrenotationInstance(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
 		return prenotations.stream().filter(prenotation -> prenotation.getId().equals(prenotationId)).findFirst()
 				.orElse(null);
-	}
-	
-	public void resetPrenotationServices() {
-		instance = new PrenotationServices();
 	}
 
 }

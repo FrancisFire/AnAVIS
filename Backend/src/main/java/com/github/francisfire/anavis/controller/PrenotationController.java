@@ -35,7 +35,7 @@ public class PrenotationController {
 		return prenotationServices.getPrenotationsByDonor(donorId);
 	}
 
-	@PutMapping("/{prenotationId}")
+	@PutMapping("")
 	public boolean updatePrenotation(
 			@RequestBody Prenotation prenotation) {
 		return prenotationServices.updatePrenotation(prenotation);
