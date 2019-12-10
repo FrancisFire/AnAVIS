@@ -86,11 +86,13 @@ public class PrenotationServices {
 	 * @param prenotation
 	 * @return
 	 */
-	public boolean updatePrenotation(String prenotationId, Prenotation prenotation) {
-		Objects.requireNonNull(prenotationId);
+	public boolean updatePrenotation(Prenotation prenotation) {
 		Objects.requireNonNull(prenotation);
-		prenotations.remove(getPrenotationInstance(prenotationId));
-		return prenotations.add(prenotation);
+		if (prenotations.remove(getPrenotationInstance(prenotation.getId()))) {
+			return prenotations.add(prenotation);
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -100,6 +102,7 @@ public class PrenotationServices {
 	 * @return
 	 */
 	public Set<Prenotation> getPrenotationsByOffice(String officeId) {
+		Objects.requireNonNull(officeId);
 		return prenotations.stream()
 				.filter(prenotation -> prenotation.getOfficePoint().getName().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
@@ -112,6 +115,7 @@ public class PrenotationServices {
 	 * @return
 	 */
 	public Set<Prenotation> getPrenotationsByDonor(String donorId) {
+		Objects.requireNonNull(donorId);
 		return prenotations.stream().filter(prenotation -> prenotation.getDonor().getMail().equalsIgnoreCase(donorId))
 				.collect(Collectors.toSet());
 	}
@@ -157,6 +161,10 @@ public class PrenotationServices {
 		Objects.requireNonNull(prenotationId);
 		return prenotations.stream().filter(prenotation -> prenotation.getId().equals(prenotationId)).findFirst()
 				.orElse(null);
+	}
+	
+	public void resetPrenotationServices() {
+		instance = new PrenotationServices();
 	}
 
 }

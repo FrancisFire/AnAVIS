@@ -36,9 +36,9 @@ public class PrenotationController {
 	}
 
 	@PutMapping("/{prenotationId}")
-	public boolean updatePrenotation(@PathVariable("prenotationId") String prenotationId,
+	public boolean updatePrenotation(
 			@RequestBody Prenotation prenotation) {
-		return prenotationServices.updatePrenotation(prenotationId, prenotation);
+		return prenotationServices.updatePrenotation(prenotation);
 	}
 
 	@DeleteMapping("/{prenotationId}")

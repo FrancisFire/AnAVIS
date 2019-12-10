@@ -18,6 +18,7 @@ public class Prenotation {
 		this.officePoint = officePoint;
 		this.donor = donor;
 		this.hour = hour;
+		this.confirmed = true;
 	}
 
 	public String getId() {
