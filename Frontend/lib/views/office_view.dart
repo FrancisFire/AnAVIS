@@ -202,12 +202,19 @@ class _OfficeViewState extends State<OfficeView> {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () {
-          Navigator.pushNamed(
-            context,
-            '/office/prenotations',
-            arguments: _officeName,
-          );
+        onPressed: () async {
+          await Provider.of<AppState>(context)
+              .setAvailableDonorsByOffice(_officeName);
+          if (Provider.of<AppState>(context).getDonorsByOffice().isEmpty) {
+            Provider.of<AppState>(context).showFlushbar('Nessun donatore',
+                'Al momento non ci sono donatori disponibili', false, context);
+          } else {
+            Navigator.pushNamed(
+              context,
+              '/office/prenotations',
+              arguments: _officeName,
+            );
+          }
         },
       ),
       BuildRaisedButtonFAB(

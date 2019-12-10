@@ -1,10 +1,13 @@
+import 'package:anavis/model/office_prenotation_recap_args.dart';
+import 'package:anavis/model/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_office_view.dart';
-import 'package:anavis/views/donor_request_add_views/donor_request_recap.dart';
+import 'package:anavis/views/donor_request_add_views/donor_request_recap_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_time_view.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/views/login_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_donor_view.dart';
+import 'package:anavis/views/office_prenotation_add_views/office_prenotation_recap_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_time_view.dart';
 import 'package:anavis/views/office_request_view.dart';
 import 'package:anavis/views/office_view.dart';
@@ -60,13 +63,28 @@ class RouteGenerator {
         return _errorRoute();
 
       case '/office/prenotations/timeview':
-        if (args is String) {
+        if (args is OfficePrenotationTimeViewArgs) {
           return MaterialPageRoute(
               builder: (_) => OfficePrenotationTimeView(
-                    officeName: args,
+                    officeName: args.getOfficeName(),
+                    donor: args.getDonor(),
                   ),
               settings: RouteSettings(
                 name: 'OfficePrenotationTimeView',
+              ));
+        }
+        return _errorRoute();
+
+      case '/office/prenotations/recap':
+        if (args is OfficePrenotationRecapArgs) {
+          return MaterialPageRoute(
+              builder: (_) => OfficePrenotationRecap(
+                    donor: args.getDonor(),
+                    time: args.getTime(),
+                    nicerTime: args.getNicerTime(),
+                  ),
+              settings: RouteSettings(
+                name: 'OfficePrenotationRecap',
               ));
         }
         return _errorRoute();

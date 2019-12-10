@@ -1,5 +1,5 @@
 import 'package:anavis/model/app_state.dart';
-import 'package:anavis/views/donor_view.dart';
+import 'package:anavis/views/office_view.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:provider/provider.dart';
@@ -11,22 +11,22 @@ import 'dart:math';
 
 import 'package:flushbar/flushbar_route.dart' as route;
 
-class DonorRequestRecap extends StatefulWidget {
-  final String office;
+class OfficePrenotationRecap extends StatefulWidget {
+  final String donor;
   final String time;
   final String nicerTime;
 
-  DonorRequestRecap({
-    @required this.office,
+  OfficePrenotationRecap({
+    @required this.donor,
     @required this.time,
     this.nicerTime,
   });
 
   @override
-  _DonorRequestRecapState createState() => _DonorRequestRecapState();
+  _OfficePrenotationRecapState createState() => _OfficePrenotationRecapState();
 }
 
-class _DonorRequestRecapState extends State<DonorRequestRecap> {
+class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -49,11 +49,11 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
     });
   }
 
-  Future<dynamic> postRequest() async {
-    await Provider.of<AppState>(context).sendRequest(
-        "${Provider.of<AppState>(context).getDonorMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
-        widget.office,
-        Provider.of<AppState>(context).getDonorMail(),
+  Future<void> postRequest() async {
+    await Provider.of<AppState>(context).sendPrenotation(
+        "${widget.donor}@${Provider.of<AppState>(context).getOfficeName()}@${widget.time}-${rng.nextInt(500)}",
+        Provider.of<AppState>(context).getOfficeName(),
+        widget.donor,
         widget.time);
   }
 
@@ -152,10 +152,10 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: ' nell\'ufficio di ',
+                                      text: ' per il donatore ',
                                     ),
                                     TextSpan(
-                                      text: widget.office,
+                                      text: widget.donor,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -267,7 +267,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                               color: Colors.green,
                                             ),
                                             message:
-                                                "La prenotazione è stata effettuata con successo, ci vedremo presto!",
+                                                "La prenotazione è stata effettuata con successo",
                                             duration: Duration(
                                               seconds: 6,
                                             ),

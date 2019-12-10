@@ -16,10 +16,14 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  void setEmail(BuildContext context, String mail) async {
+    await Provider.of<AppState>(context).setEmail(mail);
+  }
+
   @override
   Widget build(BuildContext context) {
-    Provider.of<AppState>(context).setEmail('stelluti@mail.com');
-    Provider.of<AppState>(context).setOffice('Osimo');
+    this.setEmail(context, 'stelluti@mail.com');
+    Provider.of<AppState>(context).setOffice('Fabriano');
     return ScrollConfiguration(
       behavior: RemoveGlow(),
       child: SingleChildScrollView(
@@ -69,11 +73,11 @@ class _LoginFormState extends State<LoginForm> {
                     //       .setEmail('coppola@mail.com');
                     //   Provider.of<AppState>(context).setOffice('Osimo');
                     // }
-                    Provider.of<AppState>(context).setEmail(t);
+                    this.setEmail(context, t);
                     Provider.of<AppState>(context).setOffice(t);
                   },
                   onSubmitted: (d) {
-                    Provider.of<AppState>(context).setEmail(d);
+                    this.setEmail(context, d);
                     Provider.of<AppState>(context).setOffice(d);
                   },
                 ),

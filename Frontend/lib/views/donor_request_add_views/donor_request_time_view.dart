@@ -19,8 +19,9 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
   String _timeSelected;
   String _timeFormatted;
 
-  void fetchTimeFromOffice() {
-    Provider.of<AppState>(context).setOfficeTimeTables(this.widget.office);
+  void fetchTimeFromOffice() async {
+    await Provider.of<AppState>(context)
+        .setOfficeTimeTables(this.widget.office);
   }
 
   List<DropdownMenuItem> createListItem() {
@@ -59,24 +60,12 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
                     context, '/donor/officerequest/recap',
                     arguments: new DonorRequestRecapArgs(this.widget.office,
                         this._timeSelected, this._timeFormatted));
-                /*Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) {
-                  return DonorRequestRecap(
-                    office: this.widget.office,
-                    time: this._timeSelected,
-                    nicerTime: this._timeFormatted,
-                  );
-                }));*/
               },
             )
           : FABLeftArrow(
               nameOffice: widget.office,
               onPressed: () {
                 Navigator.pop(context);
-                /*  Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) {
-                  return DonorRequestOfficeView();
-                }));*/
               },
             ),
       backgroundColor: Colors.white,

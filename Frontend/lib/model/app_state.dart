@@ -16,17 +16,17 @@ class AppState extends ChangeNotifier {
   String _officeRequestsApi;
   String _canDonateApi;
   String _requestDonor;
+  String _newPrenotationApi;
   bool _statusBody;
   List<String> _officeNames = new List<String>();
   Set<String> _availableDonorsByOffice = new Set<String>();
   Set<String> _officeTimeTables = new Set<String>();
-  static const String ip = "10.0.9.34";
+  static const String ip = "46.101.201.248";
   AppState() {
-    //setCanDonate();
     setOfficeNames();
   }
 
-  void setEmail(String email) {
+  Future<void> setEmail(String email) async {
     _donorMail = email;
     this.setCanDonate();
     notifyListeners();
@@ -54,7 +54,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setAvailableDonorsByOffice(String officeName) async {
+  Future<void> setAvailableDonorsByOffice(String officeName) async {
     _donorsAvailableNamesApi =
         "http://$ip:8080/api/donor/office/$officeName/available";
     var request = await http.get(_donorsAvailableNamesApi);
@@ -65,7 +65,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setOfficeTimeTables(String officeName) async {
+  Future<void> setOfficeTimeTables(String officeName) async {
     _officeTimeTablesApi = "http://$ip:8080/api/office/$officeName/timeTable";
     var request = await http.get(_officeTimeTablesApi);
     var parsedJson = json.decode(request.body);
@@ -83,13 +83,13 @@ class AppState extends ChangeNotifier {
     return parsedJson;
   }
 
-  void approveRequestByID(String id) async {
+  Future<void> approveRequestByID(String id) async {
     Response res = await http.put("http://$ip:8080/api/request/$id/approve");
     _statusBody = res.body == 'true';
     notifyListeners();
   }
 
-  void denyRequestByID(String id) async {
+  Future<void> denyRequestByID(String id) async {
     Response res = await http.put("http://$ip:8080/api/request/$id/deny");
     _statusBody = res.body == 'true';
     notifyListeners();
@@ -104,6 +104,38 @@ class AppState extends ChangeNotifier {
     _requestDonor = "http://$ip:8080/api/request";
     return await http.post(
       Uri.encodeFull(_requestDonor),
+      body: json.encode({
+        "id": id,
+        "officePoint": {
+          "name": officePoint,
+        },
+        "donor": {
+          "mail": donor,
+        },
+        "hour": hour
+      }),
+      headers: {
+        "content-type": "application/json",
+        "accept": "application/json",
+      },
+    ).then((res) {
+      _statusBody = res.body == 'true';
+      notifyListeners();
+    }).catchError((err) {
+      _statusBody = false;
+      notifyListeners();
+    });
+  }
+
+  Future<dynamic> sendPrenotation(
+    String id,
+    String officePoint,
+    String donor,
+    String hour,
+  ) async {
+    _newPrenotationApi = "http://$ip:8080/api/prenotation";
+    return await http.post(
+      Uri.encodeFull(_newPrenotationApi),
       body: json.encode({
         "id": id,
         "officePoint": {

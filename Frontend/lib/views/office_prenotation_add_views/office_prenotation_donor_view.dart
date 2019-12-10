@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/office_prenotation_time_view_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,8 @@ class _OfficePrenotationDonorViewState
     extends State<OfficePrenotationDonorView> {
   String _donorSelected;
 
-  void fetchDonorByOffice() {
-    Provider.of<AppState>(context)
+  void fetchDonorByOffice() async {
+    await Provider.of<AppState>(context)
         .setAvailableDonorsByOffice(this.widget.officeName);
   }
 
@@ -50,12 +51,26 @@ class _OfficePrenotationDonorViewState
     return Scaffold(
       floatingActionButton: _donorSelected != null
           ? FABRightArrow(
-              onPressed: () {
-                Navigator.pushReplacementNamed(
-                  context,
-                  '/office/prenotations/timeview',
-                  arguments: widget.officeName,
-                );
+              onPressed: () async {
+                await Provider.of<AppState>(context)
+                    .setOfficeTimeTables(this.widget.officeName);
+                if (Provider.of<AppState>(context)
+                    .getOfficeTimeTables()
+                    .isEmpty) {
+                  Navigator.pop(context);
+                  Provider.of<AppState>(context).showFlushbar(
+                      'Date non disponibili',
+                      'Non sono presenti date disponibili per il seguente ufficio',
+                      false,
+                      context);
+                } else {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/office/prenotations/timeview',
+                    arguments: new OfficePrenotationTimeViewArgs(
+                        widget.officeName, _donorSelected),
+                  );
+                }
               },
             )
           : null,

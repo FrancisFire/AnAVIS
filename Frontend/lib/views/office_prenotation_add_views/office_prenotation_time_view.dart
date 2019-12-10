@@ -1,5 +1,6 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/model/donor_request_recap_args.dart';
+import 'package:anavis/model/office_prenotation_recap_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,12 @@ import 'package:date_format/date_format.dart';
 
 class OfficePrenotationTimeView extends StatefulWidget {
   final String officeName;
+  final String donor;
 
-  OfficePrenotationTimeView({@required this.officeName});
+  OfficePrenotationTimeView({
+    @required this.officeName,
+    @required this.donor,
+  });
 
   @override
   _OfficePrenotationTimeViewState createState() =>
@@ -22,8 +27,9 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
   String _timeSelected;
   String _timeFormatted;
 
-  void fetchTimeFromOffice() {
-    Provider.of<AppState>(context).setOfficeTimeTables(this.widget.officeName);
+  void fetchTimeFromOffice() async {
+    await Provider.of<AppState>(context)
+        .setOfficeTimeTables(this.widget.officeName);
   }
 
   List<DropdownMenuItem> createListItem() {
@@ -58,31 +64,19 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
       floatingActionButton: _timeSelected != null
           ? FABRightArrow(
               onPressed: () {
-                // Navigator.pushReplacementNamed(
-                //     context, '/donor/officerequest/recap',
-                //     arguments: new DonorRequestRecapArgs(this.widget.office,
-                //         this._timeSelected, this._timeFormatted));
-                /*Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) {
-                  return DonorRequestRecap(
-                    office: this.widget.office,
-                    time: this._timeSelected,
-                    nicerTime: this._timeFormatted,
-                  );
-                }));*/
+                Navigator.pushReplacementNamed(
+                    context, '/office/prenotations/recap',
+                    arguments: new OfficePrenotationRecapArgs(this.widget.donor,
+                        this._timeSelected, this._timeFormatted));
               },
             )
           : FABLeftArrow(
-              nameOffice: widget.officeName
+              nameOffice: widget.donor
                   .split('@')
                   .map((String text) => text)
                   .elementAt(0),
               onPressed: () {
                 Navigator.pop(context);
-                /*  Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) {
-                  return DonorRequestOfficeView();
-                }));*/
               },
             ),
       backgroundColor: Colors.white,

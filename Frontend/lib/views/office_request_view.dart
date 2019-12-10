@@ -18,14 +18,10 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
-    updateReq();
-    _refreshController.refreshCompleted();
-  }
+    await Provider.of<AppState>(context)
+        .getOfficeRequestsJson(widget.officeName);
 
-  void updateReq() {
-    setState(() {
-      Provider.of<AppState>(context).getOfficeRequestsJson(widget.officeName);
-    });
+    _refreshController.refreshCompleted();
   }
 
   String restrictFractionalSeconds(String dateTime) =>
@@ -167,11 +163,11 @@ class CardRequest extends StatelessWidget {
   final String hour;
 
   Future<void> _confirmRequest(String requestId, BuildContext context) async {
-    return Provider.of<AppState>(context).approveRequestByID(requestId);
+    return await Provider.of<AppState>(context).approveRequestByID(requestId);
   }
 
   Future<void> _denyRequest(String requestId, BuildContext context) async {
-    return Provider.of<AppState>(context).denyRequestByID(requestId);
+    return await Provider.of<AppState>(context).denyRequestByID(requestId);
   }
 
   CardRequest({
@@ -220,20 +216,6 @@ class CardRequest extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         right: 85.0,
                       ),
-                      /* child: Chip(
-                        avatar: CircleAvatar(
-                          backgroundColor: Colors.grey.shade800,
-                          child: Text(
-                            'ID',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        label: Text(
-                          id,
-                        ),
-                      ),*/
                     ),
                     FlatButton(
                       shape: RoundedRectangleBorder(
@@ -254,31 +236,11 @@ class CardRequest extends StatelessWidget {
                                 this._denyRequest(id, context);
                                 Navigator.popUntil(
                                     context, ModalRoute.withName('OfficeView'));
-                                //Navigator.pop(context);
                                 Provider.of<AppState>(context).showFlushbar(
                                     "Operazione effettuata",
                                     "L'operazione è stata effettuata correttamente",
                                     true,
                                     context);
-                                /*  Flushbar(
-                                  margin: EdgeInsets.all(8),
-                                  borderRadius: 26,
-                                  shouldIconPulse: true,
-                                  title: "Operazione confermata",
-                                  icon: Icon(
-                                    Icons.check,
-                                    size: 28.0,
-                                    color: Colors.green[600],
-                                  ),
-                                  message:
-                                      "L'operazione è stata confermata correttamente",
-                                  duration: Duration(
-                                    seconds: 6,
-                                  ),
-                                  isDismissible: true,
-                                  dismissDirection:
-                                      FlushbarDismissDirection.HORIZONTAL,
-                                ).show(context);*/
                               },
                             );
                           },
@@ -306,59 +268,21 @@ class CardRequest extends StatelessWidget {
                                       .getStatusBody()) {
                                     Navigator.popUntil(context,
                                         ModalRoute.withName('OfficeView'));
-                                    //Navigator.pop(context);
                                     Provider.of<AppState>(context).showFlushbar(
-                                        "Operazione effettuata",
-                                        "L'operazione è stata effettuata correttamente",
-                                        true,
-                                        context);
-                                    /* Flushbar(
-                                      margin: EdgeInsets.all(8),
-                                      borderRadius: 26,
-                                      shouldIconPulse: true,
-                                      title: "Operazione effettuata",
-                                      icon: Icon(
-                                        Icons.check,
-                                        size: 28.0,
-                                        color: Colors.green[600],
-                                      ),
-                                      message:
-                                          "L'operazione è stata effettuata correttamente",
-                                      duration: Duration(
-                                        seconds: 6,
-                                      ),
-                                      isDismissible: true,
-                                      dismissDirection:
-                                          FlushbarDismissDirection.HORIZONTAL,
-                                    ).show(context);*/
+                                      "Operazione effettuata",
+                                      "L'operazione è stata effettuata correttamente",
+                                      true,
+                                      context,
+                                    );
                                   } else {
                                     Navigator.popUntil(context,
                                         ModalRoute.withName('OfficeView'));
-                                    //Navigator.pop(context);
                                     Provider.of<AppState>(context).showFlushbar(
-                                        "Operazione annullata",
-                                        "L'operazione è stata annulata correttamente",
-                                        false,
-                                        context);
-                                    /*  Flushbar(
-                                      margin: EdgeInsets.all(8),
-                                      borderRadius: 26,
-                                      shouldIconPulse: true,
-                                      title: "Operazione non effettuata",
-                                      icon: Icon(
-                                        Icons.info_outline,
-                                        size: 28.0,
-                                        color: Colors.red[600],
-                                      ),
-                                      message:
-                                          "L'operazione non è stata effettuata correttamente",
-                                      duration: Duration(
-                                        seconds: 6,
-                                      ),
-                                      isDismissible: true,
-                                      dismissDirection:
-                                          FlushbarDismissDirection.HORIZONTAL,
-                                    ).show(context);*/
+                                      "Operazione annullata",
+                                      "L'operazione è stata annulata correttamente",
+                                      false,
+                                      context,
+                                    );
                                   }
                                 });
                               },
@@ -417,26 +341,12 @@ class ConfirmAlertDialog extends StatelessWidget {
           child: Text("Annulla"),
           onPressed: () {
             Navigator.popUntil(context, ModalRoute.withName('OfficeView'));
-            // Navigator.pop(context);
-            Provider.of<AppState>(context).showFlushbar("Operazione annullata",
-                "L'operazione è stata annulata correttamente", false, context);
-            /*Flushbar(
-              margin: EdgeInsets.all(8),
-              borderRadius: 26,
-              shouldIconPulse: true,
-              title: "Operazione annullata",
-              icon: Icon(
-                Icons.info_outline,
-                size: 28.0,
-                color: Colors.red[600],
-              ),
-              message: "L'operazione è stata annulata correttamente",
-              duration: Duration(
-                seconds: 6,
-              ),
-              isDismissible: true,
-              dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-            ).show(context);*/
+            Provider.of<AppState>(context).showFlushbar(
+              "Operazione annullata",
+              "L'operazione è stata annulata correttamente",
+              false,
+              context,
+            );
           },
           color: Colors.red,
         ),
