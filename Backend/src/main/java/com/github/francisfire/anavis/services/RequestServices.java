@@ -111,7 +111,7 @@ public class RequestServices {
 	}
 
 	/**
-	 * Gest the Request instance associated to the id that has been passed in input
+	 * Gets the Request instance associated to the id that has been passed in input
 	 * to the method
 	 * 
 	 * @throws NullPointerException if requestId is null
