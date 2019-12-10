@@ -54,7 +54,7 @@ class _OfficePrenotationDonorViewState
                 Navigator.pushReplacementNamed(
                   context,
                   '/office/prenotations/timeview',
-                  arguments: _donorSelected,
+                  arguments: widget.officeName,
                 );
               },
             )

@@ -20,7 +20,7 @@ class AppState extends ChangeNotifier {
   List<String> _officeNames = new List<String>();
   Set<String> _availableDonorsByOffice = new Set<String>();
   Set<String> _officeTimeTables = new Set<String>();
-  static const String ip = "10.0.12.194";
+  static const String ip = "10.0.9.34";
   AppState() {
     //setCanDonate();
     setOfficeNames();

@@ -9,9 +9,9 @@ import 'package:date_format/date_format.dart';
 // /office/prenotations/timeview
 
 class OfficePrenotationTimeView extends StatefulWidget {
-  final String donor;
+  final String officeName;
 
-  OfficePrenotationTimeView({@required this.donor});
+  OfficePrenotationTimeView({@required this.officeName});
 
   @override
   _OfficePrenotationTimeViewState createState() =>
@@ -23,7 +23,7 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
   String _timeFormatted;
 
   void fetchTimeFromOffice() {
-    Provider.of<AppState>(context).setOfficeTimeTables(this.widget.donor);
+    Provider.of<AppState>(context).setOfficeTimeTables(this.widget.officeName);
   }
 
   List<DropdownMenuItem> createListItem() {
@@ -73,7 +73,7 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
               },
             )
           : FABLeftArrow(
-              nameOffice: widget.donor
+              nameOffice: widget.officeName
                   .split('@')
                   .map((String text) => text)
                   .elementAt(0),

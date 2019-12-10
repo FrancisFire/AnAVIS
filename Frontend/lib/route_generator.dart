@@ -63,7 +63,7 @@ class RouteGenerator {
         if (args is String) {
           return MaterialPageRoute(
               builder: (_) => OfficePrenotationTimeView(
-                    donor: args,
+                    officeName: args,
                   ),
               settings: RouteSettings(
                 name: 'OfficePrenotationTimeView',
