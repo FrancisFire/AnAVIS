@@ -41,7 +41,7 @@ class CurrentOfficeState extends ChangeNotifier {
     return parsedJson;
   }
 
-  Future<List<dynamic>> getOfficePrenotationsJson(String officeName) async {
+  Future<List<dynamic>> getOfficePrenotationsJson() async {
     _officeRequestsApi =
         "http://${_ipReference}:8080/api/prenotation/office/${_officeName}";
     var request = await http.get(_officeRequestsApi);

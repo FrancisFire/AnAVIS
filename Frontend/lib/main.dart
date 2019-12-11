@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'model/app_state.dart';
 
-const String ip = "10.0.12.144";
+const String ip = "46.101.201.248";
 void main() => runApp(AnAvis());
 
 class AnAvis extends StatelessWidget {

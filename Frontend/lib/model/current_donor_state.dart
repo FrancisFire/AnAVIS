@@ -8,7 +8,7 @@ class CurrentDonorState extends ChangeNotifier {
   bool _donorCanDonate;
   String _canDonateApi;
   bool _statusBody;
-  String _requestDonor;
+  String _donorRequestApi;
   String _ipReference;
 
   CurrentDonorState(String ip) {
@@ -28,15 +28,23 @@ class CurrentDonorState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<dynamic>> getDonorPrenotationsJson() async {
+    _donorRequestApi =
+        "http://${_ipReference}:8080/api/prenotation/donor/${_donorMail}";
+    var request = await http.get(_donorRequestApi);
+    var parsedJson = json.decode(request.body);
+    return parsedJson;
+  }
+
   Future<dynamic> sendRequest(
     String id,
     String officePoint,
     String donor,
     String hour,
   ) async {
-    _requestDonor = "http://${_ipReference}:8080/api/request";
+    _donorRequestApi = "http://${_ipReference}:8080/api/request";
     return await http.post(
-      Uri.encodeFull(_requestDonor),
+      Uri.encodeFull(_donorRequestApi),
       body: json.encode({
         "id": id,
         "officePoint": {
