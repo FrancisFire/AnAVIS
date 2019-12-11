@@ -1,4 +1,6 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_donor_state.dart';
+import 'package:anavis/model/current_office_state.dart';
 import 'package:flutter/material.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 import 'package:progress_indicator_button/progress_button.dart';
@@ -16,14 +18,18 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  void setEmail(BuildContext context, String mail) async {
-    await Provider.of<AppState>(context).setEmail(mail);
+  void setDonorEmail(BuildContext context, String mail) async {
+    await Provider.of<CurrentDonorState>(context).setEmail(mail);
+  }
+
+  void setOfficeMail(BuildContext context, String mail) async {
+    await Provider.of<CurrentOfficeState>(context).setOffice(mail);
   }
 
   @override
   Widget build(BuildContext context) {
-    this.setEmail(context, 'stelluti@mail.com');
-    Provider.of<AppState>(context).setOffice('Fabriano');
+    this.setDonorEmail(context, 'stelluti@mail.com');
+    this.setOfficeMail(context, 'Casette Verdini');
     return ScrollConfiguration(
       behavior: RemoveGlow(),
       child: SingleChildScrollView(
@@ -65,20 +71,12 @@ class _LoginFormState extends State<LoginForm> {
                   maxLines: 1,
                   onTap: () {},
                   onChanged: (t) {
-                    /*
-                     * Indivisuato bug per il setter del login 
-                     */
-                    // if (t.isEmpty) {
-                    //   Provider.of<AppState>(context)
-                    //       .setEmail('coppola@mail.com');
-                    //   Provider.of<AppState>(context).setOffice('Osimo');
-                    // }
-                    this.setEmail(context, t);
-                    Provider.of<AppState>(context).setOffice(t);
+                    this.setDonorEmail(context, t);
+                    this.setOfficeMail(context, t);
                   },
                   onSubmitted: (d) {
-                    this.setEmail(context, d);
-                    Provider.of<AppState>(context).setOffice(d);
+                    this.setDonorEmail(context, d);
+                    this.setOfficeMail(context, d);
                   },
                 ),
                 SizedBox(

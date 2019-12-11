@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_office_state.dart';
 import 'package:anavis/model/office_prenotation_time_view_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
@@ -52,9 +53,9 @@ class _OfficePrenotationDonorViewState
       floatingActionButton: _donorSelected != null
           ? FABRightArrow(
               onPressed: () async {
-                await Provider.of<AppState>(context)
-                    .setOfficeTimeTables(this.widget.officeName);
-                if (Provider.of<AppState>(context)
+                await Provider.of<CurrentOfficeState>(context)
+                    .setOfficeTimeTables();
+                if (Provider.of<CurrentOfficeState>(context)
                     .getOfficeTimeTables()
                     .isEmpty) {
                   Navigator.pop(context);

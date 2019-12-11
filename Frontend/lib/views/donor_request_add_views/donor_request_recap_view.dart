@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_donor_state.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
@@ -50,10 +51,10 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
   }
 
   Future<void> postRequest() async {
-    await Provider.of<AppState>(context).sendRequest(
-        "${Provider.of<AppState>(context).getDonorMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
+    await Provider.of<CurrentDonorState>(context).sendRequest(
+        "${Provider.of<CurrentDonorState>(context).getDonorMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
         widget.office,
-        Provider.of<AppState>(context).getDonorMail(),
+        Provider.of<CurrentDonorState>(context).getDonorMail(),
         widget.time);
   }
 
@@ -254,7 +255,8 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                     ),
                                     onPressed: () {
                                       this.postRequest().then((_) {
-                                        if (Provider.of<AppState>(context)
+                                        if (Provider.of<CurrentDonorState>(
+                                                context)
                                             .getStatusBody()) {
                                           confirm = new Flushbar(
                                             margin: EdgeInsets.all(8),

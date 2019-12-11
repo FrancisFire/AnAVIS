@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_office_state.dart';
 import 'package:anavis/widgets/clip_path.dart';
 import 'package:anavis/widgets/fab_item.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -18,7 +19,7 @@ class _OfficeViewState extends State<OfficeView> {
   String _officeName;
   @override
   Widget build(BuildContext context) {
-    _officeName = Provider.of<AppState>(context).getOfficeName();
+    _officeName = Provider.of<CurrentOfficeState>(context).getOfficeName();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

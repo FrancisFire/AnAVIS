@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_donor_state.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:provider/provider.dart';
 class DonorCanDonateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool _canDonate = Provider.of<AppState>(context).getCanDonate();
+    bool _canDonate = Provider.of<CurrentDonorState>(context).getCanDonate();
     return Scaffold(
       body: BuildPainter(
         canDonate: _canDonate,

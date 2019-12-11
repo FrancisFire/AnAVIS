@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_office_state.dart';
 import 'package:anavis/model/donor_request_recap_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
@@ -20,15 +21,14 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
   String _timeFormatted;
 
   void fetchTimeFromOffice() async {
-    await Provider.of<AppState>(context)
-        .setOfficeTimeTables(this.widget.office);
+    await Provider.of<CurrentOfficeState>(context).setOfficeTimeTables();
   }
 
   List<DropdownMenuItem> createListItem() {
     this.fetchTimeFromOffice();
     List<DropdownMenuItem> listTimeItem = new List<DropdownMenuItem>();
     for (var timeString
-        in Provider.of<AppState>(context).getOfficeTimeTables()) {
+        in Provider.of<CurrentOfficeState>(context).getOfficeTimeTables()) {
       String restrictFractionalSeconds(String dateTime) =>
           dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
       _timeFormatted = formatDate(

@@ -4,48 +4,20 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:http/http.dart';
-
 class AppState extends ChangeNotifier {
-  String _donorMail;
-  String _officeName;
-  bool _donorCanDonate;
-  String _officeNamesApi;
-  String _donorsAvailableNamesApi;
-  String _officeTimeTablesApi;
-  String _officeRequestsApi;
-  String _canDonateApi;
-  String _requestDonor;
-  String _newPrenotationApi;
-  bool _statusBody;
   List<String> _officeNames = new List<String>();
+  String _officeNamesApi;
+  String _ipReference;
   Set<String> _availableDonorsByOffice = new Set<String>();
-  Set<String> _officeTimeTables = new Set<String>();
-  static const String ip = "46.101.201.248";
-  AppState() {
+  String _donorsAvailableNamesApi;
+
+  AppState(String ip) {
+    _ipReference = ip;
     setOfficeNames();
   }
 
-  Future<void> setEmail(String email) async {
-    _donorMail = email;
-    this.setCanDonate();
-    notifyListeners();
-  }
-
-  void setOffice(String office) {
-    _officeName = office;
-    notifyListeners();
-  }
-
-  void setCanDonate() async {
-    _canDonateApi = "http://$ip:8080/api/donor/$_donorMail/canDonate";
-    var request = await http.get(_canDonateApi);
-    _donorCanDonate = request.body == 'true';
-    notifyListeners();
-  }
-
   void setOfficeNames() async {
-    _officeNamesApi = "http://$ip:8080/api/office";
+    _officeNamesApi = "http://${_ipReference}:8080/api/office";
     var request = await http.get(_officeNamesApi);
     var parsedJson = json.decode(request.body);
     for (var office in parsedJson) {
@@ -56,7 +28,7 @@ class AppState extends ChangeNotifier {
 
   Future<void> setAvailableDonorsByOffice(String officeName) async {
     _donorsAvailableNamesApi =
-        "http://$ip:8080/api/donor/office/$officeName/available";
+        "http://${_ipReference}:8080/api/donor/office/$officeName/available";
     var request = await http.get(_donorsAvailableNamesApi);
     var parsedJson = json.decode(request.body);
     for (var office in parsedJson) {
@@ -65,126 +37,12 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setOfficeTimeTables(String officeName) async {
-    _officeTimeTablesApi = "http://$ip:8080/api/office/$officeName/timeTable";
-    var request = await http.get(_officeTimeTablesApi);
-    var parsedJson = json.decode(request.body);
-    _officeTimeTables.clear();
-    for (var time in parsedJson) {
-      _officeTimeTables.add(time);
-    }
-    notifyListeners();
-  }
-
-  Future<List<dynamic>> getOfficeRequestsJson(String officeName) async {
-    _officeRequestsApi = "http://$ip:8080/api/request/office/$officeName";
-    var request = await http.get(_officeRequestsApi);
-    var parsedJson = json.decode(request.body);
-    return parsedJson;
-  }
-
-  Future<void> approveRequestByID(String id) async {
-    Response res = await http.put("http://$ip:8080/api/request/$id/approve");
-    _statusBody = res.body == 'true';
-    notifyListeners();
-  }
-
-  Future<void> denyRequestByID(String id) async {
-    Response res = await http.put("http://$ip:8080/api/request/$id/deny");
-    _statusBody = res.body == 'true';
-    notifyListeners();
-  }
-
-  Future<dynamic> sendRequest(
-    String id,
-    String officePoint,
-    String donor,
-    String hour,
-  ) async {
-    _requestDonor = "http://$ip:8080/api/request";
-    return await http.post(
-      Uri.encodeFull(_requestDonor),
-      body: json.encode({
-        "id": id,
-        "officePoint": {
-          "name": officePoint,
-        },
-        "donor": {
-          "mail": donor,
-        },
-        "hour": hour
-      }),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
-    ).then((res) {
-      _statusBody = res.body == 'true';
-      notifyListeners();
-    }).catchError((err) {
-      _statusBody = false;
-      notifyListeners();
-    });
-  }
-
-  Future<dynamic> sendPrenotation(
-    String id,
-    String officePoint,
-    String donor,
-    String hour,
-  ) async {
-    _newPrenotationApi = "http://$ip:8080/api/prenotation";
-    return await http.post(
-      Uri.encodeFull(_newPrenotationApi),
-      body: json.encode({
-        "id": id,
-        "officePoint": {
-          "name": officePoint,
-        },
-        "donor": {
-          "mail": donor,
-        },
-        "hour": hour
-      }),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
-    ).then((res) {
-      _statusBody = res.body == 'true';
-      notifyListeners();
-    }).catchError((err) {
-      _statusBody = false;
-      notifyListeners();
-    });
-  }
-
-  bool getCanDonate() {
-    return _donorCanDonate;
-  }
-
-  bool getStatusBody() {
-    return _statusBody;
-  }
-
   List<String> getOfficeNames() {
     return _officeNames;
   }
 
   Set<String> getDonorsByOffice() {
     return _availableDonorsByOffice;
-  }
-
-  Set<String> getOfficeTimeTables() {
-    return _officeTimeTables;
-  }
-
-  String getDonorMail() {
-    return _donorMail;
-  }
-
-  String getOfficeName() {
-    return _officeName;
   }
 
   void showFlushbar(

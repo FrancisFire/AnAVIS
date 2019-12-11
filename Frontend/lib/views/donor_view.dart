@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_donor_state.dart';
 import 'package:anavis/widgets/clip_path.dart';
 import 'package:anavis/widgets/fab_item.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,8 @@ class _DonorViewState extends State<DonorView> {
 
   @override
   Widget build(BuildContext context) {
-    _email = Provider.of<AppState>(context).getDonorMail();
-    _donorCanDonate = Provider.of<AppState>(context).getCanDonate();
+    _email = Provider.of<CurrentDonorState>(context).getDonorMail();
+    _donorCanDonate = Provider.of<CurrentDonorState>(context).getCanDonate();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -85,25 +86,27 @@ class _DonorViewState extends State<DonorView> {
                   child: Row(
                     children: <Widget>[
                       Chip(
-                        backgroundColor:
-                            Provider.of<AppState>(context).getCanDonate()
-                                ? Colors.green
-                                : Colors.red,
+                        backgroundColor: Provider.of<CurrentDonorState>(context)
+                                .getCanDonate()
+                            ? Colors.green
+                            : Colors.red,
                         elevation: 14,
                         avatar: CircleAvatar(
                           backgroundColor: Colors.white,
                           child: Icon(
-                            Provider.of<AppState>(context).getCanDonate()
+                            Provider.of<CurrentDonorState>(context)
+                                    .getCanDonate()
                                 ? Icons.check
                                 : Icons.warning,
-                            color: Provider.of<AppState>(context).getCanDonate()
+                            color: Provider.of<CurrentDonorState>(context)
+                                    .getCanDonate()
                                 ? Colors.green
                                 : Colors.red,
                             size: 18.0,
                           ),
                         ),
                         label: Text(
-                          Provider.of<AppState>(context).getCanDonate()
+                          Provider.of<CurrentDonorState>(context).getCanDonate()
                               ? 'Puoi donare'
                               : 'Non puoi donare',
                           style: TextStyle(

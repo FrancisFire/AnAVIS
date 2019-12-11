@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_office_state.dart';
 import 'package:anavis/views/office_view.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
@@ -50,9 +51,9 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
   }
 
   Future<void> postRequest() async {
-    await Provider.of<AppState>(context).sendPrenotation(
-        "${widget.donor}@${Provider.of<AppState>(context).getOfficeName()}@${widget.time}-${rng.nextInt(500)}",
-        Provider.of<AppState>(context).getOfficeName(),
+    await Provider.of<CurrentOfficeState>(context).sendPrenotation(
+        "${widget.donor}@${Provider.of<CurrentOfficeState>(context).getOfficeName()}@${widget.time}-${rng.nextInt(500)}",
+        Provider.of<CurrentOfficeState>(context).getOfficeName(),
         widget.donor,
         widget.time);
   }
@@ -254,7 +255,8 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                     ),
                                     onPressed: () {
                                       this.postRequest().then((_) {
-                                        if (Provider.of<AppState>(context)
+                                        if (Provider.of<CurrentOfficeState>(
+                                                context)
                                             .getStatusBody()) {
                                           confirm = new Flushbar(
                                             margin: EdgeInsets.all(8),

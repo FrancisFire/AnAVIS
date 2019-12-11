@@ -1,4 +1,5 @@
 import 'package:anavis/model/app_state.dart';
+import 'package:anavis/model/current_office_state.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +19,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
-    await Provider.of<AppState>(context)
-        .getOfficeRequestsJson(widget.officeName);
+    await Provider.of<CurrentOfficeState>(context).getOfficeRequestsJson();
 
     _refreshController.refreshCompleted();
   }
@@ -54,8 +54,8 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
           background: Colors.white,
         ),
         child: FutureBuilder<List<dynamic>>(
-          future: Provider.of<AppState>(context)
-              .getOfficeRequestsJson(widget.officeName),
+          future:
+              Provider.of<CurrentOfficeState>(context).getOfficeRequestsJson(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
@@ -163,11 +163,13 @@ class CardRequest extends StatelessWidget {
   final String hour;
 
   Future<void> _confirmRequest(String requestId, BuildContext context) async {
-    return await Provider.of<AppState>(context).approveRequestByID(requestId);
+    return await Provider.of<CurrentOfficeState>(context)
+        .approveRequestByID(requestId);
   }
 
   Future<void> _denyRequest(String requestId, BuildContext context) async {
-    return await Provider.of<AppState>(context).denyRequestByID(requestId);
+    return await Provider.of<CurrentOfficeState>(context)
+        .denyRequestByID(requestId);
   }
 
   CardRequest({
@@ -264,7 +266,7 @@ class CardRequest extends StatelessWidget {
                             return ConfirmAlertDialog(
                               confirmFunction: () {
                                 this._confirmRequest(id, context).then((_) {
-                                  if (Provider.of<AppState>(context)
+                                  if (Provider.of<CurrentOfficeState>(context)
                                       .getStatusBody()) {
                                     Navigator.popUntil(context,
                                         ModalRoute.withName('OfficeView'));
