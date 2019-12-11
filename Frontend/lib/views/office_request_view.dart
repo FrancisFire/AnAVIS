@@ -1,9 +1,9 @@
 import 'package:anavis/model/app_state.dart';
 import 'package:anavis/model/current_office_state.dart';
+import 'package:anavis/widgets/button_card_bottom.dart';
+import 'package:anavis/widgets/card_prenotation_request.dart';
 import 'package:anavis/widgets/painter.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 
@@ -15,8 +15,9 @@ class OfficeRequestView extends StatefulWidget {
 }
 
 class _OfficeRequestViewState extends State<OfficeRequestView> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   void _onRefresh() async {
     await Provider.of<CurrentOfficeState>(context).getOfficeRequestsJson();
@@ -27,25 +28,30 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
   String restrictFractionalSeconds(String dateTime) =>
       dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
 
+  Future<void> _denyRequest(String requestId, BuildContext context) async {
+    return await Provider.of<CurrentOfficeState>(context)
+        .denyRequestByID(requestId);
+  }
+
+  Future<void> _confirmRequest(String requestId, BuildContext context) async {
+    return await Provider.of<CurrentOfficeState>(context)
+        .approveRequestByID(requestId);
+  }
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "Ufficio di ${widget.officeName}",
           style: TextStyle(
-            color: Colors.red,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
         elevation: 8,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.red,
       ),
       body: CustomPaint(
         painter: Painter(
@@ -66,7 +72,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
               case ConnectionState.done:
                 if (snapshot.hasError)
                   return new Text("Errore nel recupero dei dati");
-                if (snapshot.data.length == 0) {
+                if (snapshot.data.isEmpty) {
                   return new Center(
                     child: Padding(
                       padding: const EdgeInsets.all(
@@ -100,41 +106,101 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                   onRefresh: _onRefresh,
                   onLoading: _onRefresh,
                   enablePullDown: true,
-                  enablePullUp: true,
+                  enablePullUp: false,
                   header: WaterDropMaterialHeader(
-                    backgroundColor: Colors.red,
-                  ),
-                  footer: ClassicFooter(
-                    idleText: "Trascina verso l'alto per caricare",
-                    loadingText: "",
-                    canLoadingText: "Rilascia per aggiornare",
-                    loadStyle: LoadStyle.ShowAlways,
-                    completeDuration: Duration(
-                      milliseconds: 500,
-                    ),
+                    backgroundColor: Colors.red[900],
                   ),
                   child: ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      return CardRequest(
+                      return CardForPrenotationAndRequest(
                         id: snapshot.data[index]['id'],
                         email: snapshot.data[index]['donor']['mail'],
-                        hour: formatDate(
-                            DateTime.parse(restrictFractionalSeconds(
-                              snapshot.data[index]['hour'],
-                            )),
-                            [
-                              "Data: ",
-                              dd,
-                              '-',
-                              mm,
-                              '-',
-                              yyyy,
-                              " | Orario: ",
-                              HH,
-                              ":",
-                              nn
-                            ]),
+                        hour: snapshot.data[index]['hour'],
+                        buttonBar: ButtonBar(
+                          children: <Widget>[
+                            ButtonForCardBottom(
+                              icon: Icon(
+                                Icons.thumb_down,
+                                color: Colors.white,
+                              ),
+                              color: Colors.red,
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return ConfirmAlertDialog(
+                                      confirmFunction: () {
+                                        this._denyRequest(
+                                            snapshot.data[index]['id'],
+                                            context);
+                                        Navigator.popUntil(context,
+                                            ModalRoute.withName('OfficeView'));
+                                        Provider.of<AppState>(context).showFlushbar(
+                                            "Operazione effettuata",
+                                            "L'operazione è stata effettuata correttamente",
+                                            true,
+                                            context);
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                              title: 'Elimina',
+                            ),
+                            ButtonForCardBottom(
+                              icon: Icon(
+                                Icons.thumb_up,
+                              ),
+                              color: Colors.green,
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return ConfirmAlertDialog(
+                                      confirmFunction: () {
+                                        this
+                                            ._confirmRequest(
+                                                snapshot.data[index]['id'],
+                                                context)
+                                            .then((_) {
+                                          if (Provider.of<CurrentOfficeState>(
+                                                  context)
+                                              .getStatusBody()) {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'OfficeView'));
+                                            Provider.of<AppState>(context)
+                                                .showFlushbar(
+                                              "Operazione effettuata",
+                                              "L'operazione è stata effettuata correttamente",
+                                              true,
+                                              context,
+                                            );
+                                          } else {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'OfficeView'));
+                                            Provider.of<AppState>(context)
+                                                .showFlushbar(
+                                              "Operazione annullata",
+                                              "L'operazione è stata annulata correttamente",
+                                              false,
+                                              context,
+                                            );
+                                          }
+                                        });
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                              title: 'Accetta',
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -151,153 +217,6 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                 );
             }
           },
-        ),
-      ),
-    );
-  }
-}
-
-class CardRequest extends StatelessWidget {
-  final String id;
-  final String email;
-  final String hour;
-
-  Future<void> _confirmRequest(String requestId, BuildContext context) async {
-    return await Provider.of<CurrentOfficeState>(context)
-        .approveRequestByID(requestId);
-  }
-
-  Future<void> _denyRequest(String requestId, BuildContext context) async {
-    return await Provider.of<CurrentOfficeState>(context)
-        .denyRequestByID(requestId);
-  }
-
-  CardRequest({
-    @required this.id,
-    @required this.email,
-    @required this.hour,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          right: 12.0,
-          left: 12.0,
-          top: 4.0,
-          bottom: 4.0,
-        ),
-        child: Card(
-          elevation: 16,
-          shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(16.0),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: Icon(
-                  Icons.account_circle,
-                  size: 56,
-                ),
-                title: Text(email),
-                subtitle: Text(
-                  hour,
-                ),
-              ),
-              ButtonBarTheme(
-                data: ButtonBarThemeData(
-                  alignment: MainAxisAlignment.end,
-                ),
-                child: ButtonBar(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 85.0,
-                      ),
-                    ),
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(26.0),
-                        ),
-                      ),
-                      color: Colors.red,
-                      child: const Text(
-                        'Rifiuta',
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return ConfirmAlertDialog(
-                              confirmFunction: () {
-                                this._denyRequest(id, context);
-                                Navigator.popUntil(
-                                    context, ModalRoute.withName('OfficeView'));
-                                Provider.of<AppState>(context).showFlushbar(
-                                    "Operazione effettuata",
-                                    "L'operazione è stata effettuata correttamente",
-                                    true,
-                                    context);
-                              },
-                            );
-                          },
-                        );
-                      },
-                    ),
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(26.0),
-                        ),
-                      ),
-                      color: Colors.green,
-                      child: const Text(
-                        'Accetta',
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return ConfirmAlertDialog(
-                              confirmFunction: () {
-                                this._confirmRequest(id, context).then((_) {
-                                  if (Provider.of<CurrentOfficeState>(context)
-                                      .getStatusBody()) {
-                                    Navigator.popUntil(context,
-                                        ModalRoute.withName('OfficeView'));
-                                    Provider.of<AppState>(context).showFlushbar(
-                                      "Operazione effettuata",
-                                      "L'operazione è stata effettuata correttamente",
-                                      true,
-                                      context,
-                                    );
-                                  } else {
-                                    Navigator.popUntil(context,
-                                        ModalRoute.withName('OfficeView'));
-                                    Provider.of<AppState>(context).showFlushbar(
-                                      "Operazione annullata",
-                                      "L'operazione è stata annulata correttamente",
-                                      false,
-                                      context,
-                                    );
-                                  }
-                                });
-                              },
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -334,13 +253,14 @@ class ConfirmAlertDialog extends StatelessWidget {
       ),
       content: Text("Confermare la scelta?"),
       actions: <Widget>[
-        new FlatButton(
+        new FlatButton.icon(
           shape: RoundedRectangleBorder(
             borderRadius: const BorderRadius.all(
               Radius.circular(26.0),
             ),
           ),
-          child: Text("Annulla"),
+          label: Text("Annulla"),
+          icon: Icon(Icons.cancel),
           onPressed: () {
             Navigator.popUntil(context, ModalRoute.withName('OfficeView'));
             Provider.of<AppState>(context).showFlushbar(
@@ -352,13 +272,14 @@ class ConfirmAlertDialog extends StatelessWidget {
           },
           color: Colors.red,
         ),
-        new FlatButton(
+        new FlatButton.icon(
           shape: RoundedRectangleBorder(
             borderRadius: const BorderRadius.all(
               Radius.circular(26.0),
             ),
           ),
-          child: Text("Conferma"),
+          icon: Icon(Icons.check),
+          label: Text("Conferma"),
           onPressed: confirmFunction,
           color: Colors.green,
         ),

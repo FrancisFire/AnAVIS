@@ -1,8 +1,10 @@
 import 'package:anavis/model/current_office_state.dart';
+import 'package:anavis/widgets/button_card_bottom.dart';
+import 'package:anavis/widgets/card_prenotation_request.dart';
+import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:circle_wheel_scroll/circle_wheel_scroll_view.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class OfficePrenotationView extends StatefulWidget {
   @override
@@ -10,77 +12,123 @@ class OfficePrenotationView extends StatefulWidget {
 }
 
 class _OfficePrenotationViewState extends State<OfficePrenotationView> {
-  CircleListScrollView buildListCircle(List<dynamic> list) {
-    List<Widget> elements = new List<Widget>();
-    for (var item in list) {
-      elements.add(
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 26),
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                title: Text("Id: ${item['id']}"),
-                subtitle: Text("Donor: ${item['donor']['mail']}"),
-              ),
-              ButtonBar(
-                children: <Widget>[
-                  FlatButton(
-                    child: Text('Modifica'),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        // new Container(
-        //   child: Column(
-        //     children: <Widget>[
-        //       Text(),
-        //       Text(),
-        //       Text("Hour: "),
-        //     ],
-        //   ),
-        // ),
-      );
-    }
-    return CircleListScrollView(
-      children: elements,
-      physics: CircleFixedExtentScrollPhysics(),
-      axis: Axis.horizontal,
-      itemExtent: 150,
-      radius: MediaQuery.of(context).size.width * 0.6,
-    );
+  RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
+
+  void _onRefresh() async {
+    await Provider.of<CurrentOfficeState>(context).getOfficePrenotationsJson();
+    _refreshController.refreshCompleted();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: FutureBuilder<List<dynamic>>(
-          future: Provider.of<CurrentOfficeState>(context)
-              .getOfficePrenotationsJson(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                return new RequestCircularLoading();
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return new RequestCircularLoading();
-              case ConnectionState.done:
-                if (snapshot.hasError) return new RequestCircularLoading();
-                if (snapshot.data.isEmpty) return new Text("Assenza dati");
-
-                return buildListCircle(snapshot.data);
-            }
-            return null; // unreachable
-          },
+      appBar: AppBar(
+        title: Text(
+          "Prenotazioni per ${Provider.of<CurrentOfficeState>(context).getOfficeName()}",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 8,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.red,
+      ),
+      body: CustomPaint(
+        painter: Painter(
+          first: Colors.red[100],
+          second: Colors.orange[200],
+          background: Colors.white,
+        ),
+        child: Center(
+          child: FutureBuilder<List<dynamic>>(
+            future: Provider.of<CurrentOfficeState>(context)
+                .getOfficePrenotationsJson(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return new RequestCircularLoading();
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return new RequestCircularLoading();
+                case ConnectionState.done:
+                  if (snapshot.hasError) return new RequestCircularLoading();
+                  if (snapshot.data.isEmpty) {
+                    return new Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(
+                          18.0,
+                        ),
+                        child: Card(
+                          elevation: 42,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              16.0,
+                            ),
+                            child: Text(
+                              "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return SmartRefresher(
+                    controller: _refreshController,
+                    onRefresh: _onRefresh,
+                    onLoading: _onRefresh,
+                    enablePullDown: true,
+                    enablePullUp: false,
+                    header: WaterDropMaterialHeader(
+                      backgroundColor: Colors.red[900],
+                    ),
+                    child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return CardForPrenotationAndRequest(
+                          email: snapshot.data[index]['donor']['mail'],
+                          hour: snapshot.data[index]['hour'],
+                          id: snapshot.data[index]['id'],
+                          buttonBar: ButtonBar(
+                            children: <Widget>[
+                              ButtonForCardBottom(
+                                icon: Icon(
+                                  Icons.mode_edit,
+                                  color: Colors.white,
+                                ),
+                                color: Colors.orange,
+                                onTap: () {},
+                                title: 'Modifica',
+                              ),
+                              ButtonForCardBottom(
+                                icon: Icon(
+                                  Icons.cancel,
+                                ),
+                                color: Colors.red,
+                                onTap: () {},
+                                title: 'Elimina',
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+              }
+              return null; // unreachable
+            },
+          ),
         ),
       ),
     );

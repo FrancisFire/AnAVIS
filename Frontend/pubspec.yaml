@@ -24,7 +24,6 @@ dependencies:
   pull_to_refresh: ^1.5.7
   avatar_glow: ^1.1.0
   flutter_swiper: ^1.1.6
-  circle_wheel_scroll: ^0.0.1+1
 
 dev_dependencies:
   flutter_test:
