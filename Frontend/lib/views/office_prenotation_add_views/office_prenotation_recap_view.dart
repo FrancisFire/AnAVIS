@@ -3,6 +3,7 @@ import 'package:anavis/model/current_office_state.dart';
 import 'package:anavis/views/office_view.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
@@ -74,8 +75,12 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
     return Scaffold(
-      backgroundColor: Colors.white,
       body: CustomPaint(
         painter: Painter(
           background: Colors.white,

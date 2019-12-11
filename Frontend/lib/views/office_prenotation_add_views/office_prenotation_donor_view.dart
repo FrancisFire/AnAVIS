@@ -4,6 +4,7 @@ import 'package:anavis/model/office_prenotation_time_view_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class OfficePrenotationDonorView extends StatefulWidget {
@@ -49,6 +50,11 @@ class _OfficePrenotationDonorViewState
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
     return Scaffold(
       floatingActionButton: _donorSelected != null
           ? FABRightArrow(

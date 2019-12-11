@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:badges/badges.dart';
 
 class OfficeView extends StatefulWidget {
   @override
@@ -17,6 +18,20 @@ class OfficeView extends StatefulWidget {
 
 class _OfficeViewState extends State<OfficeView> {
   String _officeName;
+
+  int numbers;
+
+  int getNumberPrenotations() {
+    Provider.of<CurrentOfficeState>(context).getOfficePrenotationsJson().then(
+      (onValue) {
+        setState(() {
+          numbers = onValue.length;
+        });
+      },
+    );
+    return numbers;
+  }
+
   @override
   Widget build(BuildContext context) {
     _officeName = Provider.of<CurrentOfficeState>(context).getOfficeName();
@@ -218,17 +233,26 @@ class _OfficeViewState extends State<OfficeView> {
           }
         },
       ),
-      BuildRaisedButtonFAB(
-        icon: Icon(
-          Icons.present_to_all,
-          color: Colors.white,
+      Badge(
+        showBadge: getNumberPrenotations() > 0 ? true : false,
+        badgeContent: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(getNumberPrenotations().toString()),
         ),
-        onPressed: () {
-          Navigator.pushNamed(
-            context,
-            '/office/prenotationsview',
-          );
-        },
+        position: BadgePosition.topRight(right: 1, top: 2),
+        badgeColor: Colors.white,
+        child: BuildRaisedButtonFAB(
+          icon: Icon(
+            Icons.receipt,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/office/prenotationsview',
+            );
+          },
+        ),
       ),
       BuildRaisedButtonFAB(
         icon: Icon(
