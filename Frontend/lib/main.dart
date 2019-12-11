@@ -16,13 +16,13 @@ class AnAvis extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppState>(
-          create: (_) => AppState(ip),
+          builder: (_) => AppState(ip),
         ),
         ChangeNotifierProvider<CurrentDonorState>(
-          create: (_) => CurrentDonorState(ip),
+          builder: (_) => CurrentDonorState(ip),
         ),
         ChangeNotifierProvider<CurrentOfficeState>(
-          create: (_) => CurrentOfficeState(ip),
+          builder: (_) => CurrentOfficeState(ip),
         ),
       ],
       child: MaterialApp(

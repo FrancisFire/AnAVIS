@@ -9,6 +9,7 @@ import 'package:anavis/views/login_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_donor_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_recap_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_time_view.dart';
+import 'package:anavis/views/office_prenotations_view.dart';
 import 'package:anavis/views/office_request_view.dart';
 import 'package:anavis/views/office_view.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,13 @@ class RouteGenerator {
               ));
         }
         return _errorRoute();
+
+      case "/office/prenotationsview":
+        return MaterialPageRoute(
+            builder: (_) => OfficePrenotationView(),
+            settings: RouteSettings(
+              name: 'OfficePrenotation',
+            ));
 
       case '/office/prenotations':
         if (args is String) {

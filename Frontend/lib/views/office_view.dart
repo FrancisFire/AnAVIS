@@ -223,7 +223,12 @@ class _OfficeViewState extends State<OfficeView> {
           Icons.present_to_all,
           color: Colors.white,
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            '/office/prenotationsview',
+          );
+        },
       ),
       BuildRaisedButtonFAB(
         icon: Icon(

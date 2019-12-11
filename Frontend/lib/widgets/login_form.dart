@@ -29,7 +29,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     this.setDonorEmail(context, 'stelluti@mail.com');
-    this.setOfficeMail(context, 'Casette Verdini');
+    this.setOfficeMail(context, 'Osimo');
     return ScrollConfiguration(
       behavior: RemoveGlow(),
       child: SingleChildScrollView(
