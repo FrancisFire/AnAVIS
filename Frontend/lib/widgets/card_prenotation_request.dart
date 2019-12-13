@@ -43,7 +43,7 @@ class CardForPrenotationAndRequest extends StatelessWidget {
               leading: CircleAvatar(
                 backgroundColor: Colors.red[600],
                 child: Text(
-                  email.toString().substring(0, 1).toUpperCase(),
+                  email.toString().substring(0, 2).toUpperCase(),
                   style: TextStyle(
                     color: Colors.white,
                   ),

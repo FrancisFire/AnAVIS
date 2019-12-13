@@ -230,11 +230,11 @@ class RequestCircularLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(
-      Colors.red,
-    )));
+    return Container(
+      child: CircularProgressIndicator(
+        strokeWidth: 5,
+      ),
+    );
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:anavis/model/current_office_state.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
+import 'package:anavis/widgets/custom_dialog_mod_prenotation.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -108,7 +109,16 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                                   color: Colors.white,
                                 ),
                                 color: Colors.orange,
-                                onTap: () {},
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        DialogModificationPrenotation(
+                                      email: snapshot.data[index]['donor']
+                                          ['mail'],
+                                    ),
+                                  );
+                                },
                                 title: 'Modifica',
                               ),
                               ButtonForCardBottom(
@@ -142,9 +152,9 @@ class RequestCircularLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       child: CircularProgressIndicator(
-        strokeWidth: 3,
+        strokeWidth: 5,
       ),
     );
   }
