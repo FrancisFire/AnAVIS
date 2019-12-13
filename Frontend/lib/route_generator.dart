@@ -1,6 +1,7 @@
 import 'package:anavis/model/office_prenotation_recap_args.dart';
 import 'package:anavis/model/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
+import 'package:anavis/views/donor_prenotations_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_office_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_recap_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_time_view.dart';
@@ -102,6 +103,13 @@ class RouteGenerator {
             builder: (_) => DonorCanDonateView(),
             settings: RouteSettings(
               name: 'DonorCanDonateView',
+            ));
+
+      case "/donor/prenotationsview":
+        return MaterialPageRoute(
+            builder: (_) => DonorPrenotationView(),
+            settings: RouteSettings(
+              name: 'DonorPrenotationView',
             ));
 
       case '/donor/officerequest':

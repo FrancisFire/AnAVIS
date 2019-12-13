@@ -68,7 +68,6 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
                 Navigator.pop(context);
               },
             ),
-      backgroundColor: Colors.white,
       body: BuildDonorRequestWidget(
         fetchItems: createListItem(),
         title: "Orario",

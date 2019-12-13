@@ -14,6 +14,7 @@ class CurrentDonorState extends ChangeNotifier {
   CurrentDonorState(String ip) {
     this._ipReference = ip;
   }
+
   Future<void> setEmail(String email) async {
     _donorMail = email;
     this.setCanDonate();

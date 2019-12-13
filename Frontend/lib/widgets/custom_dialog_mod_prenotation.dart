@@ -3,12 +3,10 @@ import 'package:anavis/model/current_office_state.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/form_field_general.dart';
 import 'package:date_format/date_format.dart';
-import 'package:flushbar/flushbar_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DialogModificationPrenotation extends StatefulWidget {
-  @override
   final String email;
 
   DialogModificationPrenotation({
@@ -159,7 +157,8 @@ class _DialogModificationPrenotationState
                 },
               ),
               SizedBox(height: 24.0),
-              ButtonBar(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   ButtonForCardBottom(
                     icon: Icon(
@@ -178,9 +177,13 @@ class _DialogModificationPrenotationState
                     },
                     title: 'Annulla',
                   ),
+                  SizedBox(
+                    width: 8,
+                  ),
                   ButtonForCardBottom(
                     icon: Icon(
                       Icons.thumb_up,
+                      color: Colors.white,
                     ),
                     color: Colors.green,
                     onTap: () {

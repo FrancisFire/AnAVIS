@@ -24,11 +24,6 @@ class BuildDonorRequestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
     return CustomPaint(
       painter: Painter(
         first: Colors.red[100],

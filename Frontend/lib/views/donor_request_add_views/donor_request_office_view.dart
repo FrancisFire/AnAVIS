@@ -34,11 +34,6 @@ class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
     return Scaffold(
       floatingActionButton: _officeSelected != null
           ? FABRightArrow(
@@ -46,14 +41,9 @@ class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
                 Navigator.pushReplacementNamed(
                     context, '/donor/officerequest/timeview',
                     arguments: _officeSelected);
-                /* Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) {
-                  return DonorRequestTimeView(office: _officeSelected);
-                }));*/
               },
             )
           : null,
-      backgroundColor: Colors.white,
       body: BuildDonorRequestWidget(
         fetchItems: createListItem(),
         title: "Ufficio",

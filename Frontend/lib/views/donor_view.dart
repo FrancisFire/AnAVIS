@@ -2,6 +2,7 @@ import 'package:anavis/model/app_state.dart';
 import 'package:anavis/model/current_donor_state.dart';
 import 'package:anavis/widgets/clip_path.dart';
 import 'package:anavis/widgets/fab_item.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +19,19 @@ class DonorView extends StatefulWidget {
 class _DonorViewState extends State<DonorView> {
   bool _donorCanDonate;
   String _email;
+
+  int numbers;
+
+  int getNumberPrenotations() {
+    Provider.of<CurrentDonorState>(context).getDonorPrenotationsJson().then(
+      (onValue) {
+        setState(() {
+          numbers = onValue.length;
+        });
+      },
+    );
+    return numbers;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -231,12 +245,26 @@ class _DonorViewState extends State<DonorView> {
           }
         },
       ),
-      BuildRaisedButtonFAB(
-        icon: Icon(
-          Icons.mode_edit,
-          color: Colors.white,
+      Badge(
+        showBadge: getNumberPrenotations() > 0 ? true : false,
+        badgeContent: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(getNumberPrenotations().toString()),
         ),
-        onPressed: () {},
+        position: BadgePosition.topRight(right: 1, top: 2),
+        badgeColor: Colors.white,
+        child: BuildRaisedButtonFAB(
+          icon: Icon(
+            Icons.receipt,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/donor/prenotationsview',
+            );
+          },
+        ),
       ),
       BuildRaisedButtonFAB(
         icon: Icon(

@@ -25,6 +25,7 @@ dependencies:
   avatar_glow: ^1.1.0
   flutter_swiper: ^1.1.6
   badges: ^1.1.0
+  flare_flutter: ^1.8.1
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +37,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/logo_homepage.png
     - assets/images/divider.png
+    - assets/general/sad.flr
 
   fonts:
     - family: Rubik
