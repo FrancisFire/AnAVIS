@@ -61,7 +61,12 @@ class _DialogModificationPrenotationState
     return listOfficeItem;
   }
 
+  void fetchTimeFromOffice() async {
+    await Provider.of<CurrentOfficeState>(context).setOfficeTimeTables();
+  }
+
   List<DropdownMenuItem> createHourItem(BuildContext context) {
+    this.fetchTimeFromOffice();
     List<DropdownMenuItem> listTimeItem = new List<DropdownMenuItem>();
     for (var timeString
         in Provider.of<CurrentOfficeState>(context).getOfficeTimeTables()) {
