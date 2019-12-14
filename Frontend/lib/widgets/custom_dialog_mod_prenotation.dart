@@ -1,5 +1,7 @@
-import 'package:anavis/model/app_state.dart';
-import 'package:anavis/model/current_office_state.dart';
+import 'package:anavis/models/app_state.dart';
+import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/models/office_prenotation_recap_args.dart';
+import 'package:anavis/models/office_prenotationupdate_recap_args.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/form_field_general.dart';
 import 'package:date_format/date_format.dart';
@@ -7,10 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DialogModificationPrenotation extends StatefulWidget {
-  final String email;
-
+  final String donor;
+  final String prenotationId;
   DialogModificationPrenotation({
-    @required this.email,
+    @required this.donor,
+    @required this.prenotationId,
   });
   _DialogModificationPrenotationState createState() =>
       _DialogModificationPrenotationState();
@@ -118,7 +121,7 @@ class _DialogModificationPrenotationState
                       "Mediante la seguente form si modificherà la prenotazione dell'utente ",
                   children: <TextSpan>[
                     TextSpan(
-                      text: widget.email,
+                      text: widget.donor,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -133,7 +136,7 @@ class _DialogModificationPrenotationState
                   Icons.home,
                   color: Colors.red,
                 ),
-                labelDropDown: "Selezione l'ufficio",
+                labelDropDown: "Seleziona l'ufficio",
                 valueSelected: _newOffice,
                 onChanged: (newValue) {
                   setState(() {
@@ -148,7 +151,7 @@ class _DialogModificationPrenotationState
                   Icons.access_time,
                   color: Colors.red,
                 ),
-                labelDropDown: "Selezione l'orario",
+                labelDropDown: "Seleziona l'orario",
                 valueSelected: _newHour,
                 onChanged: (newValue) {
                   setState(() {
@@ -187,7 +190,14 @@ class _DialogModificationPrenotationState
                     ),
                     color: Colors.green,
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                          context, '/office/prenotationupdate/recap',
+                          arguments: new OfficePrenotationUpdateRecapArgs(
+                              this.widget.donor,
+                              this._newHour,
+                              nicerTime(this._newHour),
+                              widget.prenotationId,
+                              _newOffice));
                     },
                     title: 'Conferma',
                   ),
@@ -207,7 +217,7 @@ class _DialogModificationPrenotationState
               foregroundColor: Colors.white,
               radius: Consts.avatarRadius,
               child: Text(
-                widget.email.toString().substring(0, 2).toUpperCase(),
+                widget.donor.toString().substring(0, 2).toUpperCase(),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,

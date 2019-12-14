@@ -1,12 +1,13 @@
-import 'package:anavis/model/current_donor_state.dart';
-import 'package:anavis/model/current_office_state.dart';
+import 'package:anavis/models/current_donor_state.dart';
+import 'package:anavis/models/current_office_state.dart';
 import 'package:anavis/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'model/app_state.dart';
+import 'models/app_state.dart';
 
 const String ip = "46.101.201.248";
+
 void main() => runApp(AnAvis());
 
 class AnAvis extends StatelessWidget {
@@ -16,13 +17,13 @@ class AnAvis extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppState>(
-          builder: (_) => AppState(ip),
+          create: (_) => AppState(ip),
         ),
         ChangeNotifierProvider<CurrentDonorState>(
-          builder: (_) => CurrentDonorState(ip),
+          create: (_) => CurrentDonorState(ip),
         ),
         ChangeNotifierProvider<CurrentOfficeState>(
-          builder: (_) => CurrentOfficeState(ip),
+          create: (_) => CurrentOfficeState(ip),
         ),
       ],
       child: MaterialApp(

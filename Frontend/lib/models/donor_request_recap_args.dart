@@ -7,7 +7,6 @@ class DonorRequestRecapArgs {
   String _office;
   String _time;
   String _nicerTime;
-
   String getOffice() {
     return _office;
   }

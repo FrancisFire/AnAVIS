@@ -4,12 +4,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 
+import 'donor.dart';
+
 class AppState extends ChangeNotifier {
   List<String> _officeNames = new List<String>();
-  String _officeNamesApi;
   String _ipReference;
-  Set<String> _availableDonorsByOffice = new Set<String>();
-  String _donorsAvailableNamesApi;
+  Set<Donor> _availableDonorsByOffice = new Set<Donor>();
 
   AppState(String ip) {
     _ipReference = ip;
@@ -17,8 +17,7 @@ class AppState extends ChangeNotifier {
   }
 
   void setOfficeNames() async {
-    _officeNamesApi = "http://${_ipReference}:8080/api/office";
-    var request = await http.get(_officeNamesApi);
+    var request = await http.get("http://${_ipReference}:8080/api/office");
     var parsedJson = json.decode(request.body);
     for (var office in parsedJson) {
       _officeNames.add(office['name']);
@@ -27,12 +26,13 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> setAvailableDonorsByOffice(String officeName) async {
-    _donorsAvailableNamesApi =
-        "http://${_ipReference}:8080/api/donor/office/$officeName/available";
-    var request = await http.get(_donorsAvailableNamesApi);
+    var request = await http.get(
+        "http://${_ipReference}:8080/api/donor/office/$officeName/available");
     var parsedJson = json.decode(request.body);
     for (var office in parsedJson) {
-      _availableDonorsByOffice.add(office['mail']);
+      Donor donor =
+          new Donor(office['mail'], office['officePoint'], office['canDonate']);
+      _availableDonorsByOffice.add(donor);
     }
     notifyListeners();
   }
@@ -41,7 +41,7 @@ class AppState extends ChangeNotifier {
     return _officeNames;
   }
 
-  Set<String> getDonorsByOffice() {
+  Set<Donor> getAvailableDonorsByOffice() {
     return _availableDonorsByOffice;
   }
 

@@ -1,6 +1,5 @@
-import 'package:anavis/model/app_state.dart';
-import 'package:anavis/model/current_donor_state.dart';
-import 'package:anavis/views/donor_view.dart';
+import 'package:anavis/models/current_donor_state.dart';
+import 'package:anavis/models/request.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +16,6 @@ class DonorRequestRecap extends StatefulWidget {
   final String office;
   final String time;
   final String nicerTime;
-
   DonorRequestRecap({
     @required this.office,
     @required this.time,
@@ -53,10 +51,12 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
 
   Future<void> postRequest() async {
     await Provider.of<CurrentDonorState>(context).sendRequest(
-        "${Provider.of<CurrentDonorState>(context).getDonorMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
-        widget.office,
-        Provider.of<CurrentDonorState>(context).getDonorMail(),
-        widget.time);
+      Request(
+          "${Provider.of<CurrentDonorState>(context).getDonorMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
+          widget.office,
+          Provider.of<CurrentDonorState>(context).getDonorMail(),
+          widget.time),
+    );
   }
 
   Future showFlushbar(Flushbar instance) {
@@ -115,7 +115,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              'Conferma della prenotazione',
+                              'Conferma della richiesta',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 42,
@@ -171,7 +171,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                     ),
                                     TextSpan(
                                       text:
-                                          '\n\nSi desidera proseguire con la prenotazione o declinare?',
+                                          '\n\nSi desidera proseguire con la richiesta o declinare?',
                                       style: TextStyle(
                                         fontStyle: FontStyle.italic,
                                         color: Colors.grey[700],
@@ -219,14 +219,14 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                         margin: EdgeInsets.all(8),
                                         borderRadius: 26,
                                         shouldIconPulse: true,
-                                        title: "Prenotazione annullata",
+                                        title: "Richiesta annullata",
                                         icon: Icon(
                                           Icons.clear,
                                           size: 28.0,
                                           color: Colors.red,
                                         ),
                                         message:
-                                            "La prenotazione è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
+                                            "La richiesta è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
                                         duration: Duration(
                                           seconds: 6,
                                         ),
@@ -267,14 +267,14 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                             margin: EdgeInsets.all(8),
                                             shouldIconPulse: true,
                                             borderRadius: 26,
-                                            title: "Prenotazione effettuata",
+                                            title: "Richiesta effettuata",
                                             icon: Icon(
                                               Icons.check,
                                               size: 28.0,
                                               color: Colors.green,
                                             ),
                                             message:
-                                                "La prenotazione è stata effettuata con successo, ci vedremo presto!",
+                                                "La richiesta è stata effettuata con successo, ci vedremo presto!",
                                             duration: Duration(
                                               seconds: 6,
                                             ),

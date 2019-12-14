@@ -33,7 +33,7 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.addDonor(null));
 
 		Office avisPineto = new Office("Pineto");
-		assertTrue(donorServices.addDonor(new Donor("Gianni", avisPineto)));
+		assertTrue(donorServices.addDonor(new Donor("Gianni", avisPineto.getName())));
 		assertFalse(donorServices.getDonors().isEmpty());
 	}
 
@@ -42,7 +42,7 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.getOfficeIdByDonor(null));
 
 		Office avisPosillipo = new Office("Posillipo");
-		donorServices.addDonor(new Donor("Lillo", avisPosillipo));
+		donorServices.addDonor(new Donor("Lillo", avisPosillipo.getName()));
 		assertEquals("Posillipo", donorServices.getOfficeIdByDonor("Lillo"));
 		assertNotEquals("Posillipa", donorServices.getOfficeIdByDonor("Lillo"));
 		assertNull(donorServices.getOfficeIdByDonor("Lilla"));
@@ -53,10 +53,10 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.checkDonationPossibility(null));
 
 		Office avisSasso = new Office("Sasso");
-		Donor donaone = new Donor("Greg", avisSasso);
+		Donor donaone = new Donor("Greg", avisSasso.getName());
 		donorServices.addDonor(donaone);
 		donaone.setCanDonate(true);
-		Donor donatwo = new Donor("Mimmo", avisSasso);
+		Donor donatwo = new Donor("Mimmo", avisSasso.getName());
 		donorServices.addDonor(donatwo);
 		donatwo.setCanDonate(false);
 		assertTrue(donorServices.checkDonationPossibility("Greg"));
@@ -69,10 +69,10 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.getDonorsByOfficeId(null));
 
 		Office officeOne = new Office("Camerino");
-		Donor donorOne = new Donor("Pepe", officeOne);
+		Donor donorOne = new Donor("Pepe", officeOne.getName());
 		Office officeTwo = new Office("Muccia");
 		donorServices.addDonor(donorOne);
-		Donor donorTwo = new Donor("Spina", officeTwo);
+		Donor donorTwo = new Donor("Spina", officeTwo.getName());
 		donorServices.addDonor(donorTwo);
 
 		assertTrue(donorServices.getDonorsByOfficeId(officeOne.getName()).contains(donorOne));
@@ -84,12 +84,12 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.getAvailableDonorsByOfficeId(null));
 
 		Office officeOne = new Office("Camerino");
-		Donor donorOne = new Donor("Sara", officeOne);
+		Donor donorOne = new Donor("Sara", officeOne.getName());
 		Office officeTwo = new Office("Muccia");
 		donorServices.addDonor(donorOne);
-		Donor donorTwo = new Donor("Giorgio", officeTwo);
+		Donor donorTwo = new Donor("Giorgio", officeTwo.getName());
 		donorServices.addDonor(donorTwo);
-		Donor donorThree = new Donor("Presa", officeOne);
+		Donor donorThree = new Donor("Presa", officeOne.getName());
 		donorThree.setCanDonate(true);
 		donorServices.addDonor(donorThree);
 

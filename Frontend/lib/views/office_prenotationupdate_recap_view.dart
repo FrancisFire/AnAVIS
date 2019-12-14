@@ -12,22 +12,27 @@ import 'dart:math';
 
 import 'package:flushbar/flushbar_route.dart' as route;
 
-class OfficePrenotationRecap extends StatefulWidget {
+class OfficePrenotationUpdateRecap extends StatefulWidget {
+  final String id;
   final String donor;
   final String time;
   final String nicerTime;
-
-  OfficePrenotationRecap({
+  final String officeName;
+  OfficePrenotationUpdateRecap({
     @required this.donor,
     @required this.time,
-    this.nicerTime,
+    @required this.nicerTime,
+    @required this.id,
+    @required this.officeName,
   });
 
   @override
-  _OfficePrenotationRecapState createState() => _OfficePrenotationRecapState();
+  _OfficePrenotationUpdateRecapState createState() =>
+      _OfficePrenotationUpdateRecapState();
 }
 
-class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
+class _OfficePrenotationUpdateRecapState
+    extends State<OfficePrenotationUpdateRecap> {
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -51,12 +56,9 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
   }
 
   Future<void> postRequest() async {
-    await Provider.of<CurrentOfficeState>(context).sendPrenotation(Prenotation(
-        "${widget.donor}@${Provider.of<CurrentOfficeState>(context).getOfficeName()}@${widget.time}-${rng.nextInt(500)}",
-        Provider.of<CurrentOfficeState>(context).getOfficeName(),
-        widget.donor,
-        widget.time,
-        true));
+    await Provider.of<CurrentOfficeState>(context).updatePrenotation(
+        Prenotation(
+            widget.id, widget.officeName, widget.donor, widget.time, false));
   }
 
   Future showFlushbar(Flushbar instance) {
@@ -115,10 +117,10 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              'Conferma della prenotazione',
+                              'Aggiornamento della prenotazione per l\'ufficio di ${widget.officeName}',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 42,
+                                fontSize: 30,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,
@@ -226,7 +228,7 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                           color: Colors.red,
                                         ),
                                         message:
-                                            "La prenotazione è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
+                                            "L\'aggiornamento è stato annullato",
                                         duration: Duration(
                                           seconds: 6,
                                         ),

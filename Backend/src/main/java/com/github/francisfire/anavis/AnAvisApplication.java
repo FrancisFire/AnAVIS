@@ -30,20 +30,20 @@ public class AnAvisApplication {
 		datesOne.add(new Date(260000));
 		datesOne.add(new Date(280000));
 		officeOne.setDonationTimeTables(datesOne);
-		Donor donorOne = new Donor("stelluti@mail.com", officeOne);
+		Donor donorOne = new Donor("stelluti@mail.com", officeOne.getName());
 		donorOne.setCanDonate(true);
 		Office officeTwo = new Office("Fabriano");
 		Set<Date> datesTwo = new HashSet<>();
 		datesTwo.add(new Date(270000));
 		datesTwo.add(new Date(300000));
 		officeTwo.setDonationTimeTables(datesTwo);
-		Donor donorTwo = new Donor("coppola@mail.com", officeTwo);
-		Donor donorThree = new Donor("clelio@mail.com", officeTwo);
+		Donor donorTwo = new Donor("coppola@mail.com", officeTwo.getName());
+		Donor donorThree = new Donor("clelio@mail.com", officeTwo.getName());
 		donorThree.setCanDonate(true);
 		Office officeThree = new Office("Casette Verdini");
-		Donor donorFour = new Donor("zamponi@mail.com", officeThree);
+		Donor donorFour = new Donor("zamponi@mail.com", officeThree.getName());
 		Office officeFour = new Office("Tolentino");
-		Donor donorFive = new Donor("sasso@mail.com", officeFour);
+		Donor donorFive = new Donor("sasso@mail.com", officeFour.getName());
 
 		DonorServices.getInstance().addDonor(donorOne);
 		DonorServices.getInstance().addDonor(donorTwo);

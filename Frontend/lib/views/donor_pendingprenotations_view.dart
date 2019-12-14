@@ -1,26 +1,40 @@
+import 'package:anavis/models/app_state.dart';
 import 'package:anavis/models/current_donor_state.dart';
+import 'package:anavis/models/donor_prenotationupdate_recap_args.dart';
+import 'package:anavis/models/donor_request_recap_args.dart';
 import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
+import 'package:anavis/widgets/confirm_alert_dialog.dart';
 import 'package:anavis/widgets/delete_dialog.dart';
 import 'package:anavis/widgets/painter.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class DonorPrenotationView extends StatefulWidget {
+class DonorPendingPrenotationView extends StatefulWidget {
   @override
-  _DonorPrenotationViewState createState() => _DonorPrenotationViewState();
+  _DonorPendingPrenotationViewState createState() =>
+      _DonorPendingPrenotationViewState();
 }
 
-class _DonorPrenotationViewState extends State<DonorPrenotationView> {
+class _DonorPendingPrenotationViewState
+    extends State<DonorPendingPrenotationView> {
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
 
   void _onRefresh() async {
-    await Provider.of<CurrentDonorState>(context).getDonorActivePrenotations();
+    await Provider.of<CurrentDonorState>(context).getDonorPendingPrenotations();
     _refreshController.refreshCompleted();
+  }
+
+  static String restrictFractionalSeconds(String dateTime) =>
+      dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
+  static String nicerTime(String timeNotNice) {
+    return formatDate(DateTime.parse(restrictFractionalSeconds(timeNotNice)),
+        ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
   }
 
   @override
@@ -28,7 +42,7 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Le tue prenotazioni attive",
+          "Le tue prenotazioni in attesa",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -47,7 +61,7 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
         child: Center(
           child: FutureBuilder<List<Prenotation>>(
             future: Provider.of<CurrentDonorState>(context)
-                .getDonorActivePrenotations(),
+                .getDonorPendingPrenotations(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -99,27 +113,30 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return CardForPrenotationAndRequest(
-                          email: snapshot.data[index].getOfficeId(),
+                          id: snapshot.data[index].getOfficeId(),
+                          email: snapshot.data[index].getDonorId(),
                           hour: snapshot.data[index].getHour(),
-                          id: snapshot.data[index].getId(),
                           buttonBar: ButtonBar(
                             children: <Widget>[
                               ButtonForCardBottom(
                                 icon: Icon(
-                                  Icons.cancel,
+                                  Icons.calendar_today,
+                                  color: Colors.white,
                                 ),
-                                color: Colors.deepOrangeAccent,
+                                color: Colors.orange,
                                 onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        DeleteDialog(
-                                      prenotationId:
-                                          snapshot.data[index].getId(),
-                                    ),
-                                  );
+                                  Navigator.pushReplacementNamed(
+                                      context, '/donor/prenotationupdate/recap',
+                                      arguments:
+                                          new DonorPrenotationUpdateRecapArgs(
+                                              snapshot.data[index]
+                                                  .getOfficeId(),
+                                              snapshot.data[index].getHour(),
+                                              nicerTime(snapshot.data[index]
+                                                  .getHour()),
+                                              snapshot.data[index].getId()));
                                 },
-                                title: 'Cancella prenotazione',
+                                title: 'Visualizza riepilogo',
                               ),
                             ],
                           ),

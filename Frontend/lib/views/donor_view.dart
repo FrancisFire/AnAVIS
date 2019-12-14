@@ -1,5 +1,5 @@
-import 'package:anavis/model/app_state.dart';
-import 'package:anavis/model/current_donor_state.dart';
+import 'package:anavis/models/app_state.dart';
+import 'package:anavis/models/current_donor_state.dart';
 import 'package:anavis/widgets/clip_path.dart';
 import 'package:anavis/widgets/fab_item.dart';
 import 'package:badges/badges.dart';
@@ -20,17 +20,28 @@ class _DonorViewState extends State<DonorView> {
   bool _donorCanDonate;
   String _email;
 
-  int numbers;
-
-  int getNumberPrenotations() {
-    Provider.of<CurrentDonorState>(context).getDonorPrenotationsJson().then(
+  int prenotationCount = 0;
+  int pendingCount = 0;
+  int getPrenotationCount() {
+    Provider.of<CurrentDonorState>(context).getDonorActivePrenotations().then(
       (onValue) {
         setState(() {
-          numbers = onValue.length;
+          prenotationCount = onValue.length;
         });
       },
     );
-    return numbers;
+    return prenotationCount;
+  }
+
+  int getPendingCount() {
+    Provider.of<CurrentDonorState>(context).getDonorPendingPrenotations().then(
+      (onValue) {
+        setState(() {
+          pendingCount = onValue.length;
+        });
+      },
+    );
+    return pendingCount;
   }
 
   @override
@@ -215,7 +226,7 @@ class _DonorViewState extends State<DonorView> {
     return <Widget>[
       BuildRaisedButtonFAB(
         icon: Icon(
-          Icons.calendar_today,
+          Icons.done_outline,
           color: Colors.white,
         ),
         onPressed: () {
@@ -246,10 +257,10 @@ class _DonorViewState extends State<DonorView> {
         },
       ),
       Badge(
-        showBadge: getNumberPrenotations() > 0 ? true : false,
+        showBadge: getPrenotationCount() > 0 ? true : false,
         badgeContent: Padding(
           padding: const EdgeInsets.all(4.0),
-          child: Text(getNumberPrenotations().toString()),
+          child: Text(getPrenotationCount().toString()),
         ),
         position: BadgePosition.topRight(right: 1, top: 2),
         badgeColor: Colors.white,
@@ -262,6 +273,27 @@ class _DonorViewState extends State<DonorView> {
             Navigator.pushNamed(
               context,
               '/donor/prenotationsview',
+            );
+          },
+        ),
+      ),
+      Badge(
+        showBadge: getPendingCount() > 0 ? true : false,
+        badgeContent: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(getPendingCount().toString()),
+        ),
+        position: BadgePosition.topRight(right: 1, top: 2),
+        badgeColor: Colors.white,
+        child: BuildRaisedButtonFAB(
+          icon: Icon(
+            Icons.calendar_today,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/donor/pendingprenotationsview',
             );
           },
         ),

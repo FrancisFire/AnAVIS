@@ -1,5 +1,4 @@
-import 'package:anavis/models/current_office_state.dart';
-import 'package:anavis/models/prenotation.dart';
+import 'package:anavis/models/current_donor_state.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
@@ -12,22 +11,25 @@ import 'dart:math';
 
 import 'package:flushbar/flushbar_route.dart' as route;
 
-class OfficePrenotationRecap extends StatefulWidget {
-  final String donor;
+class DonorPrenotationUpdateRecap extends StatefulWidget {
+  final String office;
   final String time;
   final String nicerTime;
-
-  OfficePrenotationRecap({
-    @required this.donor,
+  final String prenotationId;
+  DonorPrenotationUpdateRecap({
+    @required this.office,
     @required this.time,
     this.nicerTime,
+    @required this.prenotationId,
   });
 
   @override
-  _OfficePrenotationRecapState createState() => _OfficePrenotationRecapState();
+  _DonorPrenotationUpdateRecapState createState() =>
+      _DonorPrenotationUpdateRecapState();
 }
 
-class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
+class _DonorPrenotationUpdateRecapState
+    extends State<DonorPrenotationUpdateRecap> {
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -50,13 +52,14 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
     });
   }
 
-  Future<void> postRequest() async {
-    await Provider.of<CurrentOfficeState>(context).sendPrenotation(Prenotation(
-        "${widget.donor}@${Provider.of<CurrentOfficeState>(context).getOfficeName()}@${widget.time}-${rng.nextInt(500)}",
-        Provider.of<CurrentOfficeState>(context).getOfficeName(),
-        widget.donor,
-        widget.time,
-        true));
+  Future<void> acceptChange() async {
+    await Provider.of<CurrentDonorState>(context)
+        .acceptPrenotationChange(widget.prenotationId);
+  }
+
+  Future<void> denyChange() async {
+    await Provider.of<CurrentDonorState>(context)
+        .denyPrenotationChange(widget.prenotationId);
   }
 
   Future showFlushbar(Flushbar instance) {
@@ -115,10 +118,10 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              'Conferma della prenotazione',
+                              'Conferma della nuova prenotazione',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 42,
+                                fontSize: 35,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,
@@ -135,7 +138,7 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
                                   text:
-                                      'La donazione verrà effetuata il giorno ',
+                                      'La donazione verrà effettuata il giorno ',
                                   style: TextStyle(
                                     color: Colors.grey[850],
                                     fontFamily: 'Rubik',
@@ -158,10 +161,10 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: ' per il donatore ',
+                                      text: ' nell\'ufficio di ',
                                     ),
                                     TextSpan(
-                                      text: widget.donor,
+                                      text: widget.office,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -171,7 +174,7 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                     ),
                                     TextSpan(
                                       text:
-                                          '\n\nSi desidera proseguire con la prenotazione o declinare?',
+                                          '\n\nSi desidera proseguire con la richiesta o declinare?',
                                       style: TextStyle(
                                         fontStyle: FontStyle.italic,
                                         color: Colors.grey[700],
@@ -215,26 +218,55 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                       size: 42,
                                     ),
                                     onPressed: () {
-                                      decline = new Flushbar(
-                                        margin: EdgeInsets.all(8),
-                                        borderRadius: 26,
-                                        shouldIconPulse: true,
-                                        title: "Prenotazione annullata",
-                                        icon: Icon(
-                                          Icons.clear,
-                                          size: 28.0,
-                                          color: Colors.red,
-                                        ),
-                                        message:
-                                            "La prenotazione è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
-                                        duration: Duration(
-                                          seconds: 6,
-                                        ),
-                                        isDismissible: true,
-                                        dismissDirection:
-                                            FlushbarDismissDirection.HORIZONTAL,
-                                      );
-                                      this.showFlushbar(this.decline);
+                                      this.denyChange().then((_) {
+                                        if (Provider.of<CurrentDonorState>(
+                                                context)
+                                            .getStatusBody()) {
+                                          confirm = new Flushbar(
+                                            margin: EdgeInsets.all(8),
+                                            shouldIconPulse: true,
+                                            borderRadius: 26,
+                                            title: "Conferma annullata",
+                                            icon: Icon(
+                                              Icons.check,
+                                              size: 28.0,
+                                              color: Colors.green,
+                                            ),
+                                            message:
+                                                "La nuova prenotazione è stata annullata con successo",
+                                            duration: Duration(
+                                              seconds: 6,
+                                            ),
+                                            isDismissible: true,
+                                            dismissDirection:
+                                                FlushbarDismissDirection
+                                                    .HORIZONTAL,
+                                          );
+                                          this.showFlushbar(this.confirm);
+                                        } else {
+                                          err = new Flushbar(
+                                            margin: EdgeInsets.all(8),
+                                            shouldIconPulse: true,
+                                            borderRadius: 26,
+                                            title: "Impossibile confermare",
+                                            icon: Icon(
+                                              Icons.error,
+                                              size: 28.0,
+                                              color: Colors.red,
+                                            ),
+                                            message:
+                                                "Non è stato possibile effettuare la conferma, riprova più tardi",
+                                            duration: Duration(
+                                              seconds: 6,
+                                            ),
+                                            isDismissible: true,
+                                            dismissDirection:
+                                                FlushbarDismissDirection
+                                                    .HORIZONTAL,
+                                          );
+                                          this.showFlushbar(this.err);
+                                        }
+                                      });
                                     },
                                   ),
                                 ),
@@ -259,22 +291,22 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                       size: 42,
                                     ),
                                     onPressed: () {
-                                      this.postRequest().then((_) {
-                                        if (Provider.of<CurrentOfficeState>(
+                                      this.acceptChange().then((_) {
+                                        if (Provider.of<CurrentDonorState>(
                                                 context)
                                             .getStatusBody()) {
                                           confirm = new Flushbar(
                                             margin: EdgeInsets.all(8),
                                             shouldIconPulse: true,
                                             borderRadius: 26,
-                                            title: "Prenotazione effettuata",
+                                            title: "Conferma effettuata",
                                             icon: Icon(
                                               Icons.check,
                                               size: 28.0,
                                               color: Colors.green,
                                             ),
                                             message:
-                                                "La prenotazione è stata effettuata con successo",
+                                                "La conferma della nuova prenotazione è stata effettuata con successo!",
                                             duration: Duration(
                                               seconds: 6,
                                             ),
@@ -289,14 +321,14 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                             margin: EdgeInsets.all(8),
                                             shouldIconPulse: true,
                                             borderRadius: 26,
-                                            title: "Impossibile prenotare",
+                                            title: "Impossibile confermare",
                                             icon: Icon(
                                               Icons.error,
                                               size: 28.0,
                                               color: Colors.red,
                                             ),
                                             message:
-                                                "Non è stato possibile effettuare la prenotazione, riprova più tardi",
+                                                "Non è stato possibile effettuare la conferma, riprova più tardi",
                                             duration: Duration(
                                               seconds: 6,
                                             ),

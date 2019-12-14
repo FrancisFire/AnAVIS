@@ -1,6 +1,5 @@
-import 'package:anavis/model/app_state.dart';
-import 'package:anavis/model/current_office_state.dart';
-import 'package:anavis/model/donor_request_recap_args.dart';
+import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/models/donor_request_recap_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';

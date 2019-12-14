@@ -3,7 +3,7 @@ package com.github.francisfire.anavis.models;
 public class Donor {
 
 	private String mail;
-	private Office officePoint;
+	private String officeId;
 	private boolean canDonate;
 
 	public Donor() {
@@ -14,9 +14,9 @@ public class Donor {
 	 * @param mail
 	 * @param officePoint
 	 */
-	public Donor(String mail, Office officePoint) {
+	public Donor(String mail, String officeId) {
 		this.mail = mail;
-		this.officePoint = officePoint;
+		this.officeId = officeId;
 		this.canDonate = false;
 	}
 
@@ -28,12 +28,12 @@ public class Donor {
 		this.mail = mail;
 	}
 
-	public Office getOfficePoint() {
-		return officePoint;
+	public String getOfficePoint() {
+		return officeId;
 	}
 
-	public void setOfficePoint(Office officePoint) {
-		this.officePoint = officePoint;
+	public void setOfficePoint(String officeId) {
+		this.officeId = officeId;
 	}
 
 	public boolean isCanDonate() {

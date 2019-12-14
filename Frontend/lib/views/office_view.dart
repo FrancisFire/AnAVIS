@@ -1,5 +1,5 @@
-import 'package:anavis/model/app_state.dart';
-import 'package:anavis/model/current_office_state.dart';
+import 'package:anavis/models/app_state.dart';
+import 'package:anavis/models/current_office_state.dart';
 import 'package:anavis/widgets/clip_path.dart';
 import 'package:anavis/widgets/fab_item.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -19,17 +19,30 @@ class OfficeView extends StatefulWidget {
 class _OfficeViewState extends State<OfficeView> {
   String _officeName;
 
-  int numbers;
+  int prenotationCount = 0;
 
-  int getNumberPrenotations() {
-    Provider.of<CurrentOfficeState>(context).getOfficePrenotationsJson().then(
+  int getPrenotationCount() {
+    Provider.of<CurrentOfficeState>(context).getOfficePrenotations().then(
       (onValue) {
         setState(() {
-          numbers = onValue.length;
+          prenotationCount = onValue.length;
         });
       },
     );
-    return numbers;
+    return prenotationCount;
+  }
+
+  int requestCount = 0;
+
+  int getRequestCount() {
+    Provider.of<CurrentOfficeState>(context).getOfficeRequests().then(
+      (onValue) {
+        setState(() {
+          requestCount = onValue.length;
+        });
+      },
+    );
+    return requestCount;
   }
 
   @override
@@ -200,18 +213,27 @@ class _OfficeViewState extends State<OfficeView> {
 
   List<Widget> iconFAB() {
     return <Widget>[
-      BuildRaisedButtonFAB(
-        icon: Icon(
-          Icons.calendar_today,
-          color: Colors.white,
+      Badge(
+        showBadge: getRequestCount() > 0 ? true : false,
+        badgeContent: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(getRequestCount().toString()),
         ),
-        onPressed: () {
-          Navigator.pushNamed(
-            context,
-            '/office/requests',
-            arguments: _officeName,
-          );
-        },
+        position: BadgePosition.topRight(right: 1, top: 2),
+        badgeColor: Colors.white,
+        child: BuildRaisedButtonFAB(
+          icon: Icon(
+            Icons.calendar_today,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/office/requests',
+              arguments: _officeName,
+            );
+          },
+        ),
       ),
       BuildRaisedButtonFAB(
         icon: Icon(
@@ -221,7 +243,9 @@ class _OfficeViewState extends State<OfficeView> {
         onPressed: () async {
           await Provider.of<AppState>(context)
               .setAvailableDonorsByOffice(_officeName);
-          if (Provider.of<AppState>(context).getDonorsByOffice().isEmpty) {
+          if (Provider.of<AppState>(context)
+              .getAvailableDonorsByOffice()
+              .isEmpty) {
             Provider.of<AppState>(context).showFlushbar('Nessun donatore',
                 'Al momento non ci sono donatori disponibili', false, context);
           } else {
@@ -234,10 +258,10 @@ class _OfficeViewState extends State<OfficeView> {
         },
       ),
       Badge(
-        showBadge: getNumberPrenotations() > 0 ? true : false,
+        showBadge: getPrenotationCount() > 0 ? true : false,
         badgeContent: Padding(
           padding: const EdgeInsets.all(4.0),
-          child: Text(getNumberPrenotations().toString()),
+          child: Text(getPrenotationCount().toString()),
         ),
         position: BadgePosition.topRight(right: 1, top: 2),
         badgeColor: Colors.white,

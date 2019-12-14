@@ -1,7 +1,10 @@
-import 'package:anavis/model/office_prenotation_recap_args.dart';
-import 'package:anavis/model/office_prenotation_time_view_args.dart';
+import 'package:anavis/models/donor_prenotationupdate_recap_args.dart';
+import 'package:anavis/models/office_prenotation_recap_args.dart';
+import 'package:anavis/models/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
+import 'package:anavis/views/donor_pendingprenotations_view.dart';
 import 'package:anavis/views/donor_prenotations_view.dart';
+import 'package:anavis/views/donor_prenotationupdate_recap_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_office_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_recap_view.dart';
 import 'package:anavis/views/donor_request_add_views/donor_request_time_view.dart';
@@ -11,11 +14,13 @@ import 'package:anavis/views/office_prenotation_add_views/office_prenotation_don
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_recap_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_time_view.dart';
 import 'package:anavis/views/office_prenotations_view.dart';
+import 'package:anavis/views/office_prenotationupdate_recap_view.dart';
 import 'package:anavis/views/office_request_view.dart';
 import 'package:anavis/views/office_view.dart';
 import 'package:flutter/material.dart';
 
-import 'model/donor_request_recap_args.dart';
+import 'models/donor_request_recap_args.dart';
+import 'models/office_prenotationupdate_recap_args.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -98,6 +103,21 @@ class RouteGenerator {
         }
         return _errorRoute();
 
+      case '/office/prenotationupdate/recap':
+        if (args is OfficePrenotationUpdateRecapArgs) {
+          return MaterialPageRoute(
+              builder: (_) => OfficePrenotationUpdateRecap(
+                    donor: args.getDonor(),
+                    time: args.getTime(),
+                    nicerTime: args.getNicerTime(),
+                    id: args.getId(),
+                    officeName: args.getOfficeName(),
+                  ),
+              settings: RouteSettings(
+                name: 'OfficePrenotationUpdateRecap',
+              ));
+        }
+        return _errorRoute();
       case '/donor/candonate':
         return MaterialPageRoute(
             builder: (_) => DonorCanDonateView(),
@@ -110,6 +130,13 @@ class RouteGenerator {
             builder: (_) => DonorPrenotationView(),
             settings: RouteSettings(
               name: 'DonorPrenotationView',
+            ));
+
+      case "/donor/pendingprenotationsview":
+        return MaterialPageRoute(
+            builder: (_) => DonorPendingPrenotationView(),
+            settings: RouteSettings(
+              name: 'DonorPendingPrenotationView',
             ));
 
       case '/donor/officerequest':
@@ -144,6 +171,22 @@ class RouteGenerator {
               ));
         }
         return _errorRoute();
+
+      case '/donor/prenotationupdate/recap':
+        if (args is DonorPrenotationUpdateRecapArgs) {
+          return MaterialPageRoute(
+              builder: (_) => DonorPrenotationUpdateRecap(
+                    office: args.getOffice(),
+                    time: args.getTime(),
+                    nicerTime: args.getNicerTime(),
+                    prenotationId: args.getPrenotationId(),
+                  ),
+              settings: RouteSettings(
+                name: 'DonorPrenotationUpdateRecap',
+              ));
+        }
+        return _errorRoute();
+
       default:
         return _errorRoute();
     }
@@ -167,7 +210,7 @@ class RouteGenerator {
           children: <Widget>[
             Positioned.fill(
               child: Image.network(
-                'http://docenti.unicam.it/imgprof/1103/img_1078.jpg',
+                'https://am22.akamaized.net/tms/cnt/uploads/2019/12/Baby-Yoda-With-His-Little-Cup-Is-All-of-Us.jpeg',
                 fit: BoxFit.fill,
               ),
             ),

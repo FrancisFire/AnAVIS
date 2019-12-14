@@ -64,7 +64,7 @@ public class DonorServices {
 	 */
 	public String getOfficeIdByDonor(String donorId) {
 		Donor donor = getDonorInstance(Objects.requireNonNull(donorId));
-		return (donor == null) ? null : donor.getOfficePoint().getName();
+		return (donor == null) ? null : donor.getOfficePoint();
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class DonorServices {
 	 */
 	public Set<Donor> getDonorsByOfficeId(String officeId) {
 		Objects.requireNonNull(officeId);
-		return donors.stream().filter(donor -> donor.getOfficePoint().getName().equalsIgnoreCase(officeId))
+		return donors.stream().filter(donor -> donor.getOfficePoint().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
 
@@ -105,7 +105,7 @@ public class DonorServices {
 	public Set<Donor> getAvailableDonorsByOfficeId(String officeId) {
 		Objects.requireNonNull(officeId);
 		return donors.stream()
-				.filter(donor -> donor.getOfficePoint().getName().equalsIgnoreCase(officeId) && donor.isCanDonate())
+				.filter(donor -> donor.getOfficePoint().equalsIgnoreCase(officeId) && donor.isCanDonate())
 				.collect(Collectors.toSet());
 	}
 

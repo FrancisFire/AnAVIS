@@ -1,6 +1,9 @@
-import 'package:anavis/model/current_office_state.dart';
+import 'package:anavis/models/app_state.dart';
+import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
+import 'package:anavis/widgets/confirm_alert_dialog.dart';
 import 'package:anavis/widgets/custom_dialog_mod_prenotation.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +21,14 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
   );
 
   void _onRefresh() async {
-    await Provider.of<CurrentOfficeState>(context).getOfficePrenotationsJson();
+    await Provider.of<CurrentOfficeState>(context).getOfficePrenotations();
     _refreshController.refreshCompleted();
+  }
+
+  Future<void> _removePrenotation(
+      String prenotationId, BuildContext context) async {
+    return await Provider.of<CurrentOfficeState>(context)
+        .removePrenotationByID(prenotationId);
   }
 
   @override
@@ -44,9 +53,9 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
           background: Colors.white,
         ),
         child: Center(
-          child: FutureBuilder<List<dynamic>>(
+          child: FutureBuilder<List<Prenotation>>(
             future: Provider.of<CurrentOfficeState>(context)
-                .getOfficePrenotationsJson(),
+                .getOfficePrenotations(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -74,7 +83,7 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                               16.0,
                             ),
                             child: Text(
-                              "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
+                              "Non sono presenti prenotazioni di donazione al momento, si prega di riprovare più tardi",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,
@@ -98,11 +107,24 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return CardForPrenotationAndRequest(
-                          email: snapshot.data[index]['donor']['mail'],
-                          hour: snapshot.data[index]['hour'],
-                          id: snapshot.data[index]['id'],
+                          email: snapshot.data[index].getDonorId(),
+                          hour: snapshot.data[index].getHour(),
+                          id: snapshot.data[index].getId(),
                           buttonBar: ButtonBar(
                             children: <Widget>[
+                              ButtonForCardBottom(
+                                icon: Icon(
+                                  Icons.mode_edit,
+                                  color: Colors.white,
+                                ),
+                                color: (snapshot.data[index].isConfirmed())
+                                    ? Colors.green
+                                    : Colors.red,
+                                onTap: () {},
+                                title: (snapshot.data[index].isConfirmed())
+                                    ? 'Confermata'
+                                    : 'In attesa',
+                              ),
                               ButtonForCardBottom(
                                 icon: Icon(
                                   Icons.mode_edit,
@@ -114,8 +136,9 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                                     context: context,
                                     builder: (BuildContext context) =>
                                         DialogModificationPrenotation(
-                                      email: snapshot.data[index]['donor']
-                                          ['mail'],
+                                      prenotationId:
+                                          snapshot.data[index].getId(),
+                                      donor: snapshot.data[index].getDonorId(),
                                     ),
                                   );
                                 },
@@ -126,7 +149,63 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                                   Icons.cancel,
                                 ),
                                 color: Colors.red,
-                                onTap: () {},
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return ConfirmAlertDialog(
+                                        denyFunction: () {
+                                          Navigator.popUntil(
+                                              context,
+                                              ModalRoute.withName(
+                                                  'OfficeView'));
+                                          Provider.of<AppState>(context)
+                                              .showFlushbar(
+                                            "Operazione annullata",
+                                            "L'operazione è stata annulata correttamente",
+                                            false,
+                                            context,
+                                          );
+                                        },
+                                        confirmFunction: () {
+                                          this
+                                              ._removePrenotation(
+                                                  snapshot.data[index].getId(),
+                                                  context)
+                                              .then((_) {
+                                            if (Provider.of<CurrentOfficeState>(
+                                                    context)
+                                                .getStatusBody()) {
+                                              Navigator.popUntil(
+                                                  context,
+                                                  ModalRoute.withName(
+                                                      'OfficeView'));
+                                              Provider.of<AppState>(context)
+                                                  .showFlushbar(
+                                                "Operazione effettuata",
+                                                "L'operazione è stata effettuata correttamente",
+                                                true,
+                                                context,
+                                              );
+                                            } else {
+                                              Navigator.popUntil(
+                                                  context,
+                                                  ModalRoute.withName(
+                                                      'OfficeView'));
+                                              Provider.of<AppState>(context)
+                                                  .showFlushbar(
+                                                "Operazione non effettuata",
+                                                "C'è stato un errore nell'esecuzione dell'operazione",
+                                                false,
+                                                context,
+                                              );
+                                            }
+                                          });
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
                                 title: 'Elimina',
                               ),
                             ],
