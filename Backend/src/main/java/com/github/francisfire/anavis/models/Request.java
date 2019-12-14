@@ -5,8 +5,8 @@ import java.util.Date;
 public class Request {
 
 	private String id;
-	private Office officePoint;
-	private Donor donor;
+	private String officeId;
+	private String donorId;
 	private Date hour;
 
 	public Request() {
@@ -19,10 +19,10 @@ public class Request {
 	 * @param donor
 	 * @param hour
 	 */
-	public Request(String id, Office officePoint, Donor donor, Date hour) {
+	public Request(String id, String officePoint, String donor, Date hour) {
 		this.id = id;
-		this.officePoint = officePoint;
-		this.donor = donor;
+		this.officeId = officePoint;
+		this.donorId = donor;
 		this.hour = hour;
 	}
 
@@ -34,20 +34,20 @@ public class Request {
 		this.id = id;
 	}
 
-	public Office getOfficePoint() {
-		return officePoint;
+	public String getOfficeId() {
+		return officeId;
 	}
 
-	public void setOfficePoint(Office officePoint) {
-		this.officePoint = officePoint;
+	public void setOfficeId(String officeId) {
+		this.officeId = officeId;
 	}
 
-	public Donor getDonor() {
-		return donor;
+	public String getDonorId() {
+		return donorId;
 	}
 
-	public void setDonor(Donor donor) {
-		this.donor = donor;
+	public void setDonorId(String donorId) {
+		this.donorId = donorId;
 	}
 
 	public Date getHour() {

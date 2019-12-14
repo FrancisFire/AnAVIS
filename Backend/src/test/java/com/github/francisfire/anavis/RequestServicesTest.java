@@ -14,8 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.github.francisfire.anavis.models.Donor;
-import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.Request;
 import com.github.francisfire.anavis.services.RequestServices;
 
@@ -34,9 +32,7 @@ public class RequestServicesTest {
 	public void addRequest() {
 		assertThrows(NullPointerException.class, () -> requestServices.addRequest(null));
 
-		Office officePineto = new Office("Pineto");
-		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
-		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		Request request = new Request("id1", "Pineto", "gianni@gmail.com", new Date());
 		assertTrue(requestServices.addRequest(request));
 		assertFalse(requestServices.addRequest(request));
 		assertFalse(requestServices.getRequestsByOffice("Pineto").isEmpty());
@@ -46,9 +42,7 @@ public class RequestServicesTest {
 	public void removeRequest() {
 		assertThrows(NullPointerException.class, () -> requestServices.removeRequest(null));
 
-		Office officePineto = new Office("Pineto");
-		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
-		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		Request request = new Request("id1", "Pineto", "gianni@gmail.com", new Date());
 		requestServices.addRequest(request);
 		assertTrue(requestServices.removeRequest("id1"));
 		assertFalse(requestServices.removeRequest("id1"));
@@ -59,9 +53,7 @@ public class RequestServicesTest {
 	public void approveRequest() {
 		assertThrows(NullPointerException.class, () -> requestServices.approveRequest(null));
 
-		Office officePineto = new Office("Pineto");
-		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
-		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		Request request = new Request("id1", "Pineto", "gianni@gmail.com", new Date());
 		requestServices.addRequest(request);
 		assertTrue(requestServices.approveRequest("id1"));
 		assertFalse(requestServices.approveRequest("id1"));
@@ -72,9 +64,7 @@ public class RequestServicesTest {
 	public void denyRequest() {
 		assertThrows(NullPointerException.class, () -> requestServices.denyRequest(null));
 
-		Office officePineto = new Office("Pineto");
-		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
-		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		Request request = new Request("id1", "Pineto", "gianni@gmail.com", new Date());
 		requestServices.addRequest(request);
 		assertTrue(requestServices.denyRequest("id1"));
 		assertFalse(requestServices.denyRequest("id1"));
@@ -85,9 +75,7 @@ public class RequestServicesTest {
 	public void getRequestsByOffice() {
 		assertThrows(NullPointerException.class, () -> requestServices.getRequestsByOffice(null));
 
-		Office officePineto = new Office("Pineto");
-		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
-		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		Request request = new Request("id1", "Pineto", "gianni@gmail.com", new Date());
 		requestServices.addRequest(request);
 		assertTrue(requestServices.getRequestsByOffice("Pineto").contains(request));
 		assertTrue(requestServices.getRequestsByOffice("Sasso").isEmpty());
@@ -97,9 +85,7 @@ public class RequestServicesTest {
 	public void getRequestInstance() {
 		assertThrows(NullPointerException.class, () -> requestServices.getRequestInstance(null));
 
-		Office officePineto = new Office("Pineto");
-		Donor donorGianni = new Donor("gianni@gmail.com", officePineto);
-		Request request = new Request("id1", officePineto, donorGianni, new Date());
+		Request request = new Request("id1", "Pineto", "gianni@gmail.com", new Date());
 		requestServices.addRequest(request);
 		assertEquals(request, requestServices.getRequestInstance("id1"));
 		assertNull(requestServices.getRequestInstance("id2"));

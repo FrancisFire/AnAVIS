@@ -5,17 +5,17 @@ import java.util.Date;
 public class Prenotation {
 
 	private String id;
-	private Office officePoint;
-	private Donor donor;
+	private String officeId;
+	private String donorId;
 	private Date hour;
 	private boolean confirmed;
 
 	public Prenotation() {}
 	
-	public Prenotation(String id, Office officePoint, Donor donor, Date hour) {
+	public Prenotation(String id, String officeId, String donorId, Date hour) {
 		this.id = id;
-		this.officePoint = officePoint;
-		this.donor = donor;
+		this.officeId = officeId;
+		this.donorId = donorId;
 		this.hour = hour;
 		this.confirmed = true;
 	}
@@ -28,20 +28,20 @@ public class Prenotation {
 		this.id = id;
 	}
 
-	public Office getOfficePoint() {
-		return officePoint;
+	public String getOfficeId() {
+		return officeId;
 	}
 
-	public void setOfficePoint(Office officePoint) {
-		this.officePoint = officePoint;
+	public void setOfficeId(String officeId) {
+		this.officeId = officeId;
 	}
 
-	public Donor getDonor() {
-		return donor;
+	public String getDonorId() {
+		return donorId;
 	}
 
-	public void setDonor(Donor donor) {
-		this.donor = donor;
+	public void setDonorId(String donorId) {
+		this.donorId = donorId;
 	}
 
 	public Date getHour() {

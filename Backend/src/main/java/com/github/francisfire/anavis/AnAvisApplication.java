@@ -44,7 +44,7 @@ public class AnAvisApplication {
 		Donor donorFour = new Donor("zamponi@mail.com", officeThree);
 		Office officeFour = new Office("Tolentino");
 		Donor donorFive = new Donor("sasso@mail.com", officeFour);
-		
+
 		DonorServices.getInstance().addDonor(donorOne);
 		DonorServices.getInstance().addDonor(donorTwo);
 		DonorServices.getInstance().addDonor(donorThree);
@@ -54,12 +54,14 @@ public class AnAvisApplication {
 		OfficeServices.getInstance().addOffice(officeTwo);
 		OfficeServices.getInstance().addOffice(officeThree);
 		OfficeServices.getInstance().addOffice(officeFour);
-		Request requestOne = new Request("one", officeOne, donorOne, new Date());
-		Request requestTwo = new Request("two", officeTwo, donorTwo, new Date());
+		Request requestOne = new Request("one", officeOne.getName(), donorOne.getMail(), new Date());
+		Request requestTwo = new Request("two", officeTwo.getName(), donorTwo.getMail(), new Date());
 		RequestServices.getInstance().addRequest(requestOne);
 		RequestServices.getInstance().addRequest(requestTwo);
-		Prenotation prenotationOne = new Prenotation("ciccio", officeThree, donorFour, new Date(1575200000));
-		Prenotation prenotationTwo = new Prenotation("ciccia", officeFour, donorFive, new Date(1575800000));
+		Prenotation prenotationOne = new Prenotation("ciccio", officeThree.getName(), donorFour.getMail(),
+				new Date(1575200000));
+		Prenotation prenotationTwo = new Prenotation("ciccia", officeFour.getName(), donorFive.getMail(),
+				new Date(1575800000));
 		PrenotationServices.getInstance().addPrenotation(prenotationOne);
 		PrenotationServices.getInstance().addPrenotation(prenotationTwo);
 	}

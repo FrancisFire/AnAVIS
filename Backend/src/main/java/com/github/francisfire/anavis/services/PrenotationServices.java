@@ -43,7 +43,7 @@ public class PrenotationServices {
 	 */
 	public boolean addPrenotation(Request request) {
 		Objects.requireNonNull(request);
-		Prenotation prenotation = new Prenotation(request.getId(), request.getOfficePoint(), request.getDonor(),
+		Prenotation prenotation = new Prenotation(request.getId(), request.getOfficeId(), request.getDonorId(),
 				request.getHour());
 		return prenotations.add(prenotation);
 	}
@@ -112,7 +112,7 @@ public class PrenotationServices {
 	public Set<Prenotation> getPrenotationsByOffice(String officeId) {
 		Objects.requireNonNull(officeId);
 		return prenotations.stream()
-				.filter(prenotation -> prenotation.getOfficePoint().getName().equalsIgnoreCase(officeId))
+				.filter(prenotation -> prenotation.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
 
@@ -125,7 +125,7 @@ public class PrenotationServices {
 	 */
 	public Set<Prenotation> getPrenotationsByDonor(String donorId) {
 		Objects.requireNonNull(donorId);
-		return prenotations.stream().filter(prenotation -> prenotation.getDonor().getMail().equalsIgnoreCase(donorId))
+		return prenotations.stream().filter(prenotation -> prenotation.getDonorId().equalsIgnoreCase(donorId))
 				.collect(Collectors.toSet());
 	}
 

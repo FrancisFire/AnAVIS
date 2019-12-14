@@ -106,7 +106,7 @@ public class RequestServices {
 	 */
 	public Set<Request> getRequestsByOffice(String officeId) {
 		Objects.requireNonNull(officeId);
-		return requests.stream().filter(request -> request.getOfficePoint().getName().equals(officeId))
+		return requests.stream().filter(request -> request.getOfficeId().equals(officeId))
 				.collect(Collectors.toSet());
 	}
 
