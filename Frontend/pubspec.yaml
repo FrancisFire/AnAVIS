@@ -26,6 +26,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   badges: ^1.1.0
   flare_flutter: ^1.8.1
+  flutter_speed_dial: ^1.2.5
 
 dev_dependencies:
   flutter_test:
