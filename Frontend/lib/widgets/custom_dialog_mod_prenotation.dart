@@ -1,6 +1,5 @@
 import 'package:anavis/models/app_state.dart';
 import 'package:anavis/models/current_office_state.dart';
-import 'package:anavis/models/office_prenotation_recap_args.dart';
 import 'package:anavis/models/office_prenotationupdate_recap_args.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/form_field_general.dart';
@@ -25,9 +24,16 @@ class _DialogModificationPrenotationState
   List<DropdownMenuItem> _offices, _hours;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _hours = this.createHourItem(context);
+      _offices = this.createOfficeNames(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _hours = this.createHourItem(context);
-    _offices = this.createOfficeNames(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(26),

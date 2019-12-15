@@ -112,18 +112,19 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                           id: snapshot.data[index].getId(),
                           buttonBar: ButtonBar(
                             children: <Widget>[
-                              ButtonForCardBottom(
-                                icon: Icon(
-                                  Icons.mode_edit,
-                                  color: Colors.white,
-                                ),
-                                color: (snapshot.data[index].isConfirmed())
-                                    ? Colors.green
-                                    : Colors.red,
-                                onTap: () {},
-                                title: (snapshot.data[index].isConfirmed())
-                                    ? 'Confermata'
-                                    : 'In attesa',
+                              CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                child: snapshot.data[index].isConfirmed()
+                                    ? Icon(
+                                        Icons.check_circle,
+                                        size: 38,
+                                        color: Colors.green,
+                                      )
+                                    : Icon(
+                                        Icons.error,
+                                        size: 38,
+                                        color: Colors.red,
+                                      ),
                               ),
                               ButtonForCardBottom(
                                 icon: Icon(

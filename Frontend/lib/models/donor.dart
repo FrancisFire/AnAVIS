@@ -4,9 +4,11 @@ class Donor {
     this._officeId = officeId;
     this._canDonate = canDonate;
   }
+
   String _mail;
   String _officeId;
   bool _canDonate;
+
   String getMail() {
     return _mail;
   }

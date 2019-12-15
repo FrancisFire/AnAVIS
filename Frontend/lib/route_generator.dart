@@ -69,7 +69,9 @@ class RouteGenerator {
       case '/office/prenotations':
         if (args is String) {
           return MaterialPageRoute(
-              builder: (_) => OfficePrenotationDonorView(officeName: args),
+              builder: (_) => OfficePrenotationDonorView(
+                    officeName: args,
+                  ),
               settings: RouteSettings(
                 name: 'OfficePrenotationView',
               ));

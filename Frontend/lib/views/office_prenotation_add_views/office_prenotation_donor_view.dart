@@ -5,7 +5,6 @@ import 'package:anavis/models/office_prenotation_time_view_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class OfficePrenotationDonorView extends StatefulWidget {
@@ -22,7 +21,7 @@ class OfficePrenotationDonorView extends StatefulWidget {
 
 class _OfficePrenotationDonorViewState
     extends State<OfficePrenotationDonorView> {
-  Donor _donorSelected;
+  String _donorSelected;
 
   void fetchDonorByOffice() async {
     await Provider.of<AppState>(context)
@@ -34,28 +33,25 @@ class _OfficePrenotationDonorViewState
     List<DropdownMenuItem> listDonorItem = new List<DropdownMenuItem>();
     for (var donor
         in Provider.of<AppState>(context).getAvailableDonorsByOffice()) {
-      listDonorItem.add(new DropdownMenuItem(
-        value: donor,
-        child: Container(
-          child: Text(
-            donor.getMail(),
-            style: TextStyle(
-              color: Colors.white,
+      listDonorItem.add(
+        new DropdownMenuItem(
+          value: donor,
+          child: Container(
+            child: Text(
+              donor,
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-      ));
+      );
     }
     return listDonorItem;
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
     return Scaffold(
       floatingActionButton: _donorSelected != null
           ? FABRightArrow(
@@ -76,7 +72,9 @@ class _OfficePrenotationDonorViewState
                     context,
                     '/office/prenotations/timeview',
                     arguments: new OfficePrenotationTimeViewArgs(
-                        widget.officeName, _donorSelected.getMail()),
+                      widget.officeName,
+                      _donorSelected,
+                    ),
                   );
                 }
               },
@@ -94,7 +92,7 @@ class _OfficePrenotationDonorViewState
           color: Colors.red,
         ),
         labelDropDown: "Seleziona il donatore",
-        valueSelected: _donorSelected.getMail(),
+        valueSelected: _donorSelected,
         onChanged: (newValue) {
           setState(() {
             _donorSelected = newValue;

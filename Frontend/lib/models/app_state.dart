@@ -9,7 +9,7 @@ import 'donor.dart';
 class AppState extends ChangeNotifier {
   List<String> _officeNames = new List<String>();
   String _ipReference;
-  Set<Donor> _availableDonorsByOffice = new Set<Donor>();
+  Set<String> _availableDonorsByOffice = new Set<String>();
 
   AppState(String ip) {
     _ipReference = ip;
@@ -25,6 +25,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /*
   Future<void> setAvailableDonorsByOffice(String officeName) async {
     var request = await http.get(
         "http://${_ipReference}:8080/api/donor/office/$officeName/available");
@@ -36,12 +37,23 @@ class AppState extends ChangeNotifier {
     }
     notifyListeners();
   }
+  */
+
+  Future<void> setAvailableDonorsByOffice(String officeName) async {
+    var request = await http.get(
+        "http://${_ipReference}:8080/api/donor/office/$officeName/available");
+    var parsedJson = json.decode(request.body);
+    for (var office in parsedJson) {
+      _availableDonorsByOffice.add(office['mail']);
+    }
+    notifyListeners();
+  }
 
   List<String> getOfficeNames() {
     return _officeNames;
   }
 
-  Set<Donor> getAvailableDonorsByOffice() {
+  Set<String> getAvailableDonorsByOffice() {
     return _availableDonorsByOffice;
   }
 

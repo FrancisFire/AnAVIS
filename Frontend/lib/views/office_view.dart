@@ -246,8 +246,12 @@ class _OfficeViewState extends State<OfficeView> {
           if (Provider.of<AppState>(context)
               .getAvailableDonorsByOffice()
               .isEmpty) {
-            Provider.of<AppState>(context).showFlushbar('Nessun donatore',
-                'Al momento non ci sono donatori disponibili', false, context);
+            Provider.of<AppState>(context).showFlushbar(
+              'Nessun donatore',
+              'Al momento non ci sono donatori disponibili',
+              false,
+              context,
+            );
           } else {
             Navigator.pushNamed(
               context,
