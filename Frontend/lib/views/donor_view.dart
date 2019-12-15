@@ -1,13 +1,11 @@
 import 'package:anavis/models/app_state.dart';
 import 'package:anavis/models/current_donor_state.dart';
+import 'package:anavis/widgets/button_fab_homepage.dart';
 import 'package:anavis/widgets/clip_path.dart';
-import 'package:anavis/widgets/fab_item.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -209,21 +207,8 @@ class _DonorViewState extends State<DonorView> {
           ),
         ],
       ),
-      floatingActionButton: SpeedDial(
-        marginRight: 18,
-        marginBottom: 20,
-        animatedIcon: AnimatedIcons.menu_close,
-        animatedIconTheme: IconThemeData(size: 22.0),
-        visible: true,
-        closeManually: false,
-        curve: Curves.bounceIn,
-        overlayColor: Colors.white,
-        overlayOpacity: 0.6,
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
-        elevation: 8.0,
-        shape: CircleBorder(),
-        children: iconFAB(),
+      floatingActionButton: ButtonFABHomePage(
+        iconFab: iconFAB(),
       ),
     );
   }

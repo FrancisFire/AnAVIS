@@ -10,7 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
-  fab_circular_menu: ^0.1.1
   font_awesome_flutter: ^8.5.0
   auto_size_text: ^2.1.0
   beauty_textfield: ^0.0.1
