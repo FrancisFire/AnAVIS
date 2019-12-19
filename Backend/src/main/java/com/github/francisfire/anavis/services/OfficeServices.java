@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.github.francisfire.anavis.models.Office;
+import com.github.francisfire.anavis.models.TimeSlot;
 
 public class OfficeServices {
 
@@ -60,7 +61,7 @@ public class OfficeServices {
 	 * @param officeId the id of the office
 	 * @return the set of Date objects in which prenotations can be made
 	 */
-	public Set<Date> getDonationsTimeTable(String officeId) {
+	public Set<TimeSlot> getDonationsTimeTable(String officeId) {
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
 		return (office == null) ? new HashSet<>() : getOfficeInstance(officeId).getDonationTimeTables();
 	}
@@ -76,5 +77,29 @@ public class OfficeServices {
 	public Office getOfficeInstance(String officeId) {
 		Objects.requireNonNull(officeId);
 		return offices.stream().filter(office -> office.getName().equals(officeId)).findFirst().orElse(null);
+	}
+	
+	public boolean addTimeslotByOffice(TimeSlot timeSlot, String officeId) {
+		Objects.requireNonNull(timeSlot);
+		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
+		return office.addTimeSlot(timeSlot);
+	}
+	
+	public boolean increaseTimeslotByOffice(Date date, String officeId) {
+		Objects.requireNonNull(date);
+		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
+		return office.increaseSlotByDate(date);
+	}
+	
+	public boolean decreaseTimeslotByOffice(Date date, String officeId) {
+		Objects.requireNonNull(date);
+		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
+		return office.decreaseSlotByDate(date);
+	}
+	
+	public boolean isDateAvailableByOffice(Date date, String officeId) {
+		Objects.requireNonNull(date);
+		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
+		return office.isDateAvalaible(date);
 	}
 }

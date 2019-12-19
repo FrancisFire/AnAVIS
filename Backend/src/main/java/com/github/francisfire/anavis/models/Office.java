@@ -1,6 +1,5 @@
 package com.github.francisfire.anavis.models;
 
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,11 +7,11 @@ import java.util.Set;
 public class Office {
 
 	private String name;
-	private Set<Date> donationTimeTables;
+	private Set<TimeSlot> donationTimeTables;
 
 	public Office() {
 	}
-	
+
 	/**
 	 * 
 	 * @param nome
@@ -31,12 +30,46 @@ public class Office {
 		this.name = name;
 	}
 
-	public Set<Date> getDonationTimeTables() {
+	public Set<TimeSlot> getDonationTimeTables() {
 		return donationTimeTables;
 	}
 
-	public void setDonationTimeTables(Set<Date> donationTimeTables) {
+	public void setDonationTimeTables(Set<TimeSlot> donationTimeTables) {
 		this.donationTimeTables = donationTimeTables;
+	}
+
+	public boolean addTimeSlot(TimeSlot timeSlot) {
+		return donationTimeTables.add(timeSlot);
+	}
+
+	public boolean increaseSlotByDate(Date dateTime) {
+		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+				.findFirst().orElse(null);
+		if (slot == null) {
+			return false;
+		} else {
+			return slot.increaseSlots();
+		}
+	}
+
+	public boolean isDateAvalaible(Date dateTime) {
+		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+				.findFirst().orElse(null);
+		if (slot == null) {
+			return false;
+		} else {
+			return slot.isDateAvalaible();
+		}
+	}
+
+	public boolean decreaseSlotByDate(Date dateTime) {
+		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+				.findFirst().orElse(null);
+		if (slot == null) {
+			return false;
+		} else {
+			return slot.decreaseSlots();
+		}
 	}
 
 	@Override

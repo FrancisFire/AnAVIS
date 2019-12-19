@@ -2,22 +2,21 @@ package com.github.francisfire.anavis.models;
 
 import java.util.Date;
 
-public class Prenotation {
+abstract class Prenotation {
 
 	private String id;
 	private String officeId;
 	private String donorId;
 	private Date hour;
-	private boolean confirmed;
 
-	public Prenotation() {}
-	
+	public Prenotation() {
+	}
+
 	public Prenotation(String id, String officeId, String donorId, Date hour) {
 		this.id = id;
 		this.officeId = officeId;
 		this.donorId = donorId;
 		this.hour = hour;
-		this.confirmed = true;
 	}
 
 	public String getId() {
@@ -52,14 +51,6 @@ public class Prenotation {
 		this.hour = hour;
 	}
 
-	public boolean isConfirmed() {
-		return confirmed;
-	}
-
-	public void setConfirmed(boolean confirmed) {
-		this.confirmed = confirmed;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -88,6 +79,6 @@ public class Prenotation {
 			return false;
 		}
 		return true;
-	}	
+	}
 
 }

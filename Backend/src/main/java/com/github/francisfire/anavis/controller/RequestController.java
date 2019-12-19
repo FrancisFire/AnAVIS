@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.francisfire.anavis.models.Request;
+import com.github.francisfire.anavis.models.RequestPrenotation;
 import com.github.francisfire.anavis.services.RequestServices;
 
 @RestController
@@ -21,17 +21,17 @@ public class RequestController {
 	private static RequestServices requestServices = RequestServices.getInstance();
 
 	@PostMapping("")
-	public boolean createRequest(@RequestBody Request request) {
+	public boolean createRequest(@RequestBody RequestPrenotation request) {
 		return requestServices.addRequest(request);
 	}
 
 	@GetMapping("/office/{office}")
-	public Set<Request> getRequestsByOffice(@PathVariable("office") String officeId) {
+	public Set<RequestPrenotation> getRequestsByOffice(@PathVariable("office") String officeId) {
 		return requestServices.getRequestsByOffice(officeId);
 	}
 
 	@GetMapping("/{requestId}")
-	public Request getRequestById(@PathVariable("requestId") String requestId) {
+	public RequestPrenotation getRequestById(@PathVariable("requestId") String requestId) {
 		return requestServices.getRequestInstance(requestId);
 	}
 

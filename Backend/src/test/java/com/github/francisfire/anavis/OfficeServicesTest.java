@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.github.francisfire.anavis.models.Office;
+import com.github.francisfire.anavis.models.TimeSlot;
 import com.github.francisfire.anavis.services.OfficeServices;
 
 @ExtendWith(SpringExtension.class)
@@ -37,13 +38,14 @@ public class OfficeServicesTest {
 
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
 		Date today = calendar.getTime();
+		TimeSlot ts = new TimeSlot(today, 5);
 		Office of = new Office("Roma Sud");
-		Set<Date> dates = new HashSet<>();
-		dates.add(today);
+		Set<TimeSlot> dates = new HashSet<>();
+		dates.add(ts);
 		of.setDonationTimeTables(dates);
 		officeServices.addOffice(of);
-		assertTrue(officeServices.getDonationsTimeTable("Roma Sud").contains(today));
-		assertFalse(officeServices.getDonationsTimeTable("Roma Nord").contains(today));
+		assertTrue(officeServices.getDonationsTimeTable("Roma Sud").contains(ts));
+		assertFalse(officeServices.getDonationsTimeTable("Roma Nord").contains(ts));
 	}
 
 	@Test

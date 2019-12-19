@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.francisfire.anavis.models.Prenotation;
+import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.services.PrenotationServices;
 
 @RestController
@@ -21,23 +21,23 @@ public class PrenotationController {
 	private static PrenotationServices prenotationServices = PrenotationServices.getInstance();
 
 	@PostMapping("")
-	public boolean createPrenotation(@RequestBody Prenotation prenotation) {
+	public boolean createPrenotation(@RequestBody ActivePrenotation prenotation) {
 		return prenotationServices.addPrenotation(prenotation);
 	}
 
 	@GetMapping("/office/{officeId}")
-	public Set<Prenotation> getPrenotationsByOffice(@PathVariable("officeId") String officeId) {
+	public Set<ActivePrenotation> getPrenotationsByOffice(@PathVariable("officeId") String officeId) {
 		return prenotationServices.getPrenotationsByOffice(officeId);
 	}
 
 	@GetMapping("/donor/{donorId}")
-	public Set<Prenotation> getPrenotationsByDonor(@PathVariable("donorId") String donorId) {
+	public Set<ActivePrenotation> getPrenotationsByDonor(@PathVariable("donorId") String donorId) {
 		return prenotationServices.getPrenotationsByDonor(donorId);
 	}
 
 	@PutMapping("")
 	public boolean updatePrenotation(
-			@RequestBody Prenotation prenotation) {
+			@RequestBody ActivePrenotation prenotation) {
 		return prenotationServices.updatePrenotation(prenotation);
 	}
 

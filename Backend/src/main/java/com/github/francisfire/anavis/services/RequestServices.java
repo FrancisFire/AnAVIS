@@ -5,13 +5,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.github.francisfire.anavis.models.Request;
+import com.github.francisfire.anavis.models.RequestPrenotation;
 
 public class RequestServices {
 
 	private static RequestServices instance;
-	private Set<Request> requests;
-	
+	private Set<RequestPrenotation> requests;
+
 	private RequestServices() {
 		this.requests = new HashSet<>();
 	}
@@ -37,7 +37,7 @@ public class RequestServices {
 	 * @param request the request to add
 	 * @return true if the request wasn't present in the collection, false otherwise
 	 */
-	public boolean addRequest(Request request) {
+	public boolean addRequest(RequestPrenotation request) {
 		return requests.add(Objects.requireNonNull(request));
 	}
 
@@ -66,7 +66,7 @@ public class RequestServices {
 	 */
 	public boolean approveRequest(String requestId) {
 		Objects.requireNonNull(requestId);
-		Request toApprove = this.getRequestInstance(requestId);
+		RequestPrenotation toApprove = this.getRequestInstance(requestId);
 		if (requests.remove(toApprove)) {
 			return PrenotationServices.getInstance().addPrenotation(toApprove);
 		}
@@ -92,7 +92,7 @@ public class RequestServices {
 	 * 
 	 * @return a view of the request collection
 	 */
-	public Set<Request> getRequests() {
+	public Set<RequestPrenotation> getRequests() {
 		return new HashSet<>(requests);
 	}
 
@@ -104,21 +104,21 @@ public class RequestServices {
 	 * @param officeId id of the office
 	 * @return a collection of requests associated to the office
 	 */
-	public Set<Request> getRequestsByOffice(String officeId) {
+	public Set<RequestPrenotation> getRequestsByOffice(String officeId) {
 		Objects.requireNonNull(officeId);
-		return requests.stream().filter(request -> request.getOfficeId().equals(officeId))
-				.collect(Collectors.toSet());
+		return requests.stream().filter(request -> request.getOfficeId().equals(officeId)).collect(Collectors.toSet());
 	}
 
 	/**
-	 * Gets the Request instance associated to the id that has been passed in input
-	 * to the method
+	 * Gets the RequestPrenotation instance associated to the id that has been
+	 * passed in input to the method
 	 * 
 	 * @throws NullPointerException if requestId is null
 	 * @param requestId id of the request
-	 * @return the Request object if present in the collection, null otherwise
+	 * @return the RequestPrenotation object if present in the collection, null
+	 *         otherwise
 	 */
-	public Request getRequestInstance(String requestId) {
+	public RequestPrenotation getRequestInstance(String requestId) {
 		Objects.requireNonNull(requestId);
 		return requests.stream().filter(request -> request.getId().equals(requestId)).findFirst().orElse(null);
 	}
