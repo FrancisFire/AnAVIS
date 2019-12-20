@@ -12,14 +12,63 @@ public class Office {
 	public Office() {
 	}
 
-	/**
-	 * 
-	 * @param nome
-	 * @param donatori
-	 */
 	public Office(String name) {
 		this.name = name;
 		this.donationTimeTables = new HashSet<>();
+	}
+
+	/**
+	 * TODO docs
+	 * @param timeSlot
+	 * @return
+	 */
+	public boolean addTimeSlot(TimeSlot timeSlot) {
+		return donationTimeTables.add(timeSlot);
+	}
+
+	/**
+	 * TODO docs
+	 * @param dateTime
+	 * @return
+	 */
+	public boolean increaseSlotByDate(Date dateTime) {
+		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+				.findFirst().orElse(null);
+		if (slot == null) {
+			return false;
+		} else {
+			return slot.increaseSlots();
+		}
+	}
+
+	/**
+	 * TODO docs
+	 * @param dateTime
+	 * @return
+	 */
+	public boolean decreaseSlotByDate(Date dateTime) {
+		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+				.findFirst().orElse(null);
+		if (slot == null) {
+			return false;
+		} else {
+			return slot.decreaseSlots();
+		}
+	}
+
+	/**
+	 * TODO docs
+	 * @param dateTime
+	 * @return
+	 */
+	public boolean isDateAvalaible(Date dateTime) {
+		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+				.findFirst().orElse(null);
+		if (slot == null) {
+			return false;
+		} else {
+			return slot.isDateAvalaible();
+		}
 	}
 
 	public String getName() {
@@ -36,40 +85,6 @@ public class Office {
 
 	public void setDonationTimeTables(Set<TimeSlot> donationTimeTables) {
 		this.donationTimeTables = donationTimeTables;
-	}
-
-	public boolean addTimeSlot(TimeSlot timeSlot) {
-		return donationTimeTables.add(timeSlot);
-	}
-
-	public boolean increaseSlotByDate(Date dateTime) {
-		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
-				.findFirst().orElse(null);
-		if (slot == null) {
-			return false;
-		} else {
-			return slot.increaseSlots();
-		}
-	}
-
-	public boolean isDateAvalaible(Date dateTime) {
-		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
-				.findFirst().orElse(null);
-		if (slot == null) {
-			return false;
-		} else {
-			return slot.isDateAvalaible();
-		}
-	}
-
-	public boolean decreaseSlotByDate(Date dateTime) {
-		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
-				.findFirst().orElse(null);
-		if (slot == null) {
-			return false;
-		} else {
-			return slot.decreaseSlots();
-		}
 	}
 
 	@Override

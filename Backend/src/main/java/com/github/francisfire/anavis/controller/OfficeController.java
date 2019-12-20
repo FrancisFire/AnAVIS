@@ -4,6 +4,8 @@ import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +27,11 @@ public class OfficeController {
 	@GetMapping("/{officeId}/timeTable")
 	public Set<TimeSlot> getDonationsTimeTable(@PathVariable("officeId") String officeId) {
 		return officeServices.getDonationsTimeTable(officeId);
+	}
+	
+	@PutMapping("/{officeId}/addTimeSlot")
+	public boolean addTimeSlot(@PathVariable("officeId") String officeId, @RequestBody TimeSlot timeSlot) {
+		return officeServices.addTimeslotByOffice(timeSlot, officeId);
 	}
 
 }

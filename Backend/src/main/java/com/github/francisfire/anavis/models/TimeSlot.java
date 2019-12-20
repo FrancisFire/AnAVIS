@@ -6,9 +6,45 @@ public class TimeSlot {
 	private Date dateTime;
 	private int donorSlots;
 
+	public TimeSlot() {
+	}
+
 	public TimeSlot(Date dateTime, int donorSlots) {
 		this.dateTime = dateTime;
 		this.donorSlots = donorSlots;
+	}
+
+	/**
+	 * TODO docs
+	 * 
+	 * @return
+	 */
+	public boolean isDateAvalaible() {
+		return donorSlots > 0;
+	}
+
+	/**
+	 * TODO docs
+	 * 
+	 * @return
+	 */
+	public boolean increaseSlots() {
+		this.donorSlots++;
+		return true;
+	}
+
+	/**
+	 * TODO docs
+	 * 
+	 * @return
+	 */
+	public boolean decreaseSlots() {
+		if (this.donorSlots == 0) {
+			return false;
+		} else {
+			this.donorSlots--;
+			return true;
+		}
 	}
 
 	public Date getDateTime() {
@@ -27,23 +63,6 @@ public class TimeSlot {
 		this.donorSlots = slots;
 	}
 
-	public boolean isDateAvalaible() {
-		return donorSlots > 0;
-	}
-
-	public boolean increaseSlots() {
-		this.donorSlots++;
-		return true;
-	}
-	
-	public boolean decreaseSlots() {
-		if(this.donorSlots == 0) {
-			return false;
-		} else {
-			this.donorSlots--;
-			return true;
-		}
-	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;

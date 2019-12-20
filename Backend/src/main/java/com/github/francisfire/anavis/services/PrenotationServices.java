@@ -1,5 +1,6 @@
 package com.github.francisfire.anavis.services;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -43,8 +44,8 @@ public class PrenotationServices {
 	 */
 	public boolean addPrenotation(RequestPrenotation request) {
 		Objects.requireNonNull(request);
-		ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(), request.getDonorId(),
-				request.getHour());
+		ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(),
+				request.getDonorId(), request.getHour());
 		return prenotations.add(prenotation);
 	}
 
@@ -60,43 +61,65 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * Adds a prenotation to the prenotation collection
+	 * Adds a prenotation to the prenotation collection and decreases by one the
+	 * cardinality of the office timeslot at the date of prenotation
 	 * 
 	 * @throws NullPointerException if prenotation is null
 	 * @param prenotation the prenotation to add
-	 * @return true if the collection didn't contain the added prenotation
+	 * @return true if the collection didn't contain the added prenotation and a
+	 *         timeslot was present
 	 */
 	public boolean addPrenotation(ActivePrenotation prenotation) {
 		Objects.requireNonNull(prenotation);
-		return prenotations.add(prenotation);
+		Date date = prenotation.getHour();
+		String officeId = prenotation.getOfficeId();
+		return OfficeServices.getInstance().decreaseTimeslotByOffice(date, officeId) && prenotations.add(prenotation);
 	}
 
 	/**
 	 * Removes the prenotation assigned to the prenotationId from the prenotation
-	 * collection
+	 * collection and increases by one the cardinality of the timeslot of the office
+	 * at the date of prenotation
 	 * 
 	 * @throws NullPointerException if prenotationId is null
 	 * @param prenotationId the id of the prenotation to remove
-	 * @return true if the collections contained the prenotation
+	 * @return true if the collections contained the prenotation and the timeslot
+	 *         was succesfully increased
 	 */
 	public boolean removePrenotation(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
-		return prenotations.remove(getPrenotationInstance(prenotationId));
+		ActivePrenotation prenotation = getPrenotationInstance(prenotationId);
+		Date date = prenotation.getHour();
+		String officeId = prenotation.getOfficeId();
+		return OfficeServices.getInstance().increaseTimeslotByOffice(date, officeId)
+				&& prenotations.remove(getPrenotationInstance(prenotationId));
 	}
 
 	/**
 	 * Updates the prenotation passed in input to the method in the prenotation
-	 * collection
+	 * collection, increases by one the cardinality of the timeslot of the office
+	 * from the old prenotation and decreases the one associated to the new
+	 * prenotation
+	 * 
+	 * TODO tests
 	 * 
 	 * @throws NullPointerException if prenotation is null
 	 * @param prenotation the prenotation to update
-	 * @return true if prenotation was present and updated successfully, false
-	 *         otherwise
+	 * @return true if prenotation was present and updates succesfully and timeslots
+	 *         have been modified successfully, false otherwise
 	 */
 	public boolean updatePrenotation(ActivePrenotation prenotation) {
 		Objects.requireNonNull(prenotation);
-		if (prenotations.remove(getPrenotationInstance(prenotation.getId()))) {
-			return prenotations.add(prenotation);
+		ActivePrenotation oldPrenotation = getPrenotationInstance(prenotation.getId());
+		Date oldDate = oldPrenotation.getHour();
+		String oldOffice = oldPrenotation.getOfficeId();
+
+		Date newDate = prenotation.getHour();
+		String newOffice = prenotation.getOfficeId();
+		if (prenotations.remove(oldPrenotation)
+				&& OfficeServices.getInstance().increaseTimeslotByOffice(oldDate, oldOffice)) {
+			return OfficeServices.getInstance().decreaseTimeslotByOffice(newDate, newOffice)
+					&& prenotations.add(prenotation);
 		} else {
 			return false;
 		}
@@ -166,8 +189,8 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * Gets the ActivePrenotation instance associated to the id that has been passed in
-	 * input to the method
+	 * Gets the ActivePrenotation instance associated to the id that has been passed
+	 * in input to the method
 	 * 
 	 * @throws NullPointerException if prenotationId is null
 	 * @param prenotationId id of the request
@@ -177,6 +200,18 @@ public class PrenotationServices {
 		Objects.requireNonNull(prenotationId);
 		return prenotations.stream().filter(prenotation -> prenotation.getId().equals(prenotationId)).findFirst()
 				.orElse(null);
+	}
+
+	/**
+	 * TODO tutto
+	 * 
+	 * @param prenotationId
+	 * @param reportId
+	 * @return
+	 */
+	public boolean closePrenotation(String prenotationId, String reportId) {
+		return false;
+		// TODO tutto
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.github.francisfire.anavis.services;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -67,7 +68,9 @@ public class RequestServices {
 	public boolean approveRequest(String requestId) {
 		Objects.requireNonNull(requestId);
 		RequestPrenotation toApprove = this.getRequestInstance(requestId);
-		if (requests.remove(toApprove)) {
+		Date date = toApprove.getHour();
+		String officeId = toApprove.getOfficeId();
+		if (OfficeServices.getInstance().decreaseTimeslotByOffice(date, officeId) && requests.remove(toApprove)) {
 			return PrenotationServices.getInstance().addPrenotation(toApprove);
 		}
 		return false;

@@ -79,24 +79,48 @@ public class OfficeServices {
 		return offices.stream().filter(office -> office.getName().equals(officeId)).findFirst().orElse(null);
 	}
 	
+	/**
+	 * TODO docs e test
+	 * @param timeSlot
+	 * @param officeId
+	 * @return
+	 */
 	public boolean addTimeslotByOffice(TimeSlot timeSlot, String officeId) {
 		Objects.requireNonNull(timeSlot);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
 		return office.addTimeSlot(timeSlot);
 	}
 	
+	/**
+	 * TODO docs e test
+	 * @param date
+	 * @param officeId
+	 * @return
+	 */
 	public boolean increaseTimeslotByOffice(Date date, String officeId) {
 		Objects.requireNonNull(date);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
 		return office.increaseSlotByDate(date);
 	}
 	
+	/**
+	 * TODO docs e test
+	 * @param date
+	 * @param officeId
+	 * @return
+	 */
 	public boolean decreaseTimeslotByOffice(Date date, String officeId) {
 		Objects.requireNonNull(date);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
 		return office.decreaseSlotByDate(date);
 	}
 	
+	/**
+	 * TODO docs e test
+	 * @param date
+	 * @param officeId
+	 * @return
+	 */
 	public boolean isDateAvailableByOffice(Date date, String officeId) {
 		Objects.requireNonNull(date);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));

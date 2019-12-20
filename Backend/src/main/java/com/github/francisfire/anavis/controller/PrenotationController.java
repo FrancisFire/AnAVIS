@@ -55,4 +55,10 @@ public class PrenotationController {
 	public boolean denyPrenotationChange(@PathVariable("prenotationId") String prenotationId) {
 		return prenotationServices.denyPrenotationChange(prenotationId);
 	}
+	
+	@PutMapping("/{prenotationId}/close")
+	public boolean closePrenotation(@PathVariable("prenotationId") String prenotationId, @RequestBody String reportId) {
+		// TODO file handling
+		return prenotationServices.closePrenotation(prenotationId, reportId);
+	}
 }
