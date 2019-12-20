@@ -24,6 +24,7 @@ public class DonationController {
 	
 	@GetMapping("/report/{donationId}")
 	public File getDonationReport(@PathVariable("donationId") String donationId) {
+		@SuppressWarnings("unused")
 		String reportId = donationServices.getPrenotationInstance(donationId).getReportId();
 		// TODO get file
 		return null;

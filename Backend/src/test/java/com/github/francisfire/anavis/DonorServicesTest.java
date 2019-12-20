@@ -9,16 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.services.DonorServices;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
 public class DonorServicesTest {
 
 	private static DonorServices donorServices;

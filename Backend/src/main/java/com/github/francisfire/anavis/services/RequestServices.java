@@ -1,6 +1,5 @@
 package com.github.francisfire.anavis.services;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -61,16 +60,12 @@ public class RequestServices {
 	 * 
 	 * @throws NullPointerException if requestId is null
 	 * @param requestId id of the request
-	 * @return false if the request object hasn't been found in the collection,
-	 *         otherwise it returns the result of
-	 *         PrenotationServices.addPrenotation()
+	 * @return true if the prenotation has been correctly added, false otherwise
 	 */
 	public boolean approveRequest(String requestId) {
 		Objects.requireNonNull(requestId);
 		RequestPrenotation toApprove = this.getRequestInstance(requestId);
-		Date date = toApprove.getHour();
-		String officeId = toApprove.getOfficeId();
-		if (OfficeServices.getInstance().decreaseTimeslotByOffice(date, officeId) && requests.remove(toApprove)) {
+		if (requests.remove(toApprove)) {
 			return PrenotationServices.getInstance().addPrenotation(toApprove);
 		}
 		return false;

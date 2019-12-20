@@ -34,19 +34,23 @@ public class PrenotationServices {
 
 	/**
 	 * Adds a prenotation to the prenotation collection from the request that has
-	 * been passed as an input to the method.
+	 * been passed as an input to the method. Decreases the time slot of the office.
 	 * 
 	 * @throws NullPointerException if request is null
 	 * @param request the request from where data has been taken to create the
 	 *                prenotation
-	 * @return true if the prenotation wasn't already present in the collection,
-	 *         false otherwise
+	 * @return true if the prenotation wasn't already present in the collection and
+	 *         timeslot was available and has been correctly decreased, false
+	 *         otherwise
 	 */
 	public boolean addPrenotation(RequestPrenotation request) {
 		Objects.requireNonNull(request);
-		ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(),
-				request.getDonorId(), request.getHour());
-		return prenotations.add(prenotation);
+		if (OfficeServices.getInstance().decreaseTimeslotByOffice(request.getHour(), request.getOfficeId())) {
+			ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(),
+					request.getDonorId(), request.getHour());
+			return prenotations.add(prenotation);
+		}
+		return false;
 	}
 
 	/**
@@ -89,6 +93,9 @@ public class PrenotationServices {
 	public boolean removePrenotation(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
 		ActivePrenotation prenotation = getPrenotationInstance(prenotationId);
+		if (prenotation == null) {
+			return false;
+		}
 		Date date = prenotation.getHour();
 		String officeId = prenotation.getOfficeId();
 		return OfficeServices.getInstance().increaseTimeslotByOffice(date, officeId)
@@ -111,6 +118,9 @@ public class PrenotationServices {
 	public boolean updatePrenotation(ActivePrenotation prenotation) {
 		Objects.requireNonNull(prenotation);
 		ActivePrenotation oldPrenotation = getPrenotationInstance(prenotation.getId());
+		if (oldPrenotation == null) {
+			return false;
+		}
 		Date oldDate = oldPrenotation.getHour();
 		String oldOffice = oldPrenotation.getOfficeId();
 

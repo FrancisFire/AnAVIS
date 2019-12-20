@@ -78,9 +78,10 @@ public class OfficeServices {
 		Objects.requireNonNull(officeId);
 		return offices.stream().filter(office -> office.getName().equals(officeId)).findFirst().orElse(null);
 	}
-	
+
 	/**
 	 * TODO docs e test
+	 * 
 	 * @param timeSlot
 	 * @param officeId
 	 * @return
@@ -90,9 +91,10 @@ public class OfficeServices {
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
 		return office.addTimeSlot(timeSlot);
 	}
-	
+
 	/**
 	 * TODO docs e test
+	 * 
 	 * @param date
 	 * @param officeId
 	 * @return
@@ -102,9 +104,10 @@ public class OfficeServices {
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
 		return office.increaseSlotByDate(date);
 	}
-	
+
 	/**
 	 * TODO docs e test
+	 * 
 	 * @param date
 	 * @param officeId
 	 * @return
@@ -114,9 +117,10 @@ public class OfficeServices {
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
 		return office.decreaseSlotByDate(date);
 	}
-	
+
 	/**
 	 * TODO docs e test
+	 * 
 	 * @param date
 	 * @param officeId
 	 * @return

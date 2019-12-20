@@ -10,22 +10,22 @@ import java.util.Date;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.RequestPrenotation;
+import com.github.francisfire.anavis.models.TimeSlot;
+import com.github.francisfire.anavis.services.OfficeServices;
 import com.github.francisfire.anavis.services.RequestServices;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
 public class RequestServicesTest {
 
 	private static RequestServices requestServices;
+	private static OfficeServices officeServices;
 
 	@BeforeAll
 	public static void setUp() {
 		requestServices = RequestServices.getInstance();
+		officeServices = OfficeServices.getInstance();
 	}
 
 	@Test
@@ -52,10 +52,15 @@ public class RequestServicesTest {
 	@Test
 	public void approveRequest() {
 		assertThrows(NullPointerException.class, () -> requestServices.approveRequest(null));
+		
+		Office office = new Office("Bari");
+		officeServices.addOffice(office);
+		TimeSlot timeSlot = new TimeSlot(new Date(10000000), 1);
+		officeServices.addTimeslotByOffice(timeSlot, "Bari");
 
-		RequestPrenotation request = new RequestPrenotation("id1", "Pineto", "gianni@gmail.com", new Date());
+		RequestPrenotation request = new RequestPrenotation("id23", "Bari", "gianni@gmail.com", new Date(10000000));
 		requestServices.addRequest(request);
-		assertTrue(requestServices.approveRequest("id1"));
+		assertTrue(requestServices.approveRequest("id23"));
 		assertFalse(requestServices.approveRequest("id1"));
 		assertFalse(requestServices.approveRequest("id2"));
 	}
@@ -84,7 +89,7 @@ public class RequestServicesTest {
 	@Test
 	public void getRequestInstance() {
 		assertThrows(NullPointerException.class, () -> requestServices.getRequestInstance(null));
-
+		
 		RequestPrenotation request = new RequestPrenotation("id1", "Pineto", "gianni@gmail.com", new Date());
 		requestServices.addRequest(request);
 		assertEquals(request, requestServices.getRequestInstance("id1"));
