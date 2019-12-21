@@ -4,8 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 
-import 'donor.dart';
-
 class AppState extends ChangeNotifier {
   List<String> _officeNames = new List<String>();
   String _ipReference;
@@ -20,7 +18,7 @@ class AppState extends ChangeNotifier {
     var request = await http.get("http://${_ipReference}:8080/api/office");
     var parsedJson = json.decode(request.body);
     for (var office in parsedJson) {
-      _officeNames.add(office['name']);
+      _officeNames.add(office['id']);
     }
     notifyListeners();
   }

@@ -1,7 +1,9 @@
+import 'package:anavis/models/timeslot.dart';
+
 class Office {
   String _name;
-  Set<String> _timeTables;
-  Office(String name, Set<String> timeTables) {
+  Set<TimeSlot> _timeTables;
+  Office(String name, Set<TimeSlot> timeTables) {
     this._name = name;
     this._timeTables = timeTables;
   }
@@ -10,7 +12,7 @@ class Office {
     return _name;
   }
 
-  Set<String> getTimeTables() {
+  Set<TimeSlot> getTimeTables() {
     return _timeTables;
   }
 }

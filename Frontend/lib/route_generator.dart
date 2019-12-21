@@ -1,6 +1,6 @@
-import 'package:anavis/models/donor_prenotationupdate_recap_args.dart';
-import 'package:anavis/models/office_prenotation_recap_args.dart';
-import 'package:anavis/models/office_prenotation_time_view_args.dart';
+import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
+import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
+import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
 import 'package:anavis/views/donor_pendingprenotations_view.dart';
 import 'package:anavis/views/donor_prenotations_view.dart';
@@ -19,8 +19,8 @@ import 'package:anavis/views/office_request_view.dart';
 import 'package:anavis/views/office_view.dart';
 import 'package:flutter/material.dart';
 
-import 'models/donor_request_recap_args.dart';
-import 'models/office_prenotationupdate_recap_args.dart';
+import 'viewargs/donor_request_recap_args.dart';
+import 'viewargs/office_prenotationupdate_recap_args.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

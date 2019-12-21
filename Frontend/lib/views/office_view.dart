@@ -1,5 +1,5 @@
-import 'package:anavis/models/app_state.dart';
-import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/widgets/button_fab_homepage.dart';
 import 'package:anavis/widgets/clip_path.dart';
 import 'package:anavis/widgets/fab_item.dart';

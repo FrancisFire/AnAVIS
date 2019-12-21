@@ -1,4 +1,5 @@
-import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
@@ -51,12 +52,13 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
   }
 
   Future<void> postRequest() async {
-    await Provider.of<CurrentOfficeState>(context).sendPrenotation(Prenotation(
-        "${widget.donor}@${Provider.of<CurrentOfficeState>(context).getOfficeName()}@${widget.time}-${rng.nextInt(500)}",
-        Provider.of<CurrentOfficeState>(context).getOfficeName(),
-        widget.donor,
-        widget.time,
-        true));
+    await Provider.of<CurrentOfficeState>(context).sendPrenotation(
+        ActivePrenotation(
+            "${widget.donor}@${Provider.of<CurrentOfficeState>(context).getOfficeName()}@${widget.time}-${rng.nextInt(500)}",
+            Provider.of<CurrentOfficeState>(context).getOfficeName(),
+            widget.donor,
+            widget.time,
+            true));
   }
 
   Future showFlushbar(Flushbar instance) {

@@ -1,7 +1,7 @@
-import 'package:anavis/models/app_state.dart';
-import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/models/donor.dart';
-import 'package:anavis/models/office_prenotation_time_view_args.dart';
+import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +59,7 @@ class _OfficePrenotationDonorViewState
                 await Provider.of<CurrentOfficeState>(context)
                     .setOfficeTimeTables();
                 if (Provider.of<CurrentOfficeState>(context)
-                    .getOfficeTimeTables()
+                    .getAvailableTimeTables()
                     .isEmpty) {
                   Navigator.pop(context);
                   Provider.of<AppState>(context).showFlushbar(

@@ -1,4 +1,4 @@
-import 'package:anavis/models/current_donor_state.dart';
+import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';

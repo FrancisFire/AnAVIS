@@ -1,5 +1,6 @@
+import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/models/prenotation.dart';
-import 'package:anavis/models/request.dart';
+import 'package:anavis/models/requestprenotation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -27,14 +28,14 @@ class CurrentDonorState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Prenotation>> getDonorActivePrenotations() async {
-    List<Prenotation> prenotations = new List<Prenotation>();
+  Future<List<ActivePrenotation>> getDonorActivePrenotations() async {
+    List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
     var request = await http
         .get("http://${_ipReference}:8080/api/prenotation/donor/${_donorMail}");
     var parsedJson = json.decode(request.body);
     for (var pren in parsedJson) {
-      Prenotation newPrenotation = Prenotation(pren['id'], pren['officeId'],
-          pren['donorId'], pren['hour'], pren['confirmed']);
+      ActivePrenotation newPrenotation = ActivePrenotation(pren['id'],
+          pren['officeId'], pren['donorId'], pren['hour'], pren['confirmed']);
       if (newPrenotation.isConfirmed()) {
         prenotations.add(newPrenotation);
       }
@@ -42,14 +43,14 @@ class CurrentDonorState extends ChangeNotifier {
     return prenotations;
   }
 
-  Future<List<Prenotation>> getDonorPendingPrenotations() async {
-    List<Prenotation> prenotations = new List<Prenotation>();
+  Future<List<ActivePrenotation>> getDonorPendingPrenotations() async {
+    List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
     var request = await http
         .get("http://${_ipReference}:8080/api/prenotation/donor/${_donorMail}");
     var parsedJson = json.decode(request.body);
     for (var pren in parsedJson) {
-      Prenotation newPrenotation = Prenotation(pren['id'], pren['officeId'],
-          pren['donorId'], pren['hour'], pren['confirmed']);
+      ActivePrenotation newPrenotation = ActivePrenotation(pren['id'],
+          pren['officeId'], pren['donorId'], pren['hour'], pren['confirmed']);
       if (!newPrenotation.isConfirmed()) {
         prenotations.add(newPrenotation);
       }
@@ -78,7 +79,7 @@ class CurrentDonorState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> sendRequest(Request request) async {
+  Future<dynamic> sendRequest(RequestPrenotation request) async {
     return await http.post(
       Uri.encodeFull("http://${_ipReference}:8080/api/request"),
       body: json.encode({

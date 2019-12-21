@@ -1,5 +1,5 @@
-import 'package:anavis/models/current_office_state.dart';
-import 'package:anavis/models/office_prenotation_recap_args.dart';
+import 'package:anavis/providers/current_office_state.dart';
+import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
@@ -33,16 +33,16 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
   List<DropdownMenuItem> createListItem() {
     this.fetchTimeFromOffice();
     List<DropdownMenuItem> listTimeItem = new List<DropdownMenuItem>();
-    for (var timeString
-        in Provider.of<CurrentOfficeState>(context).getOfficeTimeTables()) {
+    for (var slot
+        in Provider.of<CurrentOfficeState>(context).getAvailableTimeTables()) {
       String restrictFractionalSeconds(String dateTime) =>
           dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
       _timeFormatted = formatDate(
-          DateTime.parse(restrictFractionalSeconds(timeString)),
+          DateTime.parse(restrictFractionalSeconds(slot.getDateTime())),
           ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
 
       listTimeItem.add(new DropdownMenuItem(
-        value: timeString,
+        value: slot.getDateTime(),
         child: Container(
           child: Text(
             _timeFormatted,

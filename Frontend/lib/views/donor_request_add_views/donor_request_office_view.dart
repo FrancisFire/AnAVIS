@@ -1,4 +1,4 @@
-import 'package:anavis/models/app_state.dart';
+import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/widgets/donor_request_widget.dart';
 import 'package:anavis/widgets/fab_button.dart';
 import 'package:flutter/material.dart';

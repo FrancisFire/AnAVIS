@@ -1,4 +1,4 @@
-import 'package:anavis/models/current_donor_state.dart';
+import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';

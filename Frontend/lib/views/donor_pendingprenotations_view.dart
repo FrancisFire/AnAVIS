@@ -1,7 +1,7 @@
-import 'package:anavis/models/app_state.dart';
-import 'package:anavis/models/current_donor_state.dart';
-import 'package:anavis/models/donor_prenotationupdate_recap_args.dart';
-import 'package:anavis/models/donor_request_recap_args.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/providers/current_donor_state.dart';
+import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
+import 'package:anavis/viewargs/donor_request_recap_args.dart';
 import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';

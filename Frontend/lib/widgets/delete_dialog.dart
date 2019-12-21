@@ -1,5 +1,5 @@
-import 'package:anavis/models/app_state.dart';
-import 'package:anavis/models/current_donor_state.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/providers/current_donor_state.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';

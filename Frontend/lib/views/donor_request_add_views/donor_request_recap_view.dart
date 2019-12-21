@@ -1,5 +1,5 @@
-import 'package:anavis/models/current_donor_state.dart';
-import 'package:anavis/models/request.dart';
+import 'package:anavis/providers/current_donor_state.dart';
+import 'package:anavis/models/requestprenotation.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
@@ -51,7 +51,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
 
   Future<void> postRequest() async {
     await Provider.of<CurrentDonorState>(context).sendRequest(
-      Request(
+      RequestPrenotation(
           "${Provider.of<CurrentDonorState>(context).getDonorMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
           widget.office,
           Provider.of<CurrentDonorState>(context).getDonorMail(),

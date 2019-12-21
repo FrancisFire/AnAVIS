@@ -1,6 +1,6 @@
-import 'package:anavis/models/app_state.dart';
-import 'package:anavis/models/current_office_state.dart';
-import 'package:anavis/models/office_prenotationupdate_recap_args.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/providers/current_office_state.dart';
+import 'package:anavis/viewargs/office_prenotationupdate_recap_args.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/form_field_general.dart';
 import 'package:date_format/date_format.dart';
@@ -75,11 +75,11 @@ class _DialogModificationPrenotationState
   List<DropdownMenuItem> createHourItem(BuildContext context) {
     this.fetchTimeFromOffice();
     List<DropdownMenuItem> listTimeItem = new List<DropdownMenuItem>();
-    for (var timeString
-        in Provider.of<CurrentOfficeState>(context).getOfficeTimeTables()) {
-      String _timeFormatted = nicerTime(timeString);
+    for (var slot
+        in Provider.of<CurrentOfficeState>(context).getAvailableTimeTables()) {
+      String _timeFormatted = nicerTime(slot.getDateTime());
       listTimeItem.add(new DropdownMenuItem(
-        value: timeString,
+        value: slot.getDateTime(),
         child: Container(
           child: Text(
             _timeFormatted,

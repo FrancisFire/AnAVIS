@@ -1,5 +1,6 @@
-import 'package:anavis/models/app_state.dart';
-import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
@@ -53,7 +54,7 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
           background: Colors.white,
         ),
         child: Center(
-          child: FutureBuilder<List<Prenotation>>(
+          child: FutureBuilder<List<ActivePrenotation>>(
             future: Provider.of<CurrentOfficeState>(context)
                 .getOfficePrenotations(),
             builder: (context, snapshot) {

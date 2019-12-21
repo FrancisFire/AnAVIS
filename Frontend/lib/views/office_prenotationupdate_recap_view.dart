@@ -1,4 +1,5 @@
-import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
@@ -57,7 +58,7 @@ class _OfficePrenotationUpdateRecapState
 
   Future<void> postRequest() async {
     await Provider.of<CurrentOfficeState>(context).updatePrenotation(
-        Prenotation(
+        ActivePrenotation(
             widget.id, widget.officeName, widget.donor, widget.time, false));
   }
 

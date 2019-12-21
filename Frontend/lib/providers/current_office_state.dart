@@ -1,5 +1,6 @@
-import 'package:anavis/models/prenotation.dart';
-import 'package:anavis/models/request.dart';
+import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/models/requestprenotation.dart';
+import 'package:anavis/models/timeslot.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,7 +10,7 @@ class CurrentOfficeState extends ChangeNotifier {
   String _officeName;
   bool _statusBody;
 
-  Set<String> _officeTimeTables = new Set<String>();
+  Set<TimeSlot> _officeTimeTables = new Set<TimeSlot>();
   String _ipReference;
 
   CurrentOfficeState(String ip) {
@@ -25,32 +26,32 @@ class CurrentOfficeState extends ChangeNotifier {
     var parsedJson = json.decode(request.body);
     _officeTimeTables.clear();
     for (var time in parsedJson) {
-      _officeTimeTables.add(time);
+      _officeTimeTables.add(TimeSlot(time['dateTime'], time['donorSlot']));
     }
     notifyListeners();
   }
 
-  Future<List<Request>> getOfficeRequests() async {
-    List<Request> requests = new List<Request>();
+  Future<List<RequestPrenotation>> getOfficeRequests() async {
+    List<RequestPrenotation> requests = new List<RequestPrenotation>();
     var request = await http
         .get("http://${_ipReference}:8080/api/request/office/${_officeName}");
     var parsedJson = json.decode(request.body);
     for (var req in parsedJson) {
-      Request newRequest =
-          new Request(req['id'], req['officeId'], req['donorId'], req['hour']);
+      RequestPrenotation newRequest = new RequestPrenotation(
+          req['id'], req['officeId'], req['donorId'], req['hour']);
       requests.add(newRequest);
     }
     return requests;
   }
 
-  Future<List<Prenotation>> getOfficePrenotations() async {
-    List<Prenotation> prenotations = new List<Prenotation>();
+  Future<List<ActivePrenotation>> getOfficePrenotations() async {
+    List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
     var request = await http.get(
         "http://${_ipReference}:8080/api/prenotation/office/${_officeName}");
     var parsedJson = json.decode(request.body);
     for (var pren in parsedJson) {
-      Prenotation newPrenotation = Prenotation(pren['id'], pren['officeId'],
-          pren['donorId'], pren['hour'], pren['confirmed']);
+      ActivePrenotation newPrenotation = ActivePrenotation(pren['id'],
+          pren['officeId'], pren['donorId'], pren['hour'], pren['confirmed']);
       prenotations.add(newPrenotation);
     }
     return prenotations;
@@ -77,7 +78,7 @@ class CurrentOfficeState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> sendPrenotation(Prenotation prenotation) async {
+  Future<dynamic> sendPrenotation(ActivePrenotation prenotation) async {
     return await http.post(
       Uri.encodeFull("http://${_ipReference}:8080/api/prenotation"),
       body: json.encode({
@@ -100,7 +101,7 @@ class CurrentOfficeState extends ChangeNotifier {
     });
   }
 
-  Future<dynamic> updatePrenotation(Prenotation prenotation) async {
+  Future<dynamic> updatePrenotation(ActivePrenotation prenotation) async {
     return await http.put(
       Uri.encodeFull("http://${_ipReference}:8080/api/prenotation"),
       body: json.encode({
@@ -127,8 +128,18 @@ class CurrentOfficeState extends ChangeNotifier {
     return _statusBody;
   }
 
-  Set<String> getOfficeTimeTables() {
+  Set<TimeSlot> getOfficeTimeTables() {
     return _officeTimeTables;
+  }
+
+  Set<TimeSlot> getAvailableTimeTables() {
+    Set<TimeSlot> available = new Set<TimeSlot>();
+    for (TimeSlot slot in _officeTimeTables) {
+      if (slot.getSlots() > 0) {
+        available.add(slot);
+      }
+    }
+    return available;
   }
 
   String getOfficeName() {

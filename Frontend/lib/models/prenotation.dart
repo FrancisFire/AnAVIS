@@ -1,18 +1,17 @@
-class Prenotation {
+abstract class Prenotation {
   String _id;
   String _officeId;
   String _donorId;
   String _hour;
-  bool _confirmed;
-  Prenotation(
-      String id, String officeId, String donorId, String hour, bool confirmed) {
+  Prenotation.withParams(
+      String id, String officeId, String donorId, String hour) {
     this._id = id;
     this._officeId = officeId;
     this._donorId = donorId;
     this._hour = hour;
-    this._confirmed = confirmed;
   }
 
+  Prenotation() {}
   String getId() {
     return _id;
   }
@@ -27,9 +26,5 @@ class Prenotation {
 
   String getHour() {
     return _hour;
-  }
-
-  bool isConfirmed() {
-    return _confirmed;
   }
 }

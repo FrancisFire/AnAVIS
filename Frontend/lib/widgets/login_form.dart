@@ -1,6 +1,6 @@
-import 'package:anavis/models/app_state.dart';
-import 'package:anavis/models/current_donor_state.dart';
-import 'package:anavis/models/current_office_state.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/providers/current_donor_state.dart';
+import 'package:anavis/providers/current_office_state.dart';
 import 'package:flutter/material.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 import 'package:progress_indicator_button/progress_button.dart';
