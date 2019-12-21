@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.ClosedPrenotation;
 
 public class DonationServices {
@@ -80,14 +82,16 @@ public class DonationServices {
 	}
 
 	/**
-	 * Adds a donation to the donation collection
+	 * Adds a donation to the donation collection using the informations from a prenotation
 	 * 
 	 * @throws NullPointerException if donation is null
 	 * @param donation the donation to add
 	 * @return true if the collection didn't contain the added donation
 	 */
-	public boolean addDonation(ClosedPrenotation donation) {
-		Objects.requireNonNull(donation);
+	public boolean addDonation(ActivePrenotation prenotation, String reportId) {
+		Objects.requireNonNull(prenotation);
+		Objects.requireNonNull(reportId);
+		ClosedPrenotation donation = new ClosedPrenotation(prenotation.getId(), prenotation.getOfficeId(), prenotation.getDonorId(), prenotation.getHour(), reportId);
 		return donations.add(donation);
 	}
 }

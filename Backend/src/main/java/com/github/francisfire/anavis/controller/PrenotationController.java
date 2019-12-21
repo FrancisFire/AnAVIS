@@ -57,8 +57,9 @@ public class PrenotationController {
 	}
 	
 	@PutMapping("/{prenotationId}/close")
-	public boolean closePrenotation(@PathVariable("prenotationId") String prenotationId, @RequestBody String reportId) {
+	public boolean closePrenotation(@PathVariable("prenotationId") String prenotationId/*, @RequestBody String reportId*/) {
 		// TODO file handling
+		String reportId = "id";
 		return prenotationServices.closePrenotation(prenotationId, reportId);
 	}
 }

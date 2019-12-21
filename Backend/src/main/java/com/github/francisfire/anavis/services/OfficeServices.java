@@ -76,15 +76,22 @@ public class OfficeServices {
 	 */
 	public Office getOfficeInstance(String officeId) {
 		Objects.requireNonNull(officeId);
-		return offices.stream().filter(office -> office.getName().equals(officeId)).findFirst().orElse(null);
+		return offices.stream().filter(office -> office.getId().equals(officeId)).findFirst().orElse(null);
 	}
 
 	/**
-	 * TODO docs e test
 	 * 
-	 * @param timeSlot
-	 * @param officeId
-	 * @return
+	 * Adds a new date, hour and number of prenotations' slots to the office
+	 * specified by an officeId through the TimeSlot object that is requested as an
+	 * argument
+	 * 
+	 * @param timeSlot that contains the date, hour and number of reserved
+	 *                 prenotations
+	 * @param officeId associated to the office that needs to have a new TimeSlot
+	 *                 object inserted
+	 * @return true if the office associated with the officeId didn't have already
+	 *         registered a TimeSlot object associated with the same hour and date,
+	 *         false otherwise
 	 */
 	public boolean addTimeslotByOffice(TimeSlot timeSlot, String officeId) {
 		Objects.requireNonNull(timeSlot);
@@ -93,11 +100,17 @@ public class OfficeServices {
 	}
 
 	/**
-	 * TODO docs e test
+	 * Increases by one unit the number of left available prenotations' slots
+	 * associated with a date and hour
 	 * 
-	 * @param date
-	 * @param officeId
-	 * @return
+	 * 
+	 * @param date     that contains the date and hour that need to have the number
+	 *                 of left available prenotations increased
+	 * @param officeId associated to the office that needs to have increased the
+	 *                 number of left available prenotations' slots associated with
+	 *                 a date and hour
+	 * @return true if it is possible to increase the number of left available
+	 *         prenotations, false otherwise
 	 */
 	public boolean increaseTimeslotByOffice(Date date, String officeId) {
 		Objects.requireNonNull(date);
@@ -106,11 +119,17 @@ public class OfficeServices {
 	}
 
 	/**
-	 * TODO docs e test
+	 * Decreases by one unit the number of left available prenotations' slots
+	 * associated with a date and hour
 	 * 
-	 * @param date
-	 * @param officeId
-	 * @return
+	 * 
+	 * @param date     that contains the date and hour that need to have the number
+	 *                 of left available prenotations decreased
+	 * @param officeId associated to the office that needs to have decreased the
+	 *                 number of left available prenotations' slots associated with
+	 *                 a date and hour
+	 * @return true if it is possible to decrease the number of left available
+	 *         prenotations, false otherwise
 	 */
 	public boolean decreaseTimeslotByOffice(Date date, String officeId) {
 		Objects.requireNonNull(date);
@@ -119,15 +138,18 @@ public class OfficeServices {
 	}
 
 	/**
-	 * TODO docs e test
+	 * Checks if there are any left available prenotations' slots associated with a
+	 * date and hour
 	 * 
-	 * @param date
-	 * @param officeId
-	 * @return
+	 * @param date     that contains the date and hour
+	 * @param officeId associated to the office of which a date needs to be verified
+	 * @return true is there are available prenotations' slots with the date and
+	 *         hour in the office associated by the officeId specified, false
+	 *         otherwise
 	 */
 	public boolean isDateAvailableByOffice(Date date, String officeId) {
 		Objects.requireNonNull(date);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
-		return office.isDateAvalaible(date);
+		return office.isDateAvailable(date);
 	}
 }

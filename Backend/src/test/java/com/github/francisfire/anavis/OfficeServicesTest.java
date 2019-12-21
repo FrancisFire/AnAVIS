@@ -1,5 +1,6 @@
 package com.github.francisfire.anavis;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,5 +57,46 @@ public class OfficeServicesTest {
 
 		assertTrue(officeServices.addOffice(new Office("Camerino")));
 		assertFalse(officeServices.addOffice(new Office("Camerino")));
+	}
+
+	@Test
+	public void addTimeslotByOffice() {
+		assertThrows(NullPointerException.class, () -> officeServices.addTimeslotByOffice(null, null));
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
+		Date today = calendar.getTime();
+		officeServices.addOffice(new Office("Test"));
+		assertTrue(officeServices.addTimeslotByOffice(new TimeSlot(today, 5), "Test"));
+		assertFalse(officeServices.addTimeslotByOffice(new TimeSlot(today, 10), "Test"));
+		assertThrows(NullPointerException.class,
+				() -> officeServices.addTimeslotByOffice(new TimeSlot(new Date(), 6), "TestErr"));
+	}
+
+	@Test
+	public void increaseTimeslotByOffice() {
+		assertThrows(NullPointerException.class, () -> officeServices.increaseTimeslotByOffice(null, null));
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
+		Date today = calendar.getTime();
+		officeServices.addOffice(new Office("TestDue"));
+		officeServices.addTimeslotByOffice(new TimeSlot(today, 6), "TestDue");
+		assertTrue(officeServices.increaseTimeslotByOffice(today, "TestDue"));
+		assertEquals(7, officeServices.getDonationsTimeTable("TestDue").iterator().next().getDonorSlot());
+		assertThrows(NullPointerException.class, () -> officeServices.increaseTimeslotByOffice(today, "TestErr"));
+	}
+
+	@Test
+	public void decreaseTimeslotByOffice() {
+		assertThrows(NullPointerException.class, () -> officeServices.decreaseTimeslotByOffice(null, null));
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
+		Date today = calendar.getTime();
+		officeServices.addOffice(new Office("TestTre"));
+		officeServices.addOffice(new Office("TestQuattro"));
+		officeServices.addTimeslotByOffice(new TimeSlot(today, 6), "TestTre");
+		officeServices.addTimeslotByOffice(new TimeSlot(today, 1), "TestQuattro");
+		assertTrue(officeServices.decreaseTimeslotByOffice(today, "TestTre"));
+		assertTrue(officeServices.decreaseTimeslotByOffice(today, "TestQuattro"));
+		assertFalse(officeServices.decreaseTimeslotByOffice(today, "TestQuattro"));
+		assertEquals(5, officeServices.getDonationsTimeTable("TestTre").iterator().next().getDonorSlot());
+		assertEquals(0, officeServices.getDonationsTimeTable("TestQuattro").iterator().next().getDonorSlot());
+		assertThrows(NullPointerException.class, () -> officeServices.decreaseTimeslotByOffice(today, "TestErr"));
 	}
 }

@@ -108,7 +108,6 @@ public class PrenotationServices {
 	 * from the old prenotation and decreases the one associated to the new
 	 * prenotation
 	 * 
-	 * TODO tests
 	 * 
 	 * @throws NullPointerException if prenotation is null
 	 * @param prenotation the prenotation to update
@@ -126,10 +125,9 @@ public class PrenotationServices {
 
 		Date newDate = prenotation.getHour();
 		String newOffice = prenotation.getOfficeId();
-		if (prenotations.remove(oldPrenotation)
-				&& OfficeServices.getInstance().increaseTimeslotByOffice(oldDate, oldOffice)) {
-			return OfficeServices.getInstance().decreaseTimeslotByOffice(newDate, newOffice)
-					&& prenotations.add(prenotation);
+		if (OfficeServices.getInstance().decreaseTimeslotByOffice(newDate, newOffice)) {
+			return prenotations.remove(prenotation) && prenotations.add(oldPrenotation)
+					&& OfficeServices.getInstance().increaseTimeslotByOffice(oldDate, oldOffice);
 		} else {
 			return false;
 		}
@@ -195,7 +193,7 @@ public class PrenotationServices {
 		if (prenotation == null || prenotation.isConfirmed()) {
 			return false;
 		}
-		return prenotations.remove(getPrenotationInstance(prenotationId));
+		return this.removePrenotation(prenotationId);
 	}
 
 	/**
@@ -213,15 +211,24 @@ public class PrenotationServices {
 	}
 
 	/**
-	 * TODO tutto
+	 * Closes the currently active prenotation associated to the id that has been
+	 * passed in input to the method
 	 * 
-	 * @param prenotationId
-	 * @param reportId
-	 * @return
+	 * 
+	 * @param prenotationId id of the prenotation that needs to be closed
+	 * @param reportId      id of the report associated to the prenotation
+	 * @return true if prenotation was present and succesfully closed, false
+	 *         otherwise
 	 */
 	public boolean closePrenotation(String prenotationId, String reportId) {
-		return false;
-		// TODO tutto
+		Objects.requireNonNull(prenotationId);
+		Objects.requireNonNull(reportId);
+		ActivePrenotation toClose = this.getPrenotationInstance(prenotationId);
+		if (this.removePrenotation(prenotationId)) {
+			return DonationServices.getInstance().addDonation(toClose, reportId);
+		} else {
+			return false;
+		}
 	}
 
 }

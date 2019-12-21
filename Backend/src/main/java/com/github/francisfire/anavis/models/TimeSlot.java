@@ -15,18 +15,23 @@ public class TimeSlot {
 	}
 
 	/**
-	 * TODO docs
+	 * Checks if there are any left available prenotations' slots associated with
+	 * this object
 	 * 
-	 * @return
+	 * 
+	 * @return true is there are available prenotations' slots with the date and
+	 *         hour specified in this object, false otherwise
 	 */
-	public boolean isDateAvalaible() {
+	public boolean isDateAvailable() {
 		return donorSlots > 0;
 	}
 
 	/**
-	 * TODO docs
+	 * Increases by one unit the number of left available prenotations' slots
+	 * associated with this object
 	 * 
-	 * @return
+	 * @return true if it is possible to increase the number of left available
+	 *         prenotations, false otherwise
 	 */
 	public boolean increaseSlots() {
 		this.donorSlots++;
@@ -34,9 +39,11 @@ public class TimeSlot {
 	}
 
 	/**
-	 * TODO docs
+	 * Decreases by one unit the number of left available prenotations' slots
+	 * associated with this object
 	 * 
-	 * @return
+	 * @return true if it is possible to decrease the number of left available
+	 *         prenotations, false otherwise
 	 */
 	public boolean decreaseSlots() {
 		if (this.donorSlots == 0) {
@@ -46,6 +53,8 @@ public class TimeSlot {
 			return true;
 		}
 	}
+	
+	
 
 	public Date getDateTime() {
 		return dateTime;

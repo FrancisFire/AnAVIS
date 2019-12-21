@@ -31,20 +31,20 @@ public class AnAvisApplication {
 		datesOne.add(new TimeSlot(new Date(260000), 5));
 		datesOne.add(new TimeSlot(new Date(280000), 5));
 		officeOne.setDonationTimeTables(datesOne);
-		Donor donorOne = new Donor("stelluti@mail.com", officeOne.getName());
+		Donor donorOne = new Donor("stelluti@mail.com", officeOne.getId());
 		donorOne.setCanDonate(true);
 		Office officeTwo = new Office("Fabriano");
 		Set<TimeSlot> datesTwo = new HashSet<>();
 		datesTwo.add(new TimeSlot(new Date(270000), 5));
 		datesTwo.add(new TimeSlot(new Date(300000), 5));
 		officeTwo.setDonationTimeTables(datesTwo);
-		Donor donorTwo = new Donor("coppola@mail.com", officeTwo.getName());
-		Donor donorThree = new Donor("clelio@mail.com", officeTwo.getName());
+		Donor donorTwo = new Donor("coppola@mail.com", officeTwo.getId());
+		Donor donorThree = new Donor("clelio@mail.com", officeTwo.getId());
 		donorThree.setCanDonate(true);
 		Office officeThree = new Office("Casette Verdini");
-		Donor donorFour = new Donor("zamponi@mail.com", officeThree.getName());
+		Donor donorFour = new Donor("zamponi@mail.com", officeThree.getId());
 		Office officeFour = new Office("Tolentino");
-		Donor donorFive = new Donor("sasso@mail.com", officeFour.getName());
+		Donor donorFive = new Donor("sasso@mail.com", officeFour.getId());
 
 		DonorServices.getInstance().addDonor(donorOne);
 		DonorServices.getInstance().addDonor(donorTwo);
@@ -55,13 +55,13 @@ public class AnAvisApplication {
 		OfficeServices.getInstance().addOffice(officeTwo);
 		OfficeServices.getInstance().addOffice(officeThree);
 		OfficeServices.getInstance().addOffice(officeFour);
-		RequestPrenotation requestOne = new RequestPrenotation("one", officeOne.getName(), donorOne.getMail(), new Date());
-		RequestPrenotation requestTwo = new RequestPrenotation("two", officeTwo.getName(), donorTwo.getMail(), new Date());
+		RequestPrenotation requestOne = new RequestPrenotation("one", officeOne.getId(), donorOne.getMail(), new Date());
+		RequestPrenotation requestTwo = new RequestPrenotation("two", officeTwo.getId(), donorTwo.getMail(), new Date());
 		RequestServices.getInstance().addRequest(requestOne);
 		RequestServices.getInstance().addRequest(requestTwo);
-		ActivePrenotation prenotationOne = new ActivePrenotation("ciccio", officeThree.getName(), donorFour.getMail(),
+		ActivePrenotation prenotationOne = new ActivePrenotation("ciccio", officeThree.getId(), donorFour.getMail(),
 				new Date(1575200000));
-		ActivePrenotation prenotationTwo = new ActivePrenotation("ciccia", officeFour.getName(), donorFive.getMail(),
+		ActivePrenotation prenotationTwo = new ActivePrenotation("ciccia", officeFour.getId(), donorFive.getMail(),
 				new Date(1575800000));
 		PrenotationServices.getInstance().addPrenotation(prenotationOne);
 		PrenotationServices.getInstance().addPrenotation(prenotationTwo);

@@ -6,30 +6,38 @@ import java.util.Set;
 
 public class Office {
 
-	private String name;
+	private String id;
 	private Set<TimeSlot> donationTimeTables;
 
 	public Office() {
 	}
 
 	public Office(String name) {
-		this.name = name;
+		this.id = name;
 		this.donationTimeTables = new HashSet<>();
 	}
 
 	/**
-	 * TODO docs
-	 * @param timeSlot
-	 * @return
+	 * Adds a new date, hour and number of prenotations' slots to the office
+	 * timetable through the TimeSlot object that is requested as an argument
+	 * 
+	 * @param timeSlot that contains the date, hour and number of reserved
+	 *                 prenotations
+	 * @return true if the office didn't have already registered a TimeSlot object
+	 *         associated with the same hour and date, false otherwise
 	 */
 	public boolean addTimeSlot(TimeSlot timeSlot) {
 		return donationTimeTables.add(timeSlot);
 	}
 
 	/**
-	 * TODO docs
-	 * @param dateTime
-	 * @return
+	 * Increases by one unit the number of left available prenotations' slots
+	 * associated with a date and hour
+	 * 
+	 * @param dateTime that contains the date and hour that need to have the number
+	 *                 of left available prenotations increased
+	 * @return true if it is possible to increase the number of left available
+	 *         prenotations, false otherwise
 	 */
 	public boolean increaseSlotByDate(Date dateTime) {
 		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
@@ -42,9 +50,13 @@ public class Office {
 	}
 
 	/**
-	 * TODO docs
-	 * @param dateTime
-	 * @return
+	 * Decreases by one unit the number of left available prenotations' slots
+	 * associated with a date and hour
+	 * 
+	 * @param dateTime that contains the date and hour that need to have the number
+	 *                 of left available prenotations decreased
+	 * @return true if it is possible to decrease the number of left available
+	 *         prenotations, false otherwise
 	 */
 	public boolean decreaseSlotByDate(Date dateTime) {
 		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
@@ -57,26 +69,29 @@ public class Office {
 	}
 
 	/**
-	 * TODO docs
-	 * @param dateTime
-	 * @return
+	 * Checks if there are any left available prenotations' slots associated with a
+	 * date and hour
+	 * 
+	 * @param dateTime that contains the date and hour
+	 * @return true is there are available prenotations' slots with the date and
+	 *         hour specified, false otherwise
 	 */
-	public boolean isDateAvalaible(Date dateTime) {
+	public boolean isDateAvailable(Date dateTime) {
 		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
 				.findFirst().orElse(null);
 		if (slot == null) {
 			return false;
 		} else {
-			return slot.isDateAvalaible();
+			return slot.isDateAvailable();
 		}
 	}
 
-	public String getName() {
-		return name;
+	public String getId() {
+		return id;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.id = name;
 	}
 
 	public Set<TimeSlot> getDonationTimeTables() {
@@ -91,7 +106,7 @@ public class Office {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -107,11 +122,11 @@ public class Office {
 			return false;
 		}
 		Office other = (Office) obj;
-		if (name == null) {
-			if (other.name != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!name.equals(other.name)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
