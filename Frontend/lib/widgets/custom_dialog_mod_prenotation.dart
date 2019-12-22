@@ -21,14 +21,13 @@ class DialogModificationPrenotation extends StatefulWidget {
 class _DialogModificationPrenotationState
     extends State<DialogModificationPrenotation> {
   String _newOffice, _newHour;
-  List<DropdownMenuItem> _offices, _hours;
+  List<DropdownMenuItem> _offices, listOfficeItem, listTimeItem;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _hours = this.createHourItem(context);
-      _offices = this.createOfficeNames(context);
+      this.createOfficeNames(context);
     });
   }
 
@@ -50,8 +49,8 @@ class _DialogModificationPrenotationState
         ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
   }
 
-  List<DropdownMenuItem> createOfficeNames(BuildContext context) {
-    List<DropdownMenuItem> listOfficeItem = new List<DropdownMenuItem>();
+  void createOfficeNames(BuildContext context) {
+    listOfficeItem = new List<DropdownMenuItem>();
     for (var officeString in Provider.of<AppState>(context).getOfficeNames()) {
       listOfficeItem.add(new DropdownMenuItem(
         value: officeString,
@@ -65,18 +64,15 @@ class _DialogModificationPrenotationState
         ),
       ));
     }
-    return listOfficeItem;
-  }
-
-  void fetchTimeFromOffice() async {
-    await Provider.of<CurrentOfficeState>(context).setOfficeTimeTables();
+    setState(() {
+      _offices = listOfficeItem;
+    });
   }
 
   List<DropdownMenuItem> createHourItem(BuildContext context) {
-    this.fetchTimeFromOffice();
-    List<DropdownMenuItem> listTimeItem = new List<DropdownMenuItem>();
-    for (var slot
-        in Provider.of<CurrentOfficeState>(context).getAvailableTimeTables()) {
+    listTimeItem = new List<DropdownMenuItem>();
+    for (var slot in Provider.of<CurrentOfficeState>(context)
+        .getOfficeAvailableTimeTablesByOffice()) {
       String _timeFormatted = nicerTime(slot.getDateTime());
       listTimeItem.add(new DropdownMenuItem(
         value: slot.getDateTime(),
@@ -144,7 +140,9 @@ class _DialogModificationPrenotationState
                 ),
                 labelDropDown: "Seleziona l'ufficio",
                 valueSelected: _newOffice,
-                onChanged: (newValue) {
+                onChanged: (newValue) async {
+                  await Provider.of<CurrentOfficeState>(context)
+                      .setOfficeTimeTablesByOffice(newValue);
                   setState(() {
                     _newOffice = newValue;
                   });
@@ -152,7 +150,7 @@ class _DialogModificationPrenotationState
               ),
               SizedBox(height: 24.0),
               FormFieldGeneral(
-                fetchItems: _hours,
+                fetchItems: createHourItem(context),
                 icon: Icon(
                   Icons.access_time,
                   color: Colors.red,
@@ -189,24 +187,27 @@ class _DialogModificationPrenotationState
                   SizedBox(
                     width: 8,
                   ),
-                  ButtonForCardBottom(
-                    icon: Icon(
-                      Icons.thumb_up,
-                      color: Colors.white,
-                    ),
-                    color: Colors.green,
-                    onTap: () {
-                      Navigator.pushReplacementNamed(
-                          context, '/office/prenotationupdate/recap',
-                          arguments: new OfficePrenotationUpdateRecapArgs(
-                              this.widget.donor,
-                              this._newHour,
-                              nicerTime(this._newHour),
-                              widget.prenotationId,
-                              _newOffice));
-                    },
-                    title: 'Conferma',
-                  ),
+                  _newHour != null
+                      ? ButtonForCardBottom(
+                          icon: Icon(
+                            Icons.thumb_up,
+                            color: Colors.white,
+                          ),
+                          color: Colors.green,
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, '/office/prenotationupdate/recap',
+                                arguments: new OfficePrenotationUpdateRecapArgs(
+                                  this.widget.donor,
+                                  this._newHour,
+                                  nicerTime(this._newHour),
+                                  widget.prenotationId,
+                                  _newOffice,
+                                ));
+                          },
+                          title: 'Conferma',
+                        )
+                      : SizedBox(),
                 ],
               ),
             ],

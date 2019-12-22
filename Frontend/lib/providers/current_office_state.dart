@@ -11,11 +11,13 @@ class CurrentOfficeState extends ChangeNotifier {
   bool _statusBody;
 
   Set<TimeSlot> _officeTimeTables = new Set<TimeSlot>();
+  Set<TimeSlot> _officeTimeTablesByOffice = new Set<TimeSlot>();
   String _ipReference;
 
   CurrentOfficeState(String ip) {
     _ipReference = ip;
   }
+
   void setOffice(String office) {
     _officeName = office;
   }
@@ -27,6 +29,18 @@ class CurrentOfficeState extends ChangeNotifier {
     _officeTimeTables.clear();
     for (var time in parsedJson) {
       _officeTimeTables.add(TimeSlot(time['dateTime'], time['donorSlot']));
+    }
+    notifyListeners();
+  }
+
+  Future<void> setOfficeTimeTablesByOffice(String office) async {
+    var request = await http
+        .get("http://$_ipReference:8080/api/office/$office/timeTable");
+    var parsedJson = json.decode(request.body);
+    _officeTimeTablesByOffice.clear();
+    for (var time in parsedJson) {
+      _officeTimeTablesByOffice
+          .add(TimeSlot(time['dateTime'], time['donorSlot']));
     }
     notifyListeners();
   }
@@ -130,6 +144,16 @@ class CurrentOfficeState extends ChangeNotifier {
 
   Set<TimeSlot> getOfficeTimeTables() {
     return _officeTimeTables;
+  }
+
+  Set<TimeSlot> getOfficeAvailableTimeTablesByOffice() {
+    Set<TimeSlot> available = new Set<TimeSlot>();
+    for (TimeSlot slot in _officeTimeTablesByOffice) {
+      if (slot.getSlots() > 0) {
+        available.add(slot);
+      }
+    }
+    return available;
   }
 
   Set<TimeSlot> getAvailableTimeTables() {

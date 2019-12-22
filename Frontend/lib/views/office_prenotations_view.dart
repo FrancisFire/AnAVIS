@@ -1,7 +1,6 @@
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
 import 'package:anavis/widgets/confirm_alert_dialog.dart';
@@ -217,7 +216,7 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                     ),
                   );
               }
-              return null; // unreachable
+              return null;
             },
           ),
         ),

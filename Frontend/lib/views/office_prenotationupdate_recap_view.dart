@@ -1,6 +1,5 @@
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
@@ -121,7 +120,7 @@ class _OfficePrenotationUpdateRecapState
                               'Aggiornamento della prenotazione per l\'ufficio di ${widget.officeName}',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 30,
+                                fontSize: 26,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,
