@@ -3,11 +3,13 @@ package com.github.francisfire.anavis;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Date;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.ClosedPrenotation;
@@ -18,18 +20,15 @@ import com.github.francisfire.anavis.services.DonationServices;
 import com.github.francisfire.anavis.services.OfficeServices;
 import com.github.francisfire.anavis.services.PrenotationServices;
 
+@SpringBootTest
 public class PrenotationServicesTest {
 
-	private static PrenotationServices prenotationServices;
-	private static OfficeServices officeServices;
-	private static DonationServices donationServices;
-
-	@BeforeAll
-	public static void setUp() {
-		prenotationServices = PrenotationServices.getInstance();
-		officeServices = OfficeServices.getInstance();
-		donationServices = DonationServices.getInstance();
-	}
+	@Autowired
+	private PrenotationServices prenotationServices;
+	@Autowired
+	private OfficeServices officeServices;
+	@Autowired
+	private DonationServices donationServices;
 
 	@Test
 	public void getPrenotations() {

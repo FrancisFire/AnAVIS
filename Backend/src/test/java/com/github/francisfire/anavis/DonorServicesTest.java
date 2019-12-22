@@ -7,21 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.services.DonorServices;
 
+@SpringBootTest
 public class DonorServicesTest {
 
-	private static DonorServices donorServices;
-
-	@BeforeAll
-	public static void setUp() {
-		donorServices = DonorServices.getInstance();
-	}
+	@Autowired
+	private DonorServices donorServices;
 
 	@Test
 	public void addDonor() {

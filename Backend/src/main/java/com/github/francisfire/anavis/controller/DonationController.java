@@ -1,21 +1,26 @@
 package com.github.francisfire.anavis.controller;
 
-import java.io.File;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.francisfire.anavis.models.ClosedPrenotation;
+import com.github.francisfire.anavis.models.DonationReport;
+import com.github.francisfire.anavis.services.DonationReportServices;
 import com.github.francisfire.anavis.services.DonationServices;
 
 @RestController
 @RequestMapping("api/donation")
 public class DonationController {
 
-	private static DonationServices donationServices = DonationServices.getInstance();
+	@Autowired
+	private DonationServices donationServices;
+	@Autowired
+	private DonationReportServices closedPrenotationReportServices;
 
 	@GetMapping("/donor/{donorId}")
 	public Set<ClosedPrenotation> getPrenotationsByDonor(@PathVariable("donorId") String donorId) {
@@ -23,10 +28,8 @@ public class DonationController {
 	}
 	
 	@GetMapping("/report/{donationId}")
-	public File getDonationReport(@PathVariable("donationId") String donationId) {
-		@SuppressWarnings("unused")
+	public DonationReport getDonationReport(@PathVariable("donationId") String donationId) {
 		String reportId = donationServices.getPrenotationInstance(donationId).getReportId();
-		// TODO get file
-		return null;
+		return closedPrenotationReportServices.getReport(reportId);
 	}
 }

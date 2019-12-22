@@ -3,6 +3,7 @@ package com.github.francisfire.anavis.controller;
 
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,8 @@ import com.github.francisfire.anavis.services.RequestServices;
 @RequestMapping("api/request")
 public class RequestController {
 
-	private static RequestServices requestServices = RequestServices.getInstance();
+	@Autowired
+	private RequestServices requestServices;
 
 	@PostMapping("")
 	public boolean createRequest(@RequestBody RequestPrenotation request) {

@@ -1,21 +1,7 @@
 package com.github.francisfire.anavis;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.github.francisfire.anavis.models.ActivePrenotation;
-import com.github.francisfire.anavis.models.Donor;
-import com.github.francisfire.anavis.models.Office;
-import com.github.francisfire.anavis.models.RequestPrenotation;
-import com.github.francisfire.anavis.models.TimeSlot;
-import com.github.francisfire.anavis.services.DonorServices;
-import com.github.francisfire.anavis.services.OfficeServices;
-import com.github.francisfire.anavis.services.PrenotationServices;
-import com.github.francisfire.anavis.services.RequestServices;
 
 @SpringBootApplication
 public class AnAvisApplication {
@@ -25,7 +11,9 @@ public class AnAvisApplication {
 		SpringApplication.run(AnAvisApplication.class, args);
 	}
 
+	@SuppressWarnings("all")
 	private static void initData() {
+		/*
 		Office officeOne = new Office("Osimo");
 		Office officeTwo = new Office("Fabriano");
 		Office officeThree = new Office("Casette Verdini");
@@ -80,5 +68,6 @@ public class AnAvisApplication {
 				new Date(300000), true);
 		PrenotationServices.getInstance().addPrenotation(prenotationOne);
 		PrenotationServices.getInstance().addPrenotation(prenotationTwo);
+		*/
 	}
 }

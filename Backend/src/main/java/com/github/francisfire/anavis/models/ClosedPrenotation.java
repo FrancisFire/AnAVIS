@@ -2,6 +2,7 @@ package com.github.francisfire.anavis.models;
 
 import java.util.Date;
 
+
 public class ClosedPrenotation extends Prenotation {
 	private String reportId;
 

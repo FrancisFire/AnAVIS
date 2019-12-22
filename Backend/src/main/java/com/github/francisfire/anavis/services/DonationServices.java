@@ -5,29 +5,18 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.ClosedPrenotation;
 
+@Service
 public class DonationServices {
-	private static DonationServices instance;
+	
 	private Set<ClosedPrenotation> donations;
 
 	private DonationServices() {
 		this.donations = new HashSet<>();
-	}
-
-	/**
-	 * Creates an instance of the class the first time it is used and returns the
-	 * class instance
-	 * 
-	 * @return the class instance
-	 */
-	public static DonationServices getInstance() {
-		if (instance == null) {
-			instance = new DonationServices();
-		}
-
-		return instance;
 	}
 
 	/**
