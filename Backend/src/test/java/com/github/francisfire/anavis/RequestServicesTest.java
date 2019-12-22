@@ -8,8 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.RequestPrenotation;
@@ -17,16 +18,13 @@ import com.github.francisfire.anavis.models.TimeSlot;
 import com.github.francisfire.anavis.services.OfficeServices;
 import com.github.francisfire.anavis.services.RequestServices;
 
+@SpringBootTest
 public class RequestServicesTest {
 
-	private static RequestServices requestServices;
-	private static OfficeServices officeServices;
-
-	@BeforeAll
-	public static void setUp() {
-		requestServices = RequestServices.getInstance();
-		officeServices = OfficeServices.getInstance();
-	}
+	@Autowired
+	private RequestServices requestServices;
+	@Autowired
+	private OfficeServices officeServices;
 
 	@Test
 	public void addRequest() {

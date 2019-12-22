@@ -6,30 +6,23 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.RequestPrenotation;
 
+@Service
 public class PrenotationServices {
 
-	private static PrenotationServices instance;
 	private Set<ActivePrenotation> prenotations;
+	@Autowired
+	private OfficeServices officeServices;
+	@Autowired
+	private DonationServices donationServices;
 
 	private PrenotationServices() {
 		this.prenotations = new HashSet<>();
-	}
-
-	/**
-	 * Creates an instance of the class the first time it is used and returns the
-	 * class instance
-	 * 
-	 * @return the class instance
-	 */
-	public static PrenotationServices getInstance() {
-		if (instance == null) {
-			instance = new PrenotationServices();
-		}
-
-		return instance;
 	}
 
 	/**
@@ -45,7 +38,7 @@ public class PrenotationServices {
 	 */
 	public boolean addPrenotation(RequestPrenotation request) {
 		Objects.requireNonNull(request);
-		if (OfficeServices.getInstance().decreaseTimeslotByOffice(request.getHour(), request.getOfficeId())) {
+		if (officeServices.decreaseTimeslotByOffice(request.getHour(), request.getOfficeId())) {
 			ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(),
 					request.getDonorId(), request.getHour(), true);
 			return prenotations.add(prenotation);
@@ -77,7 +70,7 @@ public class PrenotationServices {
 		Objects.requireNonNull(prenotation);
 		Date date = prenotation.getHour();
 		String officeId = prenotation.getOfficeId();
-		return OfficeServices.getInstance().decreaseTimeslotByOffice(date, officeId) && prenotations.add(prenotation);
+		return officeServices.decreaseTimeslotByOffice(date, officeId) && prenotations.add(prenotation);
 	}
 
 	/**
@@ -98,7 +91,7 @@ public class PrenotationServices {
 		}
 		Date date = prenotation.getHour();
 		String officeId = prenotation.getOfficeId();
-		return OfficeServices.getInstance().increaseTimeslotByOffice(date, officeId)
+		return officeServices.increaseTimeslotByOffice(date, officeId)
 				&& prenotations.remove(getPrenotationInstance(prenotationId));
 	}
 
@@ -125,9 +118,9 @@ public class PrenotationServices {
 
 		Date newDate = prenotation.getHour();
 		String newOffice = prenotation.getOfficeId();
-		if (OfficeServices.getInstance().decreaseTimeslotByOffice(newDate, newOffice)) {
+		if (officeServices.decreaseTimeslotByOffice(newDate, newOffice)) {
 			return prenotations.remove(oldPrenotation) && prenotations.add(prenotation)
-					&& OfficeServices.getInstance().increaseTimeslotByOffice(oldDate, oldOffice);
+					&& officeServices.increaseTimeslotByOffice(oldDate, oldOffice);
 		} else {
 			return false;
 		}
@@ -225,7 +218,7 @@ public class PrenotationServices {
 		Objects.requireNonNull(reportId);
 		ActivePrenotation toClose = this.getPrenotationInstance(prenotationId);
 		if (this.removePrenotation(prenotationId)) {
-			return DonationServices.getInstance().addDonation(toClose, reportId);
+			return donationServices.addDonation(toClose, reportId);
 		} else {
 			return false;
 		}

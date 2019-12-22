@@ -5,29 +5,18 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.springframework.stereotype.Service;
+
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.TimeSlot;
 
+@Service
 public class OfficeServices {
 
-	private static OfficeServices instance;
 	private Set<Office> offices;
 
 	private OfficeServices() {
 		this.offices = new HashSet<>();
-	}
-
-	/**
-	 * Creates an instance of the class the first time it is used and returns the
-	 * class instance
-	 * 
-	 * @return the class instance
-	 */
-	public static OfficeServices getInstance() {
-		if (instance == null) {
-			instance = new OfficeServices();
-		}
-		return instance;
 	}
 
 	/**

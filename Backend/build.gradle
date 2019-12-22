@@ -27,6 +27,8 @@ dependencies {
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	testCompile 'org.junit.jupiter:junit-jupiter:5.5.2'
+	compileOnly 'org.projectlombok:lombok:1.18.10'
+	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 }
 
 test {

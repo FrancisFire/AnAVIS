@@ -5,29 +5,21 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.github.francisfire.anavis.models.RequestPrenotation;
 
+@Service
 public class RequestServices {
 
-	private static RequestServices instance;
 	private Set<RequestPrenotation> requests;
+	@Autowired
+	private PrenotationServices prenotationServices;
+	
 
 	private RequestServices() {
 		this.requests = new HashSet<>();
-	}
-
-	/**
-	 * Creates an instance of the class the first time it is used and returns the
-	 * class instance
-	 * 
-	 * @return the class instance
-	 */
-	public static RequestServices getInstance() {
-		if (instance == null) {
-			instance = new RequestServices();
-		}
-
-		return instance;
 	}
 
 	/**
@@ -66,7 +58,7 @@ public class RequestServices {
 		Objects.requireNonNull(requestId);
 		RequestPrenotation toApprove = this.getRequestInstance(requestId);
 		if (requests.remove(toApprove)) {
-			return PrenotationServices.getInstance().addPrenotation(toApprove);
+			return prenotationServices.addPrenotation(toApprove);
 		}
 		return false;
 	}

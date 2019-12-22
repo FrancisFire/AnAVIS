@@ -1,10 +1,10 @@
 package com.github.francisfire.anavis;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -13,21 +13,19 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.TimeSlot;
 import com.github.francisfire.anavis.services.OfficeServices;
 
+@SpringBootTest
 public class OfficeServicesTest {
 
-	private static OfficeServices officeServices;
-
-	@BeforeAll
-	public static void setUp() {
-		officeServices = OfficeServices.getInstance();
-	}
+	@Autowired
+	private OfficeServices officeServices;
 
 	@Test
 	public void getDonationTimeTable() {

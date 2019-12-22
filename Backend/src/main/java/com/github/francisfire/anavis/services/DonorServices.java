@@ -5,29 +5,17 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import com.github.francisfire.anavis.models.Donor;
 
+@Service
 public class DonorServices {
 
-	private static DonorServices instance;
 	private Set<Donor> donors;
 
 	private DonorServices() {
 		this.donors = new HashSet<>();
-	}
-
-	/**
-	 * Creates an instance of the class the first time it is used and returns the
-	 * class instance
-	 * 
-	 * @return the class instance
-	 */
-	public static DonorServices getInstance() {
-		if (instance == null) {
-			instance = new DonorServices();
-		}
-
-		return instance;
 	}
 
 	/**
@@ -64,7 +52,7 @@ public class DonorServices {
 	 */
 	public String getOfficeIdByDonor(String donorId) {
 		Donor donor = getDonorInstance(Objects.requireNonNull(donorId));
-		return (donor == null) ? null : donor.getOfficePoint();
+		return (donor == null) ? null : donor.getOfficeId();
 	}
 
 	/**
@@ -90,7 +78,7 @@ public class DonorServices {
 	 */
 	public Set<Donor> getDonorsByOfficeId(String officeId) {
 		Objects.requireNonNull(officeId);
-		return donors.stream().filter(donor -> donor.getOfficePoint().equalsIgnoreCase(officeId))
+		return donors.stream().filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
 
@@ -105,7 +93,7 @@ public class DonorServices {
 	public Set<Donor> getAvailableDonorsByOfficeId(String officeId) {
 		Objects.requireNonNull(officeId);
 		return donors.stream()
-				.filter(donor -> donor.getOfficePoint().equalsIgnoreCase(officeId) && donor.isCanDonate())
+				.filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId) && donor.isCanDonate())
 				.collect(Collectors.toSet());
 	}
 

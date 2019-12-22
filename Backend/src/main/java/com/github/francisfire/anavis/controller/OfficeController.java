@@ -2,6 +2,7 @@ package com.github.francisfire.anavis.controller;
 
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,7 +18,8 @@ import com.github.francisfire.anavis.services.OfficeServices;
 @RequestMapping("api/office")
 public class OfficeController {
 
-	private static OfficeServices officeServices = OfficeServices.getInstance();
+	@Autowired
+	private OfficeServices officeServices;
 
 	@GetMapping("")
 	public Set<Office> getOffices() {
