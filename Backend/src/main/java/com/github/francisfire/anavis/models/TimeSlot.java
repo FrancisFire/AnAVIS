@@ -2,12 +2,20 @@ package com.github.francisfire.anavis.models;
 
 import java.util.Date;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TimeSlot {
+	
+	@EqualsAndHashCode.Include
 	private Date dateTime;
 	private int donorSlots;
-
-	public TimeSlot() {
-	}
 
 	public TimeSlot(Date dateTime, int donorSlots) {
 		this.dateTime = dateTime;
@@ -52,48 +60,5 @@ public class TimeSlot {
 			this.donorSlots--;
 			return true;
 		}
-	}
-	
-	
-
-	public Date getDateTime() {
-		return dateTime;
-	}
-
-	public void setDateTime(Date dateTime) {
-		this.dateTime = dateTime;
-	}
-
-	public int getDonorSlot() {
-		return this.donorSlots;
-	}
-
-	public void setDonorSlot(int slots) {
-		this.donorSlots = slots;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dateTime == null) ? 0 : dateTime.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TimeSlot other = (TimeSlot) obj;
-		if (dateTime == null) {
-			if (other.dateTime != null)
-				return false;
-		} else if (!dateTime.equals(other.dateTime))
-			return false;
-		return true;
 	}
 }
