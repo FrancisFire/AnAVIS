@@ -293,7 +293,7 @@ class _DonorViewState extends State<DonorView> {
         },
       ),
       SpeedDialChild(
-        label: 'Richieste in attesa',
+        label: 'Modifiche dall\'ufficio',
         labelBackgroundColor: Colors.redAccent,
         backgroundColor: Colors.redAccent,
         labelStyle: TextStyle(

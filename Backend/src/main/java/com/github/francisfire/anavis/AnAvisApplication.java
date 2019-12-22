@@ -27,23 +27,38 @@ public class AnAvisApplication {
 
 	private static void initData() {
 		Office officeOne = new Office("Osimo");
+		Office officeTwo = new Office("Fabriano");
+		Office officeThree = new Office("Casette Verdini");
+		Office officeFour = new Office("Tolentino");
+
+		OfficeServices.getInstance().addOffice(officeOne);
+		OfficeServices.getInstance().addOffice(officeTwo);
+		OfficeServices.getInstance().addOffice(officeThree);
+		OfficeServices.getInstance().addOffice(officeFour);
+
 		Set<TimeSlot> datesOne = new HashSet<>();
 		datesOne.add(new TimeSlot(new Date(260000), 5));
-		datesOne.add(new TimeSlot(new Date(280000), 5));
+		datesOne.add(new TimeSlot(new Date(550000), 5));
 		officeOne.setDonationTimeTables(datesOne);
-		Donor donorOne = new Donor("stelluti@mail.com", officeOne.getId());
-		donorOne.setCanDonate(true);
-		Office officeTwo = new Office("Fabriano");
 		Set<TimeSlot> datesTwo = new HashSet<>();
 		datesTwo.add(new TimeSlot(new Date(270000), 5));
 		datesTwo.add(new TimeSlot(new Date(300000), 5));
 		officeTwo.setDonationTimeTables(datesTwo);
+		Set<TimeSlot> datesThree = new HashSet<>();
+		datesTwo.add(new TimeSlot(new Date(270000), 5));
+		datesTwo.add(new TimeSlot(new Date(300000), 5));
+		officeThree.setDonationTimeTables(datesThree);
+		Set<TimeSlot> datesFour = new HashSet<>();
+		datesTwo.add(new TimeSlot(new Date(270000), 5));
+		datesTwo.add(new TimeSlot(new Date(300000), 5));
+		officeFour.setDonationTimeTables(datesFour);
+		
+		Donor donorOne = new Donor("stelluti@mail.com", officeOne.getId());
+		donorOne.setCanDonate(true);
 		Donor donorTwo = new Donor("coppola@mail.com", officeTwo.getId());
 		Donor donorThree = new Donor("clelio@mail.com", officeTwo.getId());
 		donorThree.setCanDonate(true);
-		Office officeThree = new Office("Casette Verdini");
 		Donor donorFour = new Donor("zamponi@mail.com", officeThree.getId());
-		Office officeFour = new Office("Tolentino");
 		Donor donorFive = new Donor("sasso@mail.com", officeFour.getId());
 
 		DonorServices.getInstance().addDonor(donorOne);
@@ -51,18 +66,18 @@ public class AnAvisApplication {
 		DonorServices.getInstance().addDonor(donorThree);
 		DonorServices.getInstance().addDonor(donorFour);
 		DonorServices.getInstance().addDonor(donorFive);
-		OfficeServices.getInstance().addOffice(officeOne);
-		OfficeServices.getInstance().addOffice(officeTwo);
-		OfficeServices.getInstance().addOffice(officeThree);
-		OfficeServices.getInstance().addOffice(officeFour);
-		RequestPrenotation requestOne = new RequestPrenotation("one", officeOne.getId(), donorOne.getMail(), new Date());
-		RequestPrenotation requestTwo = new RequestPrenotation("two", officeTwo.getId(), donorTwo.getMail(), new Date());
+		
+		RequestPrenotation requestOne = new RequestPrenotation("one", officeOne.getId(), donorOne.getMail(),
+				new Date(550000));
+		RequestPrenotation requestTwo = new RequestPrenotation("two", officeTwo.getId(), donorTwo.getMail(),
+				new Date(270000));
 		RequestServices.getInstance().addRequest(requestOne);
 		RequestServices.getInstance().addRequest(requestTwo);
-		ActivePrenotation prenotationOne = new ActivePrenotation("ciccio", officeThree.getId(), donorFour.getMail(),
-				new Date(1575200000));
-		ActivePrenotation prenotationTwo = new ActivePrenotation("ciccia", officeFour.getId(), donorFive.getMail(),
-				new Date(1575800000));
+		
+		ActivePrenotation prenotationOne = new ActivePrenotation("ciccio", officeOne.getId(), donorFour.getMail(),
+				new Date(260000), true);
+		ActivePrenotation prenotationTwo = new ActivePrenotation("ciccia", officeTwo.getId(), donorFive.getMail(),
+				new Date(300000), true);
 		PrenotationServices.getInstance().addPrenotation(prenotationOne);
 		PrenotationServices.getInstance().addPrenotation(prenotationTwo);
 	}

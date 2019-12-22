@@ -5,9 +5,10 @@ import java.util.Date;
 public class ActivePrenotation extends Prenotation {
 	private boolean confirmed;
 
-	public ActivePrenotation(String id, String officeId, String donorId, Date hour) {
+	public ActivePrenotation() {}
+	public ActivePrenotation(String id, String officeId, String donorId, Date hour, boolean conf) {
 		super(id, officeId, donorId, hour);
-		confirmed = true;
+		confirmed = conf;
 	}
 
 	public boolean isConfirmed() {

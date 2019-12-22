@@ -75,7 +75,7 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
                               16.0,
                             ),
                             child: Text(
-                              "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
+                              "Non sono presenti prenotazioni di donazione al momento, si prega di riprovare più tardi",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,

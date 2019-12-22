@@ -47,7 +47,7 @@ public class PrenotationServices {
 		Objects.requireNonNull(request);
 		if (OfficeServices.getInstance().decreaseTimeslotByOffice(request.getHour(), request.getOfficeId())) {
 			ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(),
-					request.getDonorId(), request.getHour());
+					request.getDonorId(), request.getHour(), true);
 			return prenotations.add(prenotation);
 		}
 		return false;
@@ -126,7 +126,7 @@ public class PrenotationServices {
 		Date newDate = prenotation.getHour();
 		String newOffice = prenotation.getOfficeId();
 		if (OfficeServices.getInstance().decreaseTimeslotByOffice(newDate, newOffice)) {
-			return prenotations.remove(prenotation) && prenotations.add(oldPrenotation)
+			return prenotations.remove(oldPrenotation) && prenotations.add(prenotation)
 					&& OfficeServices.getInstance().increaseTimeslotByOffice(oldDate, oldOffice);
 		} else {
 			return false;
