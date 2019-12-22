@@ -23,6 +23,8 @@ class _DialogModificationPrenotationState
   String _newOffice, _newHour;
   List<DropdownMenuItem> _offices, listOfficeItem, listTimeItem;
 
+  bool activeOffice = true, activeHour = true;
+
   @override
   void initState() {
     super.initState();
@@ -133,21 +135,23 @@ class _DialogModificationPrenotationState
               ),
               SizedBox(height: 24.0),
               FormFieldGeneral(
-                fetchItems: _offices,
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.red,
-                ),
-                labelDropDown: "Seleziona l'ufficio",
-                valueSelected: _newOffice,
-                onChanged: (newValue) async {
-                  await Provider.of<CurrentOfficeState>(context)
-                      .setOfficeTimeTablesByOffice(newValue);
-                  setState(() {
-                    _newOffice = newValue;
-                  });
-                },
-              ),
+                  fetchItems: _offices,
+                  icon: Icon(
+                    Icons.home,
+                    color: Colors.red,
+                  ),
+                  labelDropDown:
+                      activeOffice ? "Seleziona l'ufficio" : _newOffice,
+                  valueSelected: _newOffice,
+                  disabled: activeOffice,
+                  onChanged: (newValue) async {
+                    await Provider.of<CurrentOfficeState>(context)
+                        .setOfficeTimeTablesByOffice(newValue);
+                    setState(() {
+                      _newOffice = newValue;
+                      activeOffice = false;
+                    });
+                  }),
               SizedBox(height: 24.0),
               FormFieldGeneral(
                 fetchItems: createHourItem(context),
@@ -155,11 +159,13 @@ class _DialogModificationPrenotationState
                   Icons.access_time,
                   color: Colors.red,
                 ),
-                labelDropDown: "Seleziona l'orario",
+                labelDropDown: activeHour ? "Seleziona l'orario" : _newHour,
+                disabled: activeHour,
                 valueSelected: _newHour,
                 onChanged: (newValue) {
                   setState(() {
                     _newHour = newValue;
+                    activeHour = false;
                   });
                 },
               ),
@@ -169,7 +175,7 @@ class _DialogModificationPrenotationState
                 children: <Widget>[
                   ButtonForCardBottom(
                     icon: Icon(
-                      Icons.thumb_down,
+                      Icons.cancel,
                       color: Colors.white,
                     ),
                     color: Colors.red,
@@ -196,18 +202,20 @@ class _DialogModificationPrenotationState
                           color: Colors.green,
                           onTap: () {
                             Navigator.pushReplacementNamed(
-                                context, '/office/prenotationupdate/recap',
-                                arguments: new OfficePrenotationUpdateRecapArgs(
-                                  this.widget.donor,
-                                  this._newHour,
-                                  nicerTime(this._newHour),
-                                  widget.prenotationId,
-                                  _newOffice,
-                                ));
+                              context,
+                              '/office/prenotationupdate/recap',
+                              arguments: new OfficePrenotationUpdateRecapArgs(
+                                this.widget.donor,
+                                this._newHour,
+                                nicerTime(this._newHour),
+                                widget.prenotationId,
+                                _newOffice,
+                              ),
+                            );
                           },
                           title: 'Conferma',
                         )
-                      : SizedBox(),
+                      : Container(),
                 ],
               ),
             ],

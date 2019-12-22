@@ -6,6 +6,7 @@ class FormFieldGeneral extends StatelessWidget {
   final List<DropdownMenuItem<dynamic>> fetchItems;
   final String valueSelected;
   final Function onChanged;
+  final bool disabled;
 
   FormFieldGeneral({
     @required this.icon,
@@ -13,6 +14,7 @@ class FormFieldGeneral extends StatelessWidget {
     @required this.fetchItems,
     @required this.valueSelected,
     @required this.onChanged,
+    this.disabled,
   });
 
   @override
@@ -49,9 +51,11 @@ class FormFieldGeneral extends StatelessWidget {
           elevation: 18,
           items: fetchItems,
           value: valueSelected,
-          onChanged: (newValue) {
-            onChanged(newValue);
-          },
+          onChanged: disabled
+              ? (newValue) {
+                  onChanged(newValue);
+                }
+              : null,
         ),
       ),
     );
