@@ -4,17 +4,24 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Office {
 
+	@EqualsAndHashCode.Include
 	private String id;
-	private Set<TimeSlot> donationTimeTables;
-
-	public Office() {
-	}
+	private Set<TimeSlot> donationTimeTable;
 
 	public Office(String name) {
 		this.id = name;
-		this.donationTimeTables = new HashSet<>();
+		this.donationTimeTable = new HashSet<>();
 	}
 
 	/**
@@ -27,7 +34,7 @@ public class Office {
 	 *         associated with the same hour and date, false otherwise
 	 */
 	public boolean addTimeSlot(TimeSlot timeSlot) {
-		return donationTimeTables.add(timeSlot);
+		return donationTimeTable.add(timeSlot);
 	}
 
 	/**
@@ -40,7 +47,7 @@ public class Office {
 	 *         prenotations, false otherwise
 	 */
 	public boolean increaseSlotByDate(Date dateTime) {
-		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+		TimeSlot slot = donationTimeTable.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
 				.findFirst().orElse(null);
 		if (slot == null) {
 			return false;
@@ -59,7 +66,7 @@ public class Office {
 	 *         prenotations, false otherwise
 	 */
 	public boolean decreaseSlotByDate(Date dateTime) {
-		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+		TimeSlot slot = donationTimeTable.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
 				.findFirst().orElse(null);
 		if (slot == null) {
 			return false;
@@ -77,59 +84,13 @@ public class Office {
 	 *         hour specified, false otherwise
 	 */
 	public boolean isDateAvailable(Date dateTime) {
-		TimeSlot slot = donationTimeTables.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
+		TimeSlot slot = donationTimeTable.stream().filter(timeslot -> timeslot.getDateTime().equals(dateTime))
 				.findFirst().orElse(null);
 		if (slot == null) {
 			return false;
 		} else {
 			return slot.isDateAvailable();
 		}
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setName(String name) {
-		this.id = name;
-	}
-
-	public Set<TimeSlot> getDonationTimeTables() {
-		return donationTimeTables;
-	}
-
-	public void setDonationTimeTables(Set<TimeSlot> donationTimeTables) {
-		this.donationTimeTables = donationTimeTables;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Office other = (Office) obj;
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
-			return false;
-		}
-		return true;
 	}
 
 }

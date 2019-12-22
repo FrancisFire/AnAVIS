@@ -52,7 +52,7 @@ public class OfficeServices {
 	 */
 	public Set<TimeSlot> getDonationsTimeTable(String officeId) {
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
-		return (office == null) ? new HashSet<>() : getOfficeInstance(officeId).getDonationTimeTables();
+		return (office == null) ? new HashSet<>() : getOfficeInstance(officeId).getDonationTimeTable();
 	}
 
 	/**

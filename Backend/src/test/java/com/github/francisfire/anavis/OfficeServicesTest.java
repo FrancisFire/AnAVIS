@@ -37,7 +37,7 @@ public class OfficeServicesTest {
 		Office of = new Office("Roma Sud");
 		Set<TimeSlot> dates = new HashSet<>();
 		dates.add(ts);
-		of.setDonationTimeTables(dates);
+		of.setDonationTimeTable(dates);
 		officeServices.addOffice(of);
 		assertTrue(officeServices.getDonationsTimeTable("Roma Sud").contains(ts));
 		assertFalse(officeServices.getDonationsTimeTable("Roma Nord").contains(ts));
@@ -78,7 +78,7 @@ public class OfficeServicesTest {
 		officeServices.addOffice(new Office("TestDue"));
 		officeServices.addTimeslotByOffice(new TimeSlot(today, 6), "TestDue");
 		assertTrue(officeServices.increaseTimeslotByOffice(today, "TestDue"));
-		assertEquals(7, officeServices.getDonationsTimeTable("TestDue").iterator().next().getDonorSlot());
+		assertEquals(7, officeServices.getDonationsTimeTable("TestDue").iterator().next().getDonorSlots());
 		assertThrows(NullPointerException.class, () -> officeServices.increaseTimeslotByOffice(today, "TestErr"));
 	}
 
@@ -94,8 +94,8 @@ public class OfficeServicesTest {
 		assertTrue(officeServices.decreaseTimeslotByOffice(today, "TestTre"));
 		assertTrue(officeServices.decreaseTimeslotByOffice(today, "TestQuattro"));
 		assertFalse(officeServices.decreaseTimeslotByOffice(today, "TestQuattro"));
-		assertEquals(5, officeServices.getDonationsTimeTable("TestTre").iterator().next().getDonorSlot());
-		assertEquals(0, officeServices.getDonationsTimeTable("TestQuattro").iterator().next().getDonorSlot());
+		assertEquals(5, officeServices.getDonationsTimeTable("TestTre").iterator().next().getDonorSlots());
+		assertEquals(0, officeServices.getDonationsTimeTable("TestQuattro").iterator().next().getDonorSlots());
 		assertThrows(NullPointerException.class, () -> officeServices.decreaseTimeslotByOffice(today, "TestErr"));
 	}
 }
