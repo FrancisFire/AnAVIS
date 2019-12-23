@@ -1,5 +1,7 @@
 package com.github.francisfire.anavis.models;
 
+import java.util.Date;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ public class Donor {
 	private String mail;
 	private String officeId;
 	private boolean canDonate;
+	private Date lastDonation;
 	
 	public Donor(String mail, String officeId) {
 		this.mail = mail;

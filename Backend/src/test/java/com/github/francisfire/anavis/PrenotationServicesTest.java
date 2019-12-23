@@ -13,10 +13,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.ClosedPrenotation;
+import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.RequestPrenotation;
 import com.github.francisfire.anavis.models.TimeSlot;
 import com.github.francisfire.anavis.services.DonationServices;
+import com.github.francisfire.anavis.services.DonorServices;
 import com.github.francisfire.anavis.services.OfficeServices;
 import com.github.francisfire.anavis.services.PrenotationServices;
 
@@ -29,7 +31,9 @@ public class PrenotationServicesTest {
 	private OfficeServices officeServices;
 	@Autowired
 	private DonationServices donationServices;
-
+	@Autowired
+	private DonorServices donorServices;
+	
 	@Test
 	public void getPrenotations() {
 
@@ -96,6 +100,9 @@ public class PrenotationServicesTest {
 	public void updatePrenotation() {
 		assertThrows(NullPointerException.class, () -> prenotationServices.updatePrenotation(null));
 
+		Donor donor = new Donor("gianni@gmail.com", "Pineto");
+		donorServices.addDonor(donor);
+		donor.setCanDonate(true);
 		Office office = new Office("Pineto");
 		officeServices.addOffice(office);
 		TimeSlot timeSlot = new TimeSlot(new Date(3000000), 1);
@@ -148,38 +155,38 @@ public class PrenotationServicesTest {
 	@Test
 	public void getPrenotationsByDonor() {
 		assertThrows(NullPointerException.class, () -> prenotationServices.getPrenotationsByDonor(null));
-
+		Donor donor = new Donor("pren@gmail.com", "Pineto");
+		donorServices.addDonor(donor);
+		donor.setCanDonate(true);
 		Office office = new Office("Pineto");
 		officeServices.addOffice(office);
 		TimeSlot timeSlot = new TimeSlot(new Date(4000000), 3);
 		officeServices.addTimeslotByOffice(timeSlot, "Pineto");
 
-		ActivePrenotation prenotationOne = new ActivePrenotation("id13", "Pineto", "panino@gmail.com",
+		ActivePrenotation prenotationOne = new ActivePrenotation("id13", "Pineto", "pren@gmail.com",
 				new Date(4000000), true);
 		prenotationServices.addPrenotation(prenotationOne);
-		ActivePrenotation prenotationTwo = new ActivePrenotation("id14", "Pineto", "panino@gmail.com",
-				new Date(4000000), true);
-		prenotationServices.addPrenotation(prenotationTwo);
-		ActivePrenotation prenotationThree = new ActivePrenotation("id15", "Pineto", "salame@gmail.com",
+		ActivePrenotation prenotationThree = new ActivePrenotation("id15", "Pineto", "prentwo@gmail.com",
 				new Date(4000000), true);
 		prenotationServices.addPrenotation(prenotationThree);
-
-		assertTrue(prenotationServices.getPrenotationsByDonor("panino@gmail.com").contains(prenotationOne));
-		assertTrue(prenotationServices.getPrenotationsByDonor("panino@gmail.com").contains(prenotationTwo));
-		assertFalse(prenotationServices.getPrenotationsByDonor("panino@gmail.com").contains(prenotationThree));
+		
+		assertTrue(prenotationServices.getPrenotationsByDonor("pren@gmail.com").contains(prenotationOne));
+		assertFalse(prenotationServices.getPrenotationsByDonor("pren@gmail.com").contains(prenotationThree));
 
 	}
 
 	@Test
 	public void acceptPrenotationChange() {
 		assertThrows(NullPointerException.class, () -> prenotationServices.acceptPrenotationChange(null));
-
+		Donor donor = new Donor("accept@gmail.com", "Pineto");
+		donorServices.addDonor(donor);
+		donor.setCanDonate(true);
 		Office office = new Office("Pineto");
 		officeServices.addOffice(office);
 		TimeSlot timeSlot = new TimeSlot(new Date(9200000), 1);
 		officeServices.addTimeslotByOffice(timeSlot, "Pineto");
 
-		ActivePrenotation prenotationOne = new ActivePrenotation("id16", "Pineto", "panino@gmail.com",
+		ActivePrenotation prenotationOne = new ActivePrenotation("id16", "Pineto", "accept@gmail.com",
 				new Date(9200000), true);
 		prenotationServices.addPrenotation(prenotationOne);
 		assertFalse(prenotationServices.acceptPrenotationChange("id16"));
@@ -192,13 +199,15 @@ public class PrenotationServicesTest {
 	@Test
 	public void denyPrenotationChange() {
 		assertThrows(NullPointerException.class, () -> prenotationServices.denyPrenotationChange(null));
-
+		Donor donor = new Donor("deny@gmail.com", "Pineto");
+		donor.setCanDonate(true);
+		donorServices.addDonor(donor);
 		Office office = new Office("Pineto");
 		officeServices.addOffice(office);
 		TimeSlot timeSlot = new TimeSlot(new Date(9300000), 1);
 		officeServices.addTimeslotByOffice(timeSlot, "Pineto");
 
-		ActivePrenotation prenotationOne = new ActivePrenotation("id17", "Pineto", "panino@gmail.com",
+		ActivePrenotation prenotationOne = new ActivePrenotation("id17", "Pineto", "deny@gmail.com",
 				new Date(9300000), true);
 		prenotationServices.addPrenotation(prenotationOne);
 		assertTrue(prenotationServices.getPrenotationInstance("id17").isConfirmed());
@@ -214,7 +223,11 @@ public class PrenotationServicesTest {
 
 		Office office = new Office("Close");
 		String id = "sas";
+		Donor donor = new Donor("close@gmail.com", "Close");
+		donor.setCanDonate(true);
 		officeServices.addOffice(office);
+		donorServices.addDonor(donor);
+		
 		TimeSlot timeSlot = new TimeSlot(new Date(420), 1);
 		officeServices.addTimeslotByOffice(timeSlot, "Close");
 		ClosedPrenotation prenotationClosed = new ClosedPrenotation("idclose", "Close", "close@gmail.com",
@@ -227,5 +240,6 @@ public class PrenotationServicesTest {
 		assertFalse(prenotationServices.closePrenotation("idclose", id));
 		assertTrue(donationServices.getDonationsByDonor("close@gmail.com").contains(prenotationClosed));
 		assertFalse(prenotationServices.getPrenotationsByDonor("close@gmail.com").contains(prenotationActive));
+		assertFalse(donorServices.checkDonationPossibility("close@gmail.com"));
 	}
 }

@@ -106,7 +106,7 @@ public class DonorServices {
 	 * @param donorId id of the donor to find
 	 * @return the Donor object associated to the id, null if it hasn't been found
 	 */
-	private Donor getDonorInstance(String donorId) {
+	public Donor getDonorInstance(String donorId) {
 		Objects.requireNonNull(donorId);
 		return donors.stream().filter(donor -> donor.getMail().equals(donorId)).findFirst().orElse(null);
 	}

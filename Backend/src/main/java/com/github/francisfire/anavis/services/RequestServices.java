@@ -16,7 +16,8 @@ public class RequestServices {
 	private Set<RequestPrenotation> requests;
 	@Autowired
 	private PrenotationServices prenotationServices;
-	
+	@Autowired
+	private DonorServices donorServices;
 
 	private RequestServices() {
 		this.requests = new HashSet<>();
@@ -27,10 +28,14 @@ public class RequestServices {
 	 * 
 	 * @throws NullPointerException if request is null
 	 * @param request the request to add
-	 * @return true if the request wasn't present in the collection, false otherwise
+	 * @return true if the request wasn't present in the collection and the donor
+	 *         associated with the request can donate, false otherwise
 	 */
 	public boolean addRequest(RequestPrenotation request) {
-		return requests.add(Objects.requireNonNull(request));
+		if (donorServices.checkDonationPossibility(request.getDonorId())) {
+			return requests.add(Objects.requireNonNull(request));
+		} else
+			return false;
 	}
 
 	/**
@@ -52,12 +57,16 @@ public class RequestServices {
 	 * 
 	 * @throws NullPointerException if requestId is null
 	 * @param requestId id of the request
-	 * @return true if the prenotation has been correctly added, false otherwise
+	 * @return true if the donor associated with the request can donate and the
+	 *         prenotation has been correctly added, false otherwise
 	 */
 	public boolean approveRequest(String requestId) {
 		Objects.requireNonNull(requestId);
 		RequestPrenotation toApprove = this.getRequestInstance(requestId);
-		if (requests.remove(toApprove)) {
+		if (toApprove == null) {
+			return false;
+		}
+		if (donorServices.checkDonationPossibility(toApprove.getDonorId()) && requests.remove(toApprove)) {
 			return prenotationServices.addPrenotation(toApprove);
 		}
 		return false;

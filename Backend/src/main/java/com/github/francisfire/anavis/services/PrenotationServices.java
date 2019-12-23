@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.francisfire.anavis.models.ActivePrenotation;
+import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.RequestPrenotation;
 
 @Service
@@ -20,6 +21,8 @@ public class PrenotationServices {
 	private OfficeServices officeServices;
 	@Autowired
 	private DonationServices donationServices;
+	@Autowired
+	private DonorServices donorServices;
 
 	private PrenotationServices() {
 		this.prenotations = new HashSet<>();
@@ -32,13 +35,14 @@ public class PrenotationServices {
 	 * @throws NullPointerException if request is null
 	 * @param request the request from where data has been taken to create the
 	 *                prenotation
-	 * @return true if the prenotation wasn't already present in the collection and
-	 *         timeslot was available and has been correctly decreased, false
-	 *         otherwise
+	 * @return true if the donor associated with the request can donate and the
+	 *         prenotation wasn't already present in the collection and timeslot was
+	 *         available and has been correctly decreased, false otherwise
 	 */
 	public boolean addPrenotation(RequestPrenotation request) {
 		Objects.requireNonNull(request);
-		if (officeServices.decreaseTimeslotByOffice(request.getHour(), request.getOfficeId())) {
+		if (donorServices.checkDonationPossibility(request.getDonorId())
+				&& officeServices.decreaseTimeslotByOffice(request.getHour(), request.getOfficeId())) {
 			ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(),
 					request.getDonorId(), request.getHour(), true);
 			return prenotations.add(prenotation);
@@ -63,14 +67,16 @@ public class PrenotationServices {
 	 * 
 	 * @throws NullPointerException if prenotation is null
 	 * @param prenotation the prenotation to add
-	 * @return true if the collection didn't contain the added prenotation and a
-	 *         timeslot was present
+	 * @return true if the donor associated with the prenotation can donate and the
+	 *         collection didn't contain the added prenotation and a timeslot was
+	 *         present
 	 */
 	public boolean addPrenotation(ActivePrenotation prenotation) {
 		Objects.requireNonNull(prenotation);
 		Date date = prenotation.getHour();
 		String officeId = prenotation.getOfficeId();
-		return officeServices.decreaseTimeslotByOffice(date, officeId) && prenotations.add(prenotation);
+		return donorServices.checkDonationPossibility(prenotation.getDonorId())
+				&& officeServices.decreaseTimeslotByOffice(date, officeId) && prenotations.add(prenotation);
 	}
 
 	/**
@@ -104,7 +110,7 @@ public class PrenotationServices {
 	 * 
 	 * @throws NullPointerException if prenotation is null
 	 * @param prenotation the prenotation to update
-	 * @return true if prenotation was present and updates succesfully and timeslots
+	 * @return true if the donor associated with the new prenotation can donate and the prenotation was present and updates succesfully and timeslots
 	 *         have been modified successfully, false otherwise
 	 */
 	public boolean updatePrenotation(ActivePrenotation prenotation) {
@@ -118,7 +124,8 @@ public class PrenotationServices {
 
 		Date newDate = prenotation.getHour();
 		String newOffice = prenotation.getOfficeId();
-		if (officeServices.decreaseTimeslotByOffice(newDate, newOffice)) {
+		if (donorServices.checkDonationPossibility(prenotation.getDonorId())
+				&& officeServices.decreaseTimeslotByOffice(newDate, newOffice)) {
 			return prenotations.remove(oldPrenotation) && prenotations.add(prenotation)
 					&& officeServices.increaseTimeslotByOffice(oldDate, oldOffice);
 		} else {
@@ -216,9 +223,14 @@ public class PrenotationServices {
 	public boolean closePrenotation(String prenotationId, String reportId) {
 		Objects.requireNonNull(prenotationId);
 		Objects.requireNonNull(reportId);
-		ActivePrenotation toClose = this.getPrenotationInstance(prenotationId);
-		if (this.removePrenotation(prenotationId)) {
-			return donationServices.addDonation(toClose, reportId);
+		ActivePrenotation prenotation = this.getPrenotationInstance(prenotationId);
+		if (this.removePrenotation(prenotationId) && donationServices.addDonation(prenotation, reportId)) {
+			String donorId = prenotation.getDonorId();
+			Date date = prenotation.getHour();
+			Donor donor = donorServices.getDonorInstance(donorId);
+			donor.setCanDonate(false);
+			donor.setLastDonation(date);
+			return true;
 		} else {
 			return false;
 		}

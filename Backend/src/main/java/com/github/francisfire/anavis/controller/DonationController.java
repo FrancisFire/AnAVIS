@@ -23,7 +23,7 @@ public class DonationController {
 	private DonationReportServices closedPrenotationReportServices;
 
 	@GetMapping("/donor/{donorId}")
-	public Set<ClosedPrenotation> getPrenotationsByDonor(@PathVariable("donorId") String donorId) {
+	public Set<ClosedPrenotation> getDonationsByDonor(@PathVariable("donorId") String donorId) {
 		return donationServices.getDonationsByDonor(donorId);
 	}
 	
