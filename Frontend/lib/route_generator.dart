@@ -10,6 +10,7 @@ import 'package:anavis/views/donor_request_add_views/donor_request_recap_view.da
 import 'package:anavis/views/donor_request_add_views/donor_request_time_view.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/views/login_view.dart';
+import 'package:anavis/views/office_add_dateslot_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_donor_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_recap_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_time_view.dart';
@@ -64,6 +65,13 @@ class RouteGenerator {
             builder: (_) => OfficePrenotationView(),
             settings: RouteSettings(
               name: 'OfficePrenotation',
+            ));
+
+      case "/office/insertdateslotview":
+        return MaterialPageRoute(
+            builder: (_) => OfficeAddDateslotView(),
+            settings: RouteSettings(
+              name: 'OfficeAddDateslotView',
             ));
 
       case '/office/prenotations':

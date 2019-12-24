@@ -1,5 +1,4 @@
 import 'package:anavis/models/activeprenotation.dart';
-import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/models/requestprenotation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

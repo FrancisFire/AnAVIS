@@ -55,7 +55,7 @@ class FormFieldGeneral extends StatelessWidget {
               ? (newValue) {
                   onChanged(newValue);
                 }
-              : null,
+              : (newValue) => {},
         ),
       ),
     );

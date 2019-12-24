@@ -3,6 +3,7 @@ import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/widgets/button_fab_homepage.dart';
 import 'package:anavis/widgets/clip_path.dart';
 import 'package:badges/badges.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -21,6 +22,11 @@ class _DonorViewState extends State<DonorView> {
 
   int prenotationCount = 0;
   int pendingCount = 0;
+
+  List<int> selectedSpots = [];
+  int touchedIndex;
+  int lastPanStartOnIndex = -1;
+
   int getPrenotationCount() {
     Provider.of<CurrentDonorState>(context).getDonorActivePrenotations().then(
       (onValue) {
@@ -47,6 +53,7 @@ class _DonorViewState extends State<DonorView> {
   Widget build(BuildContext context) {
     _email = Provider.of<CurrentDonorState>(context).getDonorMail();
     _donorCanDonate = Provider.of<CurrentDonorState>(context).getCanDonate();
+
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -185,10 +192,132 @@ class _DonorViewState extends State<DonorView> {
                             ),
                             child: Center(
                               child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  "Possiamo mostrare delle cose qui che possono essere un grafico o un calendario",
-                                  textAlign: TextAlign.center,
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Chip(
+                                          avatar: CircleAvatar(
+                                            backgroundColor:
+                                                Colors.grey.shade800,
+                                            child: Icon(
+                                              Icons.calendar_today,
+                                              size: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          label: Text('12 Dicembre 2019'),
+                                        ),
+                                        CircleAvatar(
+                                          backgroundColor: Colors.orange,
+                                          child: Icon(
+                                            Icons.warning,
+                                            size: 22,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    PieChart(
+                                      PieChartData(
+                                        pieTouchData: PieTouchData(
+                                          touchCallback: (pieTouchResponse) {
+                                            setState(() {
+                                              if (pieTouchResponse.touchInput
+                                                      is FlLongPressEnd ||
+                                                  pieTouchResponse.touchInput
+                                                      is FlPanEnd) {
+                                                touchedIndex = -1;
+                                              } else {
+                                                touchedIndex = pieTouchResponse
+                                                    .touchedSectionIndex;
+                                              }
+                                            });
+                                          },
+                                        ),
+                                        borderData: FlBorderData(
+                                          show: false,
+                                        ),
+                                        sectionsSpace: 5,
+                                        centerSpaceRadius: 60,
+                                        sections: showingSections(),
+                                      ),
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            Chip(
+                                              avatar: CircleAvatar(
+                                                backgroundColor: Colors.red,
+                                              ),
+                                              backgroundColor:
+                                                  Colors.red.withOpacity(0.3),
+                                              label: Text(
+                                                'Globuli rossi',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            Chip(
+                                              avatar: CircleAvatar(
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                              backgroundColor:
+                                                  Colors.grey.withOpacity(0.3),
+                                              label: Text(
+                                                'Globuli bianchi',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            Chip(
+                                              avatar: CircleAvatar(
+                                                backgroundColor: Colors.orange,
+                                              ),
+                                              backgroundColor: Colors.orange
+                                                  .withOpacity(0.3),
+                                              label: Text(
+                                                'Piastrine',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            Chip(
+                                              avatar: CircleAvatar(
+                                                backgroundColor: Colors.green,
+                                              ),
+                                              backgroundColor:
+                                                  Colors.green.withOpacity(0.3),
+                                              label: Text(
+                                                'Colesterolo',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -211,6 +340,45 @@ class _DonorViewState extends State<DonorView> {
         iconFab: iconFAB(),
       ),
     );
+  }
+
+  List<PieChartSectionData> showingSections() {
+    return List.generate(4, (i) {
+      final isTouched = i == touchedIndex;
+      final double radius = isTouched ? 60 : 50;
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color: Colors.red,
+            value: 40,
+            title: "",
+            radius: radius,
+          );
+        case 1:
+          return PieChartSectionData(
+            color: Colors.orange,
+            value: 30,
+            title: "",
+            radius: radius,
+          );
+        case 2:
+          return PieChartSectionData(
+            color: Colors.grey,
+            value: 15,
+            title: "",
+            radius: radius,
+          );
+        case 3:
+          return PieChartSectionData(
+            color: Colors.green,
+            value: 15,
+            title: "",
+            radius: radius,
+          );
+        default:
+          return null;
+      }
+    });
   }
 
   List<SpeedDialChild> iconFAB() {

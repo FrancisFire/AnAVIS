@@ -217,7 +217,7 @@ class _OfficeViewState extends State<OfficeView> {
             position: BadgePosition.topRight(top: -9, right: -2),
             badgeColor: Colors.white,
             child: Icon(
-              Icons.calendar_today,
+              Icons.featured_play_list,
               color: Colors.white,
             ),
           ),
@@ -268,6 +268,25 @@ class _OfficeViewState extends State<OfficeView> {
               arguments: _officeName,
             );
           }
+        },
+      ),
+      SpeedDialChild(
+        child: Icon(
+          Icons.calendar_today,
+          color: Colors.white,
+        ),
+        label: 'Inserisci giorni e orari',
+        labelBackgroundColor: Colors.redAccent,
+        backgroundColor: Colors.redAccent,
+        labelStyle: TextStyle(
+          fontSize: 18.0,
+          color: Colors.white,
+        ),
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            '/office/insertdateslotview',
+          );
         },
       ),
       SpeedDialChild(

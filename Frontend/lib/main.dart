@@ -5,7 +5,7 @@ import 'package:anavis/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-const String ip = "46.101.201.248";
+const String ip = "192.168.43.133";
 void main() => runApp(AnAvis());
 
 class AnAvis extends StatelessWidget {
