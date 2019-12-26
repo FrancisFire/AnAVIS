@@ -2,6 +2,7 @@ import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/widgets/button_fab_homepage.dart';
 import 'package:anavis/widgets/clip_path.dart';
+import 'package:anavis/widgets/value_blood_info.dart';
 import 'package:badges/badges.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,8 @@ class DonorView extends StatefulWidget {
 class _DonorViewState extends State<DonorView> {
   bool _donorCanDonate;
   String _email;
+
+  bool showLegend = true;
 
   int prenotationCount = 0;
   int pendingCount = 0;
@@ -234,9 +237,11 @@ class _DonorViewState extends State<DonorView> {
                                                   pieTouchResponse.touchInput
                                                       is FlPanEnd) {
                                                 touchedIndex = -1;
+                                                showLegend = true;
                                               } else {
                                                 touchedIndex = pieTouchResponse
                                                     .touchedSectionIndex;
+                                                showLegend = false;
                                               }
                                             });
                                           },
@@ -249,74 +254,12 @@ class _DonorViewState extends State<DonorView> {
                                         sections: showingSections(),
                                       ),
                                     ),
-                                    Column(
-                                      children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: <Widget>[
-                                            Chip(
-                                              avatar: CircleAvatar(
-                                                backgroundColor: Colors.red,
-                                              ),
-                                              backgroundColor:
-                                                  Colors.red.withOpacity(0.3),
-                                              label: Text(
-                                                'Globuli rossi',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                            Chip(
-                                              avatar: CircleAvatar(
-                                                backgroundColor: Colors.grey,
-                                              ),
-                                              backgroundColor:
-                                                  Colors.grey.withOpacity(0.3),
-                                              label: Text(
-                                                'Globuli bianchi',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: <Widget>[
-                                            Chip(
-                                              avatar: CircleAvatar(
-                                                backgroundColor: Colors.orange,
-                                              ),
-                                              backgroundColor: Colors.orange
-                                                  .withOpacity(0.3),
-                                              label: Text(
-                                                'Piastrine',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                            Chip(
-                                              avatar: CircleAvatar(
-                                                backgroundColor: Colors.green,
-                                              ),
-                                              backgroundColor:
-                                                  Colors.green.withOpacity(0.3),
-                                              label: Text(
-                                                'Colesterolo',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                    showLegend
+                                        ? buildLegend()
+                                        : InfoValueBlood(
+                                            value: 1,
+                                            indexValue: touchedIndex,
+                                          )
                                   ],
                                 ),
                               ),
@@ -339,6 +282,71 @@ class _DonorViewState extends State<DonorView> {
       floatingActionButton: ButtonFABHomePage(
         iconFab: iconFAB(),
       ),
+    );
+  }
+
+  Column buildLegend() {
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Chip(
+              avatar: CircleAvatar(
+                backgroundColor: Colors.red,
+              ),
+              backgroundColor: Colors.red.withOpacity(0.3),
+              label: Text(
+                'Globuli rossi',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Chip(
+              avatar: CircleAvatar(
+                backgroundColor: Colors.grey,
+              ),
+              backgroundColor: Colors.grey.withOpacity(0.3),
+              label: Text(
+                'Globuli bianchi',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Chip(
+              avatar: CircleAvatar(
+                backgroundColor: Colors.orange,
+              ),
+              backgroundColor: Colors.orange.withOpacity(0.3),
+              label: Text(
+                'Piastrine',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Chip(
+              avatar: CircleAvatar(
+                backgroundColor: Colors.green,
+              ),
+              backgroundColor: Colors.green.withOpacity(0.3),
+              label: Text(
+                'Colesterolo',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
