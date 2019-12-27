@@ -2,6 +2,7 @@ package com.github.francisfire.anavis.models;
 
 import java.util.Date;
 
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

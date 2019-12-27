@@ -3,22 +3,25 @@ package com.github.francisfire.anavis.services;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.TimeSlot;
+import com.github.francisfire.anavis.repository.OfficeRepository;
 
 @Service
 public class OfficeServices {
+	@Autowired
+	private OfficeRepository repository;
+	// private Set<Office> offices;
 
-	private Set<Office> offices;
-
-	private OfficeServices() {
-		this.offices = new HashSet<>();
-	}
-
+	/*
+	 * private OfficeServices() { this.offices = new HashSet<>(); }
+	 */
 	/**
 	 * Adds an office to the office collections
 	 * 
@@ -28,7 +31,9 @@ public class OfficeServices {
 	 *         false otherwise
 	 */
 	public boolean addOffice(Office office) {
-		return offices.add(Objects.requireNonNull(office));
+		repository.save(Objects.requireNonNull(office));
+		return true;
+		// return offices.add(Objects.requireNonNull(office));
 	}
 
 	/**
@@ -39,7 +44,8 @@ public class OfficeServices {
 	 * @return a view of the office collection
 	 */
 	public Set<Office> getOffices() {
-		return new HashSet<>(offices);
+		return new HashSet<>(repository.findAll());
+		// return new HashSet<>(offices);
 	}
 
 	/**
@@ -65,7 +71,14 @@ public class OfficeServices {
 	 */
 	public Office getOfficeInstance(String officeId) {
 		Objects.requireNonNull(officeId);
-		return offices.stream().filter(office -> office.getId().equals(officeId)).findFirst().orElse(null);
+		Optional<Office> opt = repository.findById(officeId);
+		if (opt.isPresent()) {
+			return opt.get();
+		} else {
+			return null;
+		}
+		// return offices.stream().filter(office ->
+		// office.getId().equals(officeId)).findFirst().orElse(null);
 	}
 
 	/**
@@ -85,7 +98,12 @@ public class OfficeServices {
 	public boolean addTimeslotByOffice(TimeSlot timeSlot, String officeId) {
 		Objects.requireNonNull(timeSlot);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
-		return office.addTimeSlot(timeSlot);
+		if (office.addTimeSlot(timeSlot)) {
+			repository.save(office);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -104,7 +122,12 @@ public class OfficeServices {
 	public boolean increaseTimeslotByOffice(Date date, String officeId) {
 		Objects.requireNonNull(date);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
-		return office.increaseSlotByDate(date);
+		if (office.increaseSlotByDate(date)) {
+			repository.save(office);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -123,7 +146,12 @@ public class OfficeServices {
 	public boolean decreaseTimeslotByOffice(Date date, String officeId) {
 		Objects.requireNonNull(date);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
-		return office.decreaseSlotByDate(date);
+		if (office.decreaseSlotByDate(date)) {
+			repository.save(office);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

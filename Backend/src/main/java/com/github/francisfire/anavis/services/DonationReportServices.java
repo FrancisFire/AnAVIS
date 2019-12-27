@@ -20,7 +20,7 @@ public class DonationReportServices {
 	@Autowired
 	private PrenotationServices prenotationServices;
 	@Autowired
-	private DonationReportRepository closedPrenotationReportRepository;
+	private DonationReportRepository repository;
 
 	public String addReport(@NonNull String prenotationId, @NonNull MultipartFile reportFile) {
 		ActivePrenotation prenotation = prenotationServices.getPrenotationInstance(prenotationId);
@@ -28,7 +28,7 @@ public class DonationReportServices {
 				prenotation.getOfficeId(), prenotation.getHour());
 		try {
 			report.setReportFile(new Binary(BsonBinarySubType.BINARY, reportFile.getBytes()));
-			report = closedPrenotationReportRepository.insert(report);
+			report = repository.insert(report);
 		} catch (IOException e) {
 			return null;
 		}
@@ -36,7 +36,7 @@ public class DonationReportServices {
 	}
 
 	public DonationReport getReport(String reportId) {
-		return closedPrenotationReportRepository.findById(reportId).get();
+		return repository.findById(reportId).get();
 	}
 	
 	

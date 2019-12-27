@@ -2,6 +2,7 @@ package com.github.francisfire.anavis.services;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -9,19 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.francisfire.anavis.models.RequestPrenotation;
+import com.github.francisfire.anavis.repository.RequestRepository;
 
 @Service
 public class RequestServices {
 
-	private Set<RequestPrenotation> requests;
+	// private Set<RequestPrenotation> requests;
+	@Autowired
+	private RequestRepository repository;
 	@Autowired
 	private PrenotationServices prenotationServices;
 	@Autowired
 	private DonorServices donorServices;
 
-	private RequestServices() {
-		this.requests = new HashSet<>();
-	}
+	/*
+	 * private RequestServices() { this.requests = new HashSet<>(); }
+	 */
 
 	/**
 	 * Adds the request passed in input to the method to the request collection
@@ -33,7 +37,9 @@ public class RequestServices {
 	 */
 	public boolean addRequest(RequestPrenotation request) {
 		if (donorServices.checkDonationPossibility(request.getDonorId())) {
-			return requests.add(Objects.requireNonNull(request));
+			repository.save(Objects.requireNonNull(request));
+			return true;
+			// return requests.add(Objects.requireNonNull(request));
 		} else
 			return false;
 	}
@@ -48,7 +54,10 @@ public class RequestServices {
 	 *         otherwise
 	 */
 	public boolean removeRequest(String requestId) {
-		return requests.remove(getRequestInstance(Objects.requireNonNull(requestId)));
+		repository.delete(getRequestInstance(Objects.requireNonNull(requestId)));
+		return true;
+		// return
+		// requests.remove(getRequestInstance(Objects.requireNonNull(requestId)));
 
 	}
 
@@ -66,7 +75,8 @@ public class RequestServices {
 		if (toApprove == null) {
 			return false;
 		}
-		if (donorServices.checkDonationPossibility(toApprove.getDonorId()) && requests.remove(toApprove)) {
+		if (donorServices.checkDonationPossibility(toApprove.getDonorId())) {
+			repository.delete(toApprove);
 			return prenotationServices.addPrenotation(toApprove);
 		}
 		return false;
@@ -81,7 +91,9 @@ public class RequestServices {
 	 *         otherwise it returns true
 	 */
 	public boolean denyRequest(String requestId) {
-		return requests.remove(this.getRequestInstance(Objects.requireNonNull(requestId)));
+		return this.removeRequest(requestId);
+		// return
+		// requests.remove(this.getRequestInstance(Objects.requireNonNull(requestId)));
 	}
 
 	/**
@@ -92,7 +104,7 @@ public class RequestServices {
 	 * @return a view of the request collection
 	 */
 	public Set<RequestPrenotation> getRequests() {
-		return new HashSet<>(requests);
+		return new HashSet<>(repository.findAll());
 	}
 
 	/**
@@ -105,7 +117,10 @@ public class RequestServices {
 	 */
 	public Set<RequestPrenotation> getRequestsByOffice(String officeId) {
 		Objects.requireNonNull(officeId);
-		return requests.stream().filter(request -> request.getOfficeId().equals(officeId)).collect(Collectors.toSet());
+		return repository.findAll().stream().filter(request -> request.getOfficeId().equals(officeId))
+				.collect(Collectors.toSet());
+		// return requests.stream().filter(request ->
+		// request.getOfficeId().equals(officeId)).collect(Collectors.toSet());
 	}
 
 	/**
@@ -119,7 +134,10 @@ public class RequestServices {
 	 */
 	public RequestPrenotation getRequestInstance(String requestId) {
 		Objects.requireNonNull(requestId);
-		return requests.stream().filter(request -> request.getId().equals(requestId)).findFirst().orElse(null);
+		Optional<RequestPrenotation> opt = repository.findById(requestId);
+		return opt.isPresent() ? opt.get() : null;
+		// return requests.stream().filter(request ->
+		// request.getId().equals(requestId)).findFirst().orElse(null);
 	}
 
 }

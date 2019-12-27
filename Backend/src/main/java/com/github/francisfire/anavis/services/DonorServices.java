@@ -2,21 +2,27 @@ package com.github.francisfire.anavis.services;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.francisfire.anavis.models.Donor;
+import com.github.francisfire.anavis.repository.DonorRepository;
 
 @Service
 public class DonorServices {
 
-	private Set<Donor> donors;
+	/*
+	 * private Set<Donor> donors;
+	 * 
+	 * public DonorServices() { this.donors = new HashSet<>(); }
+	 */
 
-	private DonorServices() {
-		this.donors = new HashSet<>();
-	}
+	@Autowired
+	private DonorRepository repository;
 
 	/**
 	 * Adds a donor to the donor collection
@@ -26,7 +32,9 @@ public class DonorServices {
 	 * @return true if the collection didn't contain the added donor
 	 */
 	public boolean addDonor(Donor donor) {
-		return donors.add(Objects.requireNonNull(donor));
+		repository.save(Objects.requireNonNull(donor));
+		return true;
+		// return donors.add(Objects.requireNonNull(donor));
 	}
 
 	/**
@@ -37,7 +45,8 @@ public class DonorServices {
 	 * @return a view of the donor collection
 	 */
 	public Set<Donor> getDonors() {
-		return new HashSet<>(this.donors);
+		return new HashSet<>(repository.findAll());
+		// return new HashSet<>(this.donors);
 	}
 
 	/**
@@ -78,8 +87,12 @@ public class DonorServices {
 	 */
 	public Set<Donor> getDonorsByOfficeId(String officeId) {
 		Objects.requireNonNull(officeId);
-		return donors.stream().filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId))
+		return repository.findAll().stream().filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
+		/*
+		 * return donors.stream().filter(donor ->
+		 * donor.getOfficeId().equalsIgnoreCase(officeId)) .collect(Collectors.toSet());
+		 */
 	}
 
 	/**
@@ -92,9 +105,14 @@ public class DonorServices {
 	 */
 	public Set<Donor> getAvailableDonorsByOfficeId(String officeId) {
 		Objects.requireNonNull(officeId);
-		return donors.stream()
+		return repository.findAll().stream()
 				.filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId) && donor.isCanDonate())
 				.collect(Collectors.toSet());
+		/*
+		 * return donors.stream().filter(donor ->
+		 * donor.getOfficeId().equalsIgnoreCase(officeId) && donor.isCanDonate())
+		 * .collect(Collectors.toSet());
+		 */
 	}
 
 	/**
@@ -108,7 +126,10 @@ public class DonorServices {
 	 */
 	public Donor getDonorInstance(String donorId) {
 		Objects.requireNonNull(donorId);
-		return donors.stream().filter(donor -> donor.getMail().equals(donorId)).findFirst().orElse(null);
+		Optional<Donor> opt = repository.findById(donorId);
+		return opt.isPresent() ? opt.get() : null;
+		// return donors.stream().filter(donor ->
+		// donor.getMail().equals(donorId)).findFirst().orElse(null);
 	}
 
 }

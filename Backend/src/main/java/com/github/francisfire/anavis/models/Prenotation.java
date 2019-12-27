@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.springframework.data.annotation.Id;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,6 +16,7 @@ import lombok.Setter;
 abstract class Prenotation {
 
 	@EqualsAndHashCode.Include
+	@Id
 	private String id;
 	private String officeId;
 	private String donorId;
