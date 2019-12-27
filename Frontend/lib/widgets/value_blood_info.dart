@@ -20,7 +20,7 @@ class InfoValueBlood extends StatelessWidget {
       case 3:
         return "Colesterolo";
       default:
-        return "Errore";
+        return "Informazione";
     }
   }
 
@@ -35,7 +35,7 @@ class InfoValueBlood extends StatelessWidget {
       case 3:
         return Colors.green;
       default:
-        return Colors.deepOrangeAccent;
+        return Colors.blueGrey;
     }
   }
 
@@ -45,17 +45,27 @@ class InfoValueBlood extends StatelessWidget {
       children: <Widget>[
         ListTile(
           leading: CircleAvatar(
-            child: Icon(
-              Icons.bubble_chart,
-              color: Colors.white,
-              size: 32,
-            ),
+            child: indexValue == null
+                ? Icon(
+                    Icons.find_in_page,
+                    color: Colors.white,
+                    size: 26,
+                  )
+                : Icon(
+                    Icons.bubble_chart,
+                    color: Colors.white,
+                    size: 32,
+                  ),
             backgroundColor: convertIndexToColor(indexValue),
           ),
           title: Text(convertIndexToValue(indexValue)),
-          subtitle: Text(
-            'La misurazione di tale valore è uguale a: ${this.value}',
-          ),
+          subtitle: indexValue == null
+              ? Text(
+                  'Clicca su una porzione del grafico per ottenre maggiori informazioni',
+                )
+              : Text(
+                  'La misurazione di tale valore è uguale a: ${this.value}',
+                ),
           isThreeLine: true,
         ),
       ],

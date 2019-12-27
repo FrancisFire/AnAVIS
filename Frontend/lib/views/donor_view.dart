@@ -218,9 +218,10 @@ class _DonorViewState extends State<DonorView> {
                                           label: Text('12 Dicembre 2019'),
                                         ),
                                         CircleAvatar(
-                                          backgroundColor: Colors.orange,
+                                          radius: 16,
+                                          backgroundColor: Colors.grey.shade800,
                                           child: Icon(
-                                            Icons.warning,
+                                            Icons.file_download,
                                             size: 22,
                                             color: Colors.white,
                                           ),
@@ -359,28 +360,28 @@ class _DonorViewState extends State<DonorView> {
           return PieChartSectionData(
             color: Colors.red,
             value: 40,
-            title: "",
+            showTitle: false,
             radius: radius,
           );
         case 1:
           return PieChartSectionData(
             color: Colors.orange,
             value: 30,
-            title: "",
+            showTitle: false,
             radius: radius,
           );
         case 2:
           return PieChartSectionData(
             color: Colors.grey,
             value: 15,
-            title: "",
+            showTitle: false,
             radius: radius,
           );
         case 3:
           return PieChartSectionData(
             color: Colors.green,
             value: 15,
-            title: "",
+            showTitle: false,
             radius: radius,
           );
         default:

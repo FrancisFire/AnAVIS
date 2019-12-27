@@ -18,7 +18,7 @@ class ButtonFABHomePage extends StatelessWidget {
       closeManually: false,
       curve: Curves.bounceIn,
       overlayColor: Colors.white,
-      overlayOpacity: 0.6,
+      overlayOpacity: 0.8,
       backgroundColor: Colors.red,
       foregroundColor: Colors.white,
       elevation: 8.0,

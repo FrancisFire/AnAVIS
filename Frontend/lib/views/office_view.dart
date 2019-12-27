@@ -2,12 +2,12 @@ import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/widgets/button_fab_homepage.dart';
 import 'package:anavis/widgets/clip_path.dart';
-import 'package:anavis/widgets/fab_item.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_calendar_carousel/classes/event.dart';
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart';
 
@@ -20,6 +20,55 @@ class _OfficeViewState extends State<OfficeView> {
   String _officeName;
 
   int prenotationCount = 0;
+
+  DateTime _currentDate = DateTime.now();
+
+  static Widget _eventIcon = new Container(
+    decoration: new BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.all(
+        Radius.circular(
+          1000,
+        ),
+      ),
+      border: Border.all(
+        color: Colors.orange,
+        width: 2.0,
+      ),
+    ),
+    child: Icon(
+      Icons.person,
+      color: Colors.orange,
+    ),
+  );
+
+  EventList<Event> _markedDateMap = new EventList<Event>(
+    events: {
+      new DateTime(2019, 12, 28): [
+        new Event(
+          date: new DateTime(2019, 12, 28),
+          title: 'Event 1',
+          icon: _eventIcon,
+          dot: Container(
+            margin: EdgeInsets.symmetric(horizontal: 1.0),
+            color: Colors.red,
+            height: 5.0,
+            width: 5.0,
+          ),
+        ),
+        new Event(
+          date: new DateTime(2019, 12, 28),
+          title: 'Event 2',
+          icon: _eventIcon,
+        ),
+        new Event(
+          date: new DateTime(2019, 12, 28),
+          title: 'Event 3',
+          icon: _eventIcon,
+        ),
+      ],
+    },
+  );
 
   int getPrenotationCount() {
     Provider.of<CurrentOfficeState>(context).getOfficePrenotations().then(
@@ -155,43 +204,72 @@ class _OfficeViewState extends State<OfficeView> {
               ],
             ),
           ),
-          Container(
-            child: Center(
-              child: Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    top: (MediaQuery.of(context).size.height / 4),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Swiper(
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            color: Colors.white,
-                            elevation: 7,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(26.0),
-                              ),
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  "Possiamo mostrare delle cose qui che possono essere un grafico o un calendario",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        itemCount: 10,
-                        itemWidth: 330.0,
-                        itemHeight: (MediaQuery.of(context).size.height / 1.7),
-                        layout: SwiperLayout.STACK,
-                      ),
-                    ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height / 3,
+              bottom: 64,
+              right: 8,
+              left: 8,
+            ),
+            child: Card(
+              color: Colors.white,
+              elevation: 7,
+              shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(26.0),
+                ),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
                   ),
-                ],
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: CalendarCarousel(
+                          selectedDayBorderColor: Colors.red,
+                          selectedDayButtonColor: Colors.red,
+                          thisMonthDayBorderColor: Colors.grey,
+                          locale: 'it',
+                          selectedDateTime: _currentDate,
+                          daysTextStyle: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.grey,
+                          ),
+                          weekendTextStyle: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.redAccent,
+                          ),
+                          iconColor: Colors.red,
+                          headerTextStyle: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 32,
+                            color: Colors.red,
+                          ),
+                          markedDatesMap: _markedDateMap,
+                          markedDateIconBuilder: (event) {
+                            return event.icon;
+                          },
+                          markedDateShowIcon: true,
+                          markedDateIconMaxShown: 2,
+                          markedDateCustomShapeBorder: CircleBorder(
+                            side: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          markedDateMoreShowTotal: true,
+                          daysHaveCircularBorder: null,
+                          weekdayTextStyle: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.red,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
