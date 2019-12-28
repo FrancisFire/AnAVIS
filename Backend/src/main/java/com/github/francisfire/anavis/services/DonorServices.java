@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -132,4 +134,19 @@ public class DonorServices {
 		// donor.getMail().equals(donorId)).findFirst().orElse(null);
 	}
 
+	public void updateDonorsAvailability(Date currentDate) {
+		for (Donor curDonor : repository.findAll()) {
+			long diffTwo = currentDate.getTime() - curDonor.getFirstDonationInYear().getTime();
+			long diffTwoDays = diffTwo / (24 * 60 * 60 * 1000);
+			if (diffTwoDays >= 365) {
+				curDonor.resetLeftDonationsInYear();
+			}
+			long diffOne = currentDate.getTime() - curDonor.getLastDonation().getTime();
+			long diffOneDays = diffOne / (24 * 60 * 60 * 1000);
+			if (diffOneDays >= 90 && curDonor.getLeftDonationsInYear() > 0) {
+				curDonor.setCanDonate(true);
+			}
+			repository.save(curDonor);
+		}
+	}
 }

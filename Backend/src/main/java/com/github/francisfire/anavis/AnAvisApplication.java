@@ -45,13 +45,13 @@ public class AnAvisApplication implements CommandLineRunner {
 		officeServices.addOffice(officeThree);
 		officeServices.addOffice(officeFour);
 
-		Donor donorOne = new Donor("stelluti@mail.com", officeOne.getId());
+		Donor donorOne = new Donor("stelluti@mail.com", officeOne.getId(), DonorCategory.MAN);
 		donorOne.setCanDonate(true);
-		Donor donorTwo = new Donor("coppola@mail.com", officeTwo.getId());
-		Donor donorThree = new Donor("clelio@mail.com", officeTwo.getId());
+		Donor donorTwo = new Donor("coppola@mail.com", officeTwo.getId(), DonorCategory.MAN);
+		Donor donorThree = new Donor("clelio@mail.com", officeTwo.getId(), DonorCategory.MAN);
 		donorThree.setCanDonate(true);
-		Donor donorFour = new Donor("zamponi@mail.com", officeThree.getId());
-		Donor donorFive = new Donor("sasso@mail.com", officeFour.getId());
+		Donor donorFour = new Donor("zamponi@mail.com", officeThree.getId(), DonorCategory.MAN);
+		Donor donorFive = new Donor("sasso@mail.com", officeFour.getId(), DonorCategory.MAN);
 
 		donorServices.addDonor(donorOne);
 		donorServices.addDonor(donorTwo);
