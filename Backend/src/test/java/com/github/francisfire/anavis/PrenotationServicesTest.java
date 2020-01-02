@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.ClosedPrenotation;
 import com.github.francisfire.anavis.models.Donor;
+import com.github.francisfire.anavis.models.DonorCategory;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.RequestPrenotation;
 import com.github.francisfire.anavis.models.TimeSlot;
@@ -100,7 +101,7 @@ public class PrenotationServicesTest {
 	public void updatePrenotation() {
 		assertThrows(NullPointerException.class, () -> prenotationServices.updatePrenotation(null));
 
-		Donor donor = new Donor("gianni@gmail.com", "Pineto");
+		Donor donor = new Donor("gianni@gmail.com", "Pineto", DonorCategory.MAN);
 		donorServices.addDonor(donor);
 		donor.setCanDonate(true);
 		Office office = new Office("Pineto");
@@ -155,7 +156,7 @@ public class PrenotationServicesTest {
 	@Test
 	public void getPrenotationsByDonor() {
 		assertThrows(NullPointerException.class, () -> prenotationServices.getPrenotationsByDonor(null));
-		Donor donor = new Donor("pren@gmail.com", "Pineto");
+		Donor donor = new Donor("pren@gmail.com", "Pineto", DonorCategory.MAN);
 		donorServices.addDonor(donor);
 		donor.setCanDonate(true);
 		Office office = new Office("Pineto");
@@ -178,7 +179,7 @@ public class PrenotationServicesTest {
 	@Test
 	public void acceptPrenotationChange() {
 		assertThrows(NullPointerException.class, () -> prenotationServices.acceptPrenotationChange(null));
-		Donor donor = new Donor("accept@gmail.com", "Pineto");
+		Donor donor = new Donor("accept@gmail.com", "Pineto", DonorCategory.MAN);
 		donorServices.addDonor(donor);
 		donor.setCanDonate(true);
 		Office office = new Office("Pineto");
@@ -199,7 +200,7 @@ public class PrenotationServicesTest {
 	@Test
 	public void denyPrenotationChange() {
 		assertThrows(NullPointerException.class, () -> prenotationServices.denyPrenotationChange(null));
-		Donor donor = new Donor("deny@gmail.com", "Pineto");
+		Donor donor = new Donor("deny@gmail.com", "Pineto", DonorCategory.MAN);
 		donor.setCanDonate(true);
 		donorServices.addDonor(donor);
 		Office office = new Office("Pineto");
@@ -223,7 +224,7 @@ public class PrenotationServicesTest {
 
 		Office office = new Office("Close");
 		String id = "sas";
-		Donor donor = new Donor("close@gmail.com", "Close");
+		Donor donor = new Donor("close@gmail.com", "Close", DonorCategory.MAN);
 		donor.setCanDonate(true);
 		officeServices.addOffice(office);
 		donorServices.addDonor(donor);

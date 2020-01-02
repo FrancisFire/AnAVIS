@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.francisfire.anavis.models.Donor;
+import com.github.francisfire.anavis.models.DonorCategory;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.RequestPrenotation;
 import com.github.francisfire.anavis.models.TimeSlot;
@@ -54,7 +55,7 @@ public class RequestServicesTest {
 	@Test
 	public void approveRequest() {
 		assertThrows(NullPointerException.class, () -> requestServices.approveRequest(null));
-		Donor donor = new Donor("gianni@gmail.com", "Bari");
+		Donor donor = new Donor("gianni@gmail.com", "Bari", DonorCategory.MAN);
 		donorServices.addDonor(donor);
 		Office office = new Office("Bari");
 		officeServices.addOffice(office);

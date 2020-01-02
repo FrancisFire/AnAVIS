@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.francisfire.anavis.models.Donor;
+import com.github.francisfire.anavis.models.DonorCategory;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.services.DonorServices;
 
@@ -26,7 +27,7 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.addDonor(null));
 
 		Office avisPineto = new Office("Pineto");
-		assertTrue(donorServices.addDonor(new Donor("Gianni", avisPineto.getId())));
+		assertTrue(donorServices.addDonor(new Donor("Gianni", avisPineto.getId(), DonorCategory.MAN)));
 		assertFalse(donorServices.getDonors().isEmpty());
 	}
 
@@ -35,7 +36,7 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.getOfficeIdByDonor(null));
 
 		Office avisPosillipo = new Office("Posillipo");
-		donorServices.addDonor(new Donor("Lillo", avisPosillipo.getId()));
+		donorServices.addDonor(new Donor("Lillo", avisPosillipo.getId(), DonorCategory.MAN));
 		assertEquals("Posillipo", donorServices.getOfficeIdByDonor("Lillo"));
 		assertNotEquals("Posillipa", donorServices.getOfficeIdByDonor("Lillo"));
 		assertNull(donorServices.getOfficeIdByDonor("Lilla"));
@@ -46,10 +47,10 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.checkDonationPossibility(null));
 
 		Office avisSasso = new Office("Sasso");
-		Donor donaone = new Donor("Greg", avisSasso.getId());
+		Donor donaone = new Donor("Greg", avisSasso.getId(), DonorCategory.MAN);
 		donorServices.addDonor(donaone);
 		donaone.setCanDonate(true);
-		Donor donatwo = new Donor("Mimmo", avisSasso.getId());
+		Donor donatwo = new Donor("Mimmo", avisSasso.getId(), DonorCategory.MAN);
 		donorServices.addDonor(donatwo);
 		donatwo.setCanDonate(false);
 		assertTrue(donorServices.checkDonationPossibility("Greg"));
@@ -62,10 +63,10 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.getDonorsByOfficeId(null));
 
 		Office officeOne = new Office("Camerino");
-		Donor donorOne = new Donor("Pepe", officeOne.getId());
+		Donor donorOne = new Donor("Pepe", officeOne.getId(), DonorCategory.MAN);
 		Office officeTwo = new Office("Muccia");
 		donorServices.addDonor(donorOne);
-		Donor donorTwo = new Donor("Spina", officeTwo.getId());
+		Donor donorTwo = new Donor("Spina", officeTwo.getId(), DonorCategory.MAN);
 		donorServices.addDonor(donorTwo);
 
 		assertTrue(donorServices.getDonorsByOfficeId(officeOne.getId()).contains(donorOne));
@@ -77,12 +78,12 @@ public class DonorServicesTest {
 		assertThrows(NullPointerException.class, () -> donorServices.getAvailableDonorsByOfficeId(null));
 
 		Office officeOne = new Office("Camerino");
-		Donor donorOne = new Donor("Sara", officeOne.getId());
+		Donor donorOne = new Donor("Sara", officeOne.getId(), DonorCategory.MAN);
 		Office officeTwo = new Office("Muccia");
 		donorServices.addDonor(donorOne);
-		Donor donorTwo = new Donor("Giorgio", officeTwo.getId());
+		Donor donorTwo = new Donor("Giorgio", officeTwo.getId(), DonorCategory.MAN);
 		donorServices.addDonor(donorTwo);
-		Donor donorThree = new Donor("Presa", officeOne.getId());
+		Donor donorThree = new Donor("Presa", officeOne.getId(), DonorCategory.MAN);
 		donorThree.setCanDonate(true);
 		donorServices.addDonor(donorThree);
 

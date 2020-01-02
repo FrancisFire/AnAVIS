@@ -17,11 +17,7 @@ import com.github.francisfire.anavis.repository.OfficeRepository;
 public class OfficeServices {
 	@Autowired
 	private OfficeRepository repository;
-	// private Set<Office> offices;
-
-	/*
-	 * private OfficeServices() { this.offices = new HashSet<>(); }
-	 */
+	
 	/**
 	 * Adds an office to the office collections
 	 * 
@@ -33,7 +29,6 @@ public class OfficeServices {
 	public boolean addOffice(Office office) {
 		repository.save(Objects.requireNonNull(office));
 		return true;
-		// return offices.add(Objects.requireNonNull(office));
 	}
 
 	/**
@@ -45,7 +40,6 @@ public class OfficeServices {
 	 */
 	public Set<Office> getOffices() {
 		return new HashSet<>(repository.findAll());
-		// return new HashSet<>(offices);
 	}
 
 	/**
@@ -72,13 +66,7 @@ public class OfficeServices {
 	public Office getOfficeInstance(String officeId) {
 		Objects.requireNonNull(officeId);
 		Optional<Office> opt = repository.findById(officeId);
-		if (opt.isPresent()) {
-			return opt.get();
-		} else {
-			return null;
-		}
-		// return offices.stream().filter(office ->
-		// office.getId().equals(officeId)).findFirst().orElse(null);
+		return opt.orElse(null);
 	}
 
 	/**

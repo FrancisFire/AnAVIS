@@ -36,13 +36,7 @@ public class DonationServices {
 	public ClosedPrenotation getDonationInstance(String donationId) {
 		Objects.requireNonNull(donationId);
 		Optional<ClosedPrenotation> opt = repository.findById(donationId);
-		if (opt.isPresent()) {
-			return opt.get();
-		} else {
-			return null;
-		}
-		// return donations.stream().filter(donation ->
-		// donation.getId().equals(donationId)).findFirst().orElse(null);
+		return opt.orElse(null);
 	}
 
 	/**
@@ -56,11 +50,6 @@ public class DonationServices {
 		Objects.requireNonNull(officeId);
 		return repository.findAll().stream().filter(donation -> donation.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
-		/*
-		 * return donations.stream().filter(donation ->
-		 * donation.getOfficeId().equalsIgnoreCase(officeId))
-		 * .collect(Collectors.toSet());
-		 */
 	}
 
 	/**
@@ -74,11 +63,6 @@ public class DonationServices {
 		Objects.requireNonNull(donorId);
 		return repository.findAll().stream().filter(donation -> donation.getDonorId().equalsIgnoreCase(donorId))
 				.collect(Collectors.toSet());
-		/*
-		 * return donations.stream().filter(donation ->
-		 * donation.getDonorId().equalsIgnoreCase(donorId))
-		 * .collect(Collectors.toSet());
-		 */
 	}
 
 	/**

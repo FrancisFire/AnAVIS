@@ -15,17 +15,12 @@ import com.github.francisfire.anavis.repository.RequestRepository;
 @Service
 public class RequestServices {
 
-	// private Set<RequestPrenotation> requests;
 	@Autowired
 	private RequestRepository repository;
 	@Autowired
 	private PrenotationServices prenotationServices;
 	@Autowired
 	private DonorServices donorServices;
-
-	/*
-	 * private RequestServices() { this.requests = new HashSet<>(); }
-	 */
 
 	/**
 	 * Adds the request passed in input to the method to the request collection
@@ -39,7 +34,6 @@ public class RequestServices {
 		if (donorServices.checkDonationPossibility(request.getDonorId())) {
 			repository.save(Objects.requireNonNull(request));
 			return true;
-			// return requests.add(Objects.requireNonNull(request));
 		} else
 			return false;
 	}
@@ -56,9 +50,6 @@ public class RequestServices {
 	public boolean removeRequest(String requestId) {
 		repository.delete(getRequestInstance(Objects.requireNonNull(requestId)));
 		return true;
-		// return
-		// requests.remove(getRequestInstance(Objects.requireNonNull(requestId)));
-
 	}
 
 	/**
@@ -92,8 +83,6 @@ public class RequestServices {
 	 */
 	public boolean denyRequest(String requestId) {
 		return this.removeRequest(requestId);
-		// return
-		// requests.remove(this.getRequestInstance(Objects.requireNonNull(requestId)));
 	}
 
 	/**
@@ -119,8 +108,6 @@ public class RequestServices {
 		Objects.requireNonNull(officeId);
 		return repository.findAll().stream().filter(request -> request.getOfficeId().equals(officeId))
 				.collect(Collectors.toSet());
-		// return requests.stream().filter(request ->
-		// request.getOfficeId().equals(officeId)).collect(Collectors.toSet());
 	}
 
 	/**
@@ -135,9 +122,7 @@ public class RequestServices {
 	public RequestPrenotation getRequestInstance(String requestId) {
 		Objects.requireNonNull(requestId);
 		Optional<RequestPrenotation> opt = repository.findById(requestId);
-		return opt.isPresent() ? opt.get() : null;
-		// return requests.stream().filter(request ->
-		// request.getId().equals(requestId)).findFirst().orElse(null);
+		return opt.orElse(null);
 	}
 
 }

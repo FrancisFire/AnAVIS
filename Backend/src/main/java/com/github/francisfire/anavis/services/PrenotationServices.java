@@ -19,7 +19,6 @@ import com.github.francisfire.anavis.repository.PrenotationRepository;
 @Service
 public class PrenotationServices {
 
-	// private Set<ActivePrenotation> prenotations;
 	@Autowired
 	private OfficeServices officeServices;
 	@Autowired
@@ -30,9 +29,6 @@ public class PrenotationServices {
 	private PrenotationRepository repository;
 	@Autowired
 	private DonorRepository donorRepository;
-	/*
-	 * public PrenotationServices() { this.prenotations = new HashSet<>(); }
-	 */
 
 	/**
 	 * Adds a prenotation to the prenotation collection from the request that has
@@ -53,7 +49,6 @@ public class PrenotationServices {
 					request.getDonorId(), request.getHour(), true);
 			repository.save(prenotation);
 			return true;
-			// return prenotations.add(prenotation);
 		}
 		return false;
 	}
@@ -67,7 +62,6 @@ public class PrenotationServices {
 	 */
 	public Set<ActivePrenotation> getPrenotations() {
 		return new HashSet<>(repository.findAll());
-		// return new HashSet<>(prenotations);
 	}
 
 	/**
@@ -91,11 +85,6 @@ public class PrenotationServices {
 		} else {
 			return false;
 		}
-		/*
-		 * return donorServices.checkDonationPossibility(prenotation.getDonorId()) &&
-		 * officeServices.decreaseTimeslotByOffice(date, officeId) &&
-		 * prenotations.add(prenotation);
-		 */
 	}
 
 	/**
@@ -118,7 +107,6 @@ public class PrenotationServices {
 		String officeId = prenotation.getOfficeId();
 		repository.delete(getPrenotationInstance(prenotationId));
 		return officeServices.increaseTimeslotByOffice(date, officeId);
-		// && prenotations.remove(getPrenotationInstance(prenotationId));
 	}
 
 	/**
@@ -152,7 +140,6 @@ public class PrenotationServices {
 			repository.delete(oldPrenotation);
 			repository.save(prenotation);
 			return true;
-			// && officeServices.increaseTimeslotByOffice(oldDate, oldOffice);
 		} else {
 			return false;
 		}
@@ -169,11 +156,6 @@ public class PrenotationServices {
 		Objects.requireNonNull(officeId);
 		return repository.findAll().stream().filter(prenotation -> prenotation.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
-		/*
-		 * return prenotations.stream().filter(prenotation ->
-		 * prenotation.getOfficeId().equalsIgnoreCase(officeId))
-		 * .collect(Collectors.toSet());
-		 */
 	}
 
 	/**
@@ -187,11 +169,6 @@ public class PrenotationServices {
 		Objects.requireNonNull(donorId);
 		return repository.findAll().stream().filter(prenotation -> prenotation.getDonorId().equalsIgnoreCase(donorId))
 				.collect(Collectors.toSet());
-		/*
-		 * return prenotations.stream().filter(prenotation ->
-		 * prenotation.getDonorId().equalsIgnoreCase(donorId))
-		 * .collect(Collectors.toSet());
-		 */
 	}
 
 	/**
@@ -243,11 +220,7 @@ public class PrenotationServices {
 	public ActivePrenotation getPrenotationInstance(String prenotationId) {
 		Objects.requireNonNull(prenotationId);
 		Optional<ActivePrenotation> opt = repository.findById(prenotationId);
-		return opt.isPresent() ? opt.get() : null;
-		/*
-		 * return prenotations.stream().filter(prenotation ->
-		 * prenotation.getId().equals(prenotationId)).findFirst() .orElse(null);
-		 */
+		return opt.orElse(null);
 	}
 
 	/**

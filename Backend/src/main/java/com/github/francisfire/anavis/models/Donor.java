@@ -30,8 +30,9 @@ public class Donor {
 	public Donor(String mail, String officeId, DonorCategory category) {
 		this.mail = mail;
 		this.officeId = officeId;
-		this.canDonate = false;
 		this.category = category;
+		this.canDonate = true;
+		resetLeftDonationsInYear();
 	}
 
 	public void resetLeftDonationsInYear() {
@@ -49,7 +50,7 @@ public class Donor {
 	}
 
 	public void setLastDonation(Date lastDonation) {
-		if (lastDonation.after(this.lastDonation)) {
+		if (this.lastDonation == null || lastDonation.after(this.lastDonation)) {
 			this.lastDonation = lastDonation;
 			switch (category) {
 			case MAN:

@@ -1,14 +1,14 @@
 package com.github.francisfire.anavis.services;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.github.francisfire.anavis.models.Donor;
@@ -16,12 +16,6 @@ import com.github.francisfire.anavis.repository.DonorRepository;
 
 @Service
 public class DonorServices {
-
-	/*
-	 * private Set<Donor> donors;
-	 * 
-	 * public DonorServices() { this.donors = new HashSet<>(); }
-	 */
 
 	@Autowired
 	private DonorRepository repository;
@@ -36,7 +30,6 @@ public class DonorServices {
 	public boolean addDonor(Donor donor) {
 		repository.save(Objects.requireNonNull(donor));
 		return true;
-		// return donors.add(Objects.requireNonNull(donor));
 	}
 
 	/**
@@ -48,7 +41,6 @@ public class DonorServices {
 	 */
 	public Set<Donor> getDonors() {
 		return new HashSet<>(repository.findAll());
-		// return new HashSet<>(this.donors);
 	}
 
 	/**
@@ -91,10 +83,6 @@ public class DonorServices {
 		Objects.requireNonNull(officeId);
 		return repository.findAll().stream().filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
-		/*
-		 * return donors.stream().filter(donor ->
-		 * donor.getOfficeId().equalsIgnoreCase(officeId)) .collect(Collectors.toSet());
-		 */
 	}
 
 	/**
@@ -110,11 +98,6 @@ public class DonorServices {
 		return repository.findAll().stream()
 				.filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId) && donor.isCanDonate())
 				.collect(Collectors.toSet());
-		/*
-		 * return donors.stream().filter(donor ->
-		 * donor.getOfficeId().equalsIgnoreCase(officeId) && donor.isCanDonate())
-		 * .collect(Collectors.toSet());
-		 */
 	}
 
 	/**
@@ -129,24 +112,26 @@ public class DonorServices {
 	public Donor getDonorInstance(String donorId) {
 		Objects.requireNonNull(donorId);
 		Optional<Donor> opt = repository.findById(donorId);
-		return opt.isPresent() ? opt.get() : null;
-		// return donors.stream().filter(donor ->
-		// donor.getMail().equals(donorId)).findFirst().orElse(null);
+		return opt.orElse(null);
 	}
 
-	public void updateDonorsAvailability(Date currentDate) {
-		for (Donor curDonor : repository.findAll()) {
-			long diffTwo = currentDate.getTime() - curDonor.getFirstDonationInYear().getTime();
-			long diffTwoDays = diffTwo / (24 * 60 * 60 * 1000);
-			if (diffTwoDays >= 365) {
-				curDonor.resetLeftDonationsInYear();
+	@Scheduled(cron = "0 0 * * * ?")
+	public void updateDonorsAvailability() {
+		Date currentDate = new Date();
+		for (Donor donor : repository.findAll()) {
+			if (donor.getFirstDonationInYear() != null) {
+				long differenceFirstYearDonation = currentDate.getTime() - donor.getFirstDonationInYear().getTime();
+				if (differenceFirstYearDonation >= 365 * 24 * 60 * 60 * 1000) {
+					donor.resetLeftDonationsInYear();
+				}
 			}
-			long diffOne = currentDate.getTime() - curDonor.getLastDonation().getTime();
-			long diffOneDays = diffOne / (24 * 60 * 60 * 1000);
-			if (diffOneDays >= 90 && curDonor.getLeftDonationsInYear() > 0) {
-				curDonor.setCanDonate(true);
+			if (donor.getLastDonation() != null) {
+				long differenceLastDonation = currentDate.getTime() - donor.getLastDonation().getTime();
+				if (differenceLastDonation >= 90 * 24 * 60 * 60 * 1000 && donor.getLeftDonationsInYear() > 0) {
+					donor.setCanDonate(true);
+				}
 			}
-			repository.save(curDonor);
+			repository.save(donor);
 		}
 	}
 }
