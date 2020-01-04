@@ -47,8 +47,12 @@ public class PrenotationServices {
 				&& officeServices.decreaseTimeslotByOffice(request.getHour(), request.getOfficeId())) {
 			ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(),
 					request.getDonorId(), request.getHour(), true);
-			repository.save(prenotation);
-			return true;
+			if (repository.findAll().contains(prenotation)) {
+				return false;
+			} else {
+				repository.save(prenotation);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -80,8 +84,12 @@ public class PrenotationServices {
 		String officeId = prenotation.getOfficeId();
 		if (donorServices.checkDonationPossibility(prenotation.getDonorId())
 				&& officeServices.decreaseTimeslotByOffice(date, officeId)) {
-			repository.save(prenotation);
-			return true;
+			if (repository.findAll().contains(prenotation)) {
+				return false;
+			} else {
+				repository.save(prenotation);
+				return true;
+			}
 		} else {
 			return false;
 		}
@@ -107,6 +115,7 @@ public class PrenotationServices {
 		String officeId = prenotation.getOfficeId();
 		repository.delete(getPrenotationInstance(prenotationId));
 		return officeServices.increaseTimeslotByOffice(date, officeId);
+
 	}
 
 	/**

@@ -30,6 +30,6 @@ public class DonationController {
 	@GetMapping("/report/{donationId}")
 	public DonationReport getDonationReport(@PathVariable("donationId") String donationId) {
 		String reportId = donationServices.getDonationInstance(donationId).getReportId();
-		return closedPrenotationReportServices.getReport(reportId);
+		return closedPrenotationReportServices.getReportInstance(reportId);
 	}
 }

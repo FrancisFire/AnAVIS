@@ -21,19 +21,27 @@ public class RequestServices {
 	private PrenotationServices prenotationServices;
 	@Autowired
 	private DonorServices donorServices;
+	@Autowired
+	private OfficeServices officeServices;
 
 	/**
 	 * Adds the request passed in input to the method to the request collection
 	 * 
 	 * @throws NullPointerException if request is null
 	 * @param request the request to add
-	 * @return true if the request wasn't present in the collection and the donor
-	 *         associated with the request can donate, false otherwise
+	 * @return true if the request wasn't present in the collectionz the donor
+	 *         associated with the request can donate and the date associated with
+	 *         the request is legit, false otherwise
 	 */
 	public boolean addRequest(RequestPrenotation request) {
-		if (donorServices.checkDonationPossibility(request.getDonorId())) {
-			repository.save(Objects.requireNonNull(request));
-			return true;
+		if (donorServices.checkDonationPossibility(request.getDonorId())
+				&& officeServices.isDateAvailableByOffice(request.getHour(), request.getOfficeId())) {
+			if (repository.findAll().contains(request)) {
+				return false;
+			} else {
+				repository.save(Objects.requireNonNull(request));
+				return true;
+			}
 		} else
 			return false;
 	}
@@ -48,8 +56,12 @@ public class RequestServices {
 	 *         otherwise
 	 */
 	public boolean removeRequest(String requestId) {
-		repository.delete(getRequestInstance(Objects.requireNonNull(requestId)));
-		return true;
+		if (repository.findAll().contains(this.getRequestInstance(requestId))) {
+			repository.delete(getRequestInstance(Objects.requireNonNull(requestId)));
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -73,17 +85,7 @@ public class RequestServices {
 		return false;
 	}
 
-	/**
-	 * Denies a request and deletes it from the collection
-	 * 
-	 * @throws NullPointerException if requestId is null
-	 * @param requestId id of the request
-	 * @return false if requestId is null or the request object hasn't been found,
-	 *         otherwise it returns true
-	 */
-	public boolean denyRequest(String requestId) {
-		return this.removeRequest(requestId);
-	}
+
 
 	/**
 	 * Returns a view of the collection of requests, modifying this view won't have

@@ -28,8 +28,12 @@ public class DonorServices {
 	 * @return true if the collection didn't contain the added donor
 	 */
 	public boolean addDonor(Donor donor) {
-		repository.save(Objects.requireNonNull(donor));
-		return true;
+		if (repository.findAll().contains(donor)) {
+			return false;
+		} else {
+			repository.save(Objects.requireNonNull(donor));
+			return true;
+		}
 	}
 
 	/**
@@ -132,6 +136,15 @@ public class DonorServices {
 				}
 			}
 			repository.save(donor);
+		}
+	}
+
+	public boolean removeDonor(String donorId) {
+		if (repository.findAll().contains(this.getDonorInstance(donorId))) {
+			repository.delete(getDonorInstance(Objects.requireNonNull(donorId)));
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

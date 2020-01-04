@@ -16,13 +16,8 @@ import com.github.francisfire.anavis.repository.DonationRepository;
 @Service
 public class DonationServices {
 
-	// private Set<ClosedPrenotation> donations;
 	@Autowired
 	private DonationRepository repository;
-
-	/*
-	 * private DonationServices() { this.donations = new HashSet<>(); }
-	 */
 
 	/**
 	 * Gets the ClosedPrenotation instance associated to the id that has been passed
@@ -89,8 +84,20 @@ public class DonationServices {
 		Objects.requireNonNull(reportId);
 		ClosedPrenotation donation = new ClosedPrenotation(prenotation.getId(), prenotation.getOfficeId(),
 				prenotation.getDonorId(), prenotation.getHour(), reportId);
-		repository.save(donation);
-		return true;
-		// return donations.add(donation);
+		if (repository.findAll().contains(donation)) {
+			return false;
+		} else {
+			repository.save(donation);
+			return true;
+		}
+	}
+
+	public boolean removeDonation(String donationId) {
+		if (repository.findAll().contains(this.getDonationInstance(donationId))) {
+			repository.delete(getDonationInstance(Objects.requireNonNull(donationId)));
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

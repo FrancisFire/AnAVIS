@@ -44,7 +44,7 @@ public class RequestController {
 	
 	@PutMapping("/{requestId}/deny")
 	public boolean denyRequest(@PathVariable("requestId") String id) {
-		return requestServices.denyRequest(id);
+		return requestServices.removeRequest(id);
 	}
 
 }

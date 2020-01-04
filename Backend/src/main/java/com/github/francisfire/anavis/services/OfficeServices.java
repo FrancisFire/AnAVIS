@@ -17,7 +17,7 @@ import com.github.francisfire.anavis.repository.OfficeRepository;
 public class OfficeServices {
 	@Autowired
 	private OfficeRepository repository;
-	
+
 	/**
 	 * Adds an office to the office collections
 	 * 
@@ -27,8 +27,12 @@ public class OfficeServices {
 	 *         false otherwise
 	 */
 	public boolean addOffice(Office office) {
-		repository.save(Objects.requireNonNull(office));
-		return true;
+		if (repository.findAll().contains(office)) {
+			return false;
+		} else {
+			repository.save(Objects.requireNonNull(office));
+			return true;
+		}
 	}
 
 	/**
@@ -156,5 +160,14 @@ public class OfficeServices {
 		Objects.requireNonNull(date);
 		Office office = getOfficeInstance(Objects.requireNonNull(officeId));
 		return office.isDateAvailable(date);
+	}
+
+	public boolean removeOffice(String officeId) {
+		if (repository.findAll().contains(this.getOfficeInstance(officeId))) {
+			repository.delete(getOfficeInstance(Objects.requireNonNull(officeId)));
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
