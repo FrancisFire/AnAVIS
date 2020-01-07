@@ -138,6 +138,27 @@ class CurrentOfficeState extends ChangeNotifier {
     });
   }
 
+  Future<dynamic> addTimeTableSlot(TimeSlot timeslot) async {
+    return await http.put(
+      Uri.encodeFull(
+          "http://${_ipReference}:8080/api/office/$_officeName/addTimeSlot"),
+      body: json.encode({
+        "dateTime": timeslot.getDateTime(),
+        "donorSlots": timeslot.getSlots(),
+      }),
+      headers: {
+        "content-type": "application/json",
+        "accept": "application/json",
+      },
+    ).then((res) {
+      _statusBody = res.body == 'true';
+      notifyListeners();
+    }).catchError((err) {
+      _statusBody = false;
+      notifyListeners();
+    });
+  }
+
   bool getStatusBody() {
     return _statusBody;
   }

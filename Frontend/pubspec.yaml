@@ -28,6 +28,8 @@ dependencies:
   flutter_speed_dial: ^1.2.5
   fl_chart: ^0.6.0
   flutter_calendar_carousel: ^1.4.10
+  slimy_card: ^1.0.1
+  datetime_picker_formfield: ^1.0.0
 
 dev_dependencies:
   flutter_test:
