@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.ClosedPrenotation;
 import com.github.francisfire.anavis.models.Donor;
-import com.github.francisfire.anavis.models.DonorCategory;
+import com.github.francisfire.anavis.models.Donor.DonorCategory;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.TimeSlot;
 import com.github.francisfire.anavis.services.DonationServices;
