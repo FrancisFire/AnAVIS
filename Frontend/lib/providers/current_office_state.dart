@@ -28,7 +28,7 @@ class CurrentOfficeState extends ChangeNotifier {
     var parsedJson = json.decode(request.body);
     _officeTimeTables.clear();
     for (var time in parsedJson) {
-      _officeTimeTables.add(TimeSlot(time['dateTime'], time['donorSlot']));
+      _officeTimeTables.add(TimeSlot(time['dateTime'], time['donorSlots']));
     }
     notifyListeners();
   }
@@ -40,7 +40,7 @@ class CurrentOfficeState extends ChangeNotifier {
     _officeTimeTablesByOffice.clear();
     for (var time in parsedJson) {
       _officeTimeTablesByOffice
-          .add(TimeSlot(time['dateTime'], time['donorSlot']));
+          .add(TimeSlot(time['dateTime'], time['donorSlots']));
     }
     notifyListeners();
   }

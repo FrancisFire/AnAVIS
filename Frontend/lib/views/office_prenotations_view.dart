@@ -110,22 +110,17 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                           email: snapshot.data[index].getDonorId(),
                           hour: snapshot.data[index].getHour(),
                           id: snapshot.data[index].getId(),
+                          afterTitle: snapshot.data[index].isConfirmed()
+                              ? Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                )
+                              : Icon(
+                                  Icons.error,
+                                  color: Colors.red,
+                                ),
                           buttonBar: ButtonBar(
                             children: <Widget>[
-                              CircleAvatar(
-                                backgroundColor: Colors.transparent,
-                                child: snapshot.data[index].isConfirmed()
-                                    ? Icon(
-                                        Icons.check_circle,
-                                        size: 38,
-                                        color: Colors.green,
-                                      )
-                                    : Icon(
-                                        Icons.error,
-                                        size: 38,
-                                        color: Colors.red,
-                                      ),
-                              ),
                               ButtonForCardBottom(
                                 icon: Icon(
                                   Icons.mode_edit,

@@ -6,12 +6,14 @@ class CardForPrenotationAndRequest extends StatelessWidget {
   final String email;
   final String hour;
   final ButtonBar buttonBar;
+  final Widget afterTitle;
 
   CardForPrenotationAndRequest({
     @required this.id,
     @required this.email,
     @required this.hour,
     @required this.buttonBar,
+    this.afterTitle,
   });
 
   static String restrictFractionalSeconds(String dateTime) =>
@@ -40,6 +42,7 @@ class CardForPrenotationAndRequest extends StatelessWidget {
         child: Column(
           children: <Widget>[
             ListTile(
+              trailing: afterTitle,
               leading: CircleAvatar(
                 backgroundColor: Colors.red[600],
                 child: Text(
