@@ -1,8 +1,6 @@
 package com.github.francisfire.anavis.services;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
 
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.github.francisfire.anavis.models.ActivePrenotation;
-import com.github.francisfire.anavis.models.ClosedPrenotation;
 import com.github.francisfire.anavis.models.DonationReport;
 import com.github.francisfire.anavis.repository.DonationReportRepository;
 
@@ -38,19 +35,24 @@ public class DonationReportServices {
 		return report.getReportId();
 	}
 
-	public DonationReport getReportInstance(String reportId) {
-		Objects.requireNonNull(reportId);
-		Optional<DonationReport> opt = repository.findById(reportId);
-		return opt.orElse(null);
-	}
-
-	public boolean removeReport(String reportId) {
+	/**
+	 * Removes the report assigned to the reportId
+	 * 
+	 * @throws NullPointerException if reportId is null
+	 * @param reportId the id of the report to remove
+	 * @return true if the collections contained the report
+	 */
+	public boolean removeReport(@NonNull String reportId) {
 		if (repository.findAll().contains(this.getReportInstance(reportId))) {
-			repository.delete(getReportInstance(Objects.requireNonNull(reportId)));
+			repository.delete(getReportInstance(reportId));
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	public DonationReport getReportInstance(@NonNull String reportId) {
+		return repository.findById(reportId).orElse(null);
 	}
 
 }

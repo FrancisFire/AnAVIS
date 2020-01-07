@@ -1,8 +1,6 @@
 package com.github.francisfire.anavis.services;
 
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,26 +11,13 @@ import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.ClosedPrenotation;
 import com.github.francisfire.anavis.repository.DonationRepository;
 
+import lombok.NonNull;
+
 @Service
 public class DonationServices {
 
 	@Autowired
 	private DonationRepository repository;
-
-	/**
-	 * Gets the ClosedPrenotation instance associated to the id that has been passed
-	 * in input to the method
-	 * 
-	 * @throws NullPointerException if prenotationId is null
-	 * @param donationId id of the request
-	 * @return the ClosedPrenotation object if present in the collection, null
-	 *         otherwise
-	 */
-	public ClosedPrenotation getDonationInstance(String donationId) {
-		Objects.requireNonNull(donationId);
-		Optional<ClosedPrenotation> opt = repository.findById(donationId);
-		return opt.orElse(null);
-	}
 
 	/**
 	 * Returns a collection of donations related to an office passed in input
@@ -41,8 +26,7 @@ public class DonationServices {
 	 * @param officeId id of the office
 	 * @return collection of donations related to the office passed in input
 	 */
-	public Set<ClosedPrenotation> getDonationsByOffice(String officeId) {
-		Objects.requireNonNull(officeId);
+	public Set<ClosedPrenotation> getDonationsByOffice(@NonNull String officeId) {
 		return repository.findAll().stream().filter(donation -> donation.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
@@ -54,8 +38,7 @@ public class DonationServices {
 	 * @param donorId id of the donor
 	 * @return a collection of donations related to the donor passed in input
 	 */
-	public Set<ClosedPrenotation> getDonationsByDonor(String donorId) {
-		Objects.requireNonNull(donorId);
+	public Set<ClosedPrenotation> getDonationsByDonor(@NonNull String donorId) {
 		return repository.findAll().stream().filter(donation -> donation.getDonorId().equalsIgnoreCase(donorId))
 				.collect(Collectors.toSet());
 	}
@@ -79,9 +62,7 @@ public class DonationServices {
 	 * @param donation the donation to add
 	 * @return true if the collection didn't contain the added donation
 	 */
-	public boolean addDonation(ActivePrenotation prenotation, String reportId) {
-		Objects.requireNonNull(prenotation);
-		Objects.requireNonNull(reportId);
+	public boolean addDonation(@NonNull ActivePrenotation prenotation, @NonNull String reportId) {
 		ClosedPrenotation donation = new ClosedPrenotation(prenotation.getId(), prenotation.getOfficeId(),
 				prenotation.getDonorId(), prenotation.getHour(), reportId);
 		if (repository.findAll().contains(donation)) {
@@ -92,12 +73,32 @@ public class DonationServices {
 		}
 	}
 
-	public boolean removeDonation(String donationId) {
+	/**
+	 * Removes the donation assigned to the donationId
+	 * 
+	 * @throws NullPointerException if donationId is null
+	 * @param donationId the id of the donation to remove
+	 * @return true if the collections contained the donation
+	 */
+	public boolean removeDonation(@NonNull String donationId) {
 		if (repository.findAll().contains(this.getDonationInstance(donationId))) {
-			repository.delete(getDonationInstance(Objects.requireNonNull(donationId)));
+			repository.delete(getDonationInstance(donationId));
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Gets the ClosedPrenotation instance associated to the id that has been passed
+	 * in input to the method
+	 * 
+	 * @throws NullPointerException if prenotationId is null
+	 * @param donationId id of the request
+	 * @return the ClosedPrenotation object if present in the collection, null
+	 *         otherwise
+	 */
+	public ClosedPrenotation getDonationInstance(@NonNull String donationId) {
+		return repository.findById(donationId).orElse(null);
 	}
 }

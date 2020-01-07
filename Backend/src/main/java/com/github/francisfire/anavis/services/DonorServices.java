@@ -2,8 +2,6 @@ package com.github.francisfire.anavis.services;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.repository.DonorRepository;
+
+import lombok.NonNull;
 
 @Service
 public class DonorServices {
@@ -27,11 +27,11 @@ public class DonorServices {
 	 * @param donor the donor to add
 	 * @return true if the collection didn't contain the added donor
 	 */
-	public boolean addDonor(Donor donor) {
+	public boolean addDonor(@NonNull Donor donor) {
 		if (repository.findAll().contains(donor)) {
 			return false;
 		} else {
-			repository.save(Objects.requireNonNull(donor));
+			repository.save(donor);
 			return true;
 		}
 	}
@@ -57,8 +57,8 @@ public class DonorServices {
 	 * @return the id of the office associated to the donor, null if the donor
 	 *         hasn't been found
 	 */
-	public String getOfficeIdByDonor(String donorId) {
-		Donor donor = getDonorInstance(Objects.requireNonNull(donorId));
+	public String getOfficeIdByDonor(@NonNull String donorId) {
+		Donor donor = getDonorInstance(donorId);
 		return (donor == null) ? null : donor.getOfficeId();
 	}
 
@@ -70,8 +70,8 @@ public class DonorServices {
 	 * @param donorId the id of the donor
 	 * @return true if the donor can donate, false otherwise
 	 */
-	public boolean checkDonationPossibility(String donorId) {
-		Donor donor = getDonorInstance(Objects.requireNonNull(donorId));
+	public boolean checkDonationPossibility(@NonNull String donorId) {
+		Donor donor = getDonorInstance(donorId);
 		return (donor == null) ? false : donor.isCanDonate();
 	}
 
@@ -83,8 +83,7 @@ public class DonorServices {
 	 * @param officeId id of the office
 	 * @return collection of donors associated to the office
 	 */
-	public Set<Donor> getDonorsByOfficeId(String officeId) {
-		Objects.requireNonNull(officeId);
+	public Set<Donor> getDonorsByOfficeId(@NonNull String officeId) {
 		return repository.findAll().stream().filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
@@ -97,11 +96,26 @@ public class DonorServices {
 	 * @param officeId id of the office
 	 * @return collection of donors associated to the office and that can donate
 	 */
-	public Set<Donor> getAvailableDonorsByOfficeId(String officeId) {
-		Objects.requireNonNull(officeId);
+	public Set<Donor> getAvailableDonorsByOfficeId(@NonNull String officeId) {
 		return repository.findAll().stream()
 				.filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId) && donor.isCanDonate())
 				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Removes the donor assigned to the donorId 
+	 * 
+	 * @throws NullPointerException if donorId is null
+	 * @param donorId the id of the donor to remove
+	 * @return true if the collections contained the donor
+	 */
+	public boolean removeDonor(@NonNull String donorId) {
+		if (repository.findAll().contains(this.getDonorInstance(donorId))) {
+			repository.delete(getDonorInstance(donorId));
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -113,10 +127,8 @@ public class DonorServices {
 	 * @param donorId id of the donor to find
 	 * @return the Donor object associated to the id, null if it hasn't been found
 	 */
-	public Donor getDonorInstance(String donorId) {
-		Objects.requireNonNull(donorId);
-		Optional<Donor> opt = repository.findById(donorId);
-		return opt.orElse(null);
+	public Donor getDonorInstance(@NonNull String donorId) {
+		return repository.findById(donorId).orElse(null);
 	}
 
 	@Scheduled(cron = "0 0 * * * ?")
@@ -136,15 +148,6 @@ public class DonorServices {
 				}
 			}
 			repository.save(donor);
-		}
-	}
-
-	public boolean removeDonor(String donorId) {
-		if (repository.findAll().contains(this.getDonorInstance(donorId))) {
-			repository.delete(getDonorInstance(Objects.requireNonNull(donorId)));
-			return true;
-		} else {
-			return false;
 		}
 	}
 }

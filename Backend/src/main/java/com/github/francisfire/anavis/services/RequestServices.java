@@ -2,7 +2,6 @@ package com.github.francisfire.anavis.services;
 
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.github.francisfire.anavis.models.RequestPrenotation;
 import com.github.francisfire.anavis.repository.RequestRepository;
+
+import lombok.NonNull;
 
 @Service
 public class RequestServices {
@@ -29,7 +30,7 @@ public class RequestServices {
 	 * 
 	 * @throws NullPointerException if request is null
 	 * @param request the request to add
-	 * @return true if the request wasn't present in the collectionz the donor
+	 * @return true if the request wasn't present in the collection the donor
 	 *         associated with the request can donate and the date associated with
 	 *         the request is legit, false otherwise
 	 */
@@ -85,8 +86,6 @@ public class RequestServices {
 		return false;
 	}
 
-
-
 	/**
 	 * Returns a view of the collection of requests, modifying this view won't have
 	 * effects on the original collection, however modifying the objects in it will
@@ -106,9 +105,21 @@ public class RequestServices {
 	 * @param officeId id of the office
 	 * @return a collection of requests associated to the office
 	 */
-	public Set<RequestPrenotation> getRequestsByOffice(String officeId) {
-		Objects.requireNonNull(officeId);
+	public Set<RequestPrenotation> getRequestsByOffice(@NonNull String officeId) {
 		return repository.findAll().stream().filter(request -> request.getOfficeId().equals(officeId))
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Gets a collection of requests associated to the donor whose id is the one
+	 * passed in input to the function
+	 * 
+	 * @throws NullPointerException if officeId is null
+	 * @param donorId id of the donor
+	 * @return a collection of requests associated to the donor
+	 */
+	public Set<RequestPrenotation> getRequestsByDonor(@NonNull String donorId) {
+		return repository.findAll().stream().filter(request -> request.getDonorId().equals(donorId))
 				.collect(Collectors.toSet());
 	}
 
@@ -121,10 +132,8 @@ public class RequestServices {
 	 * @return the RequestPrenotation object if present in the collection, null
 	 *         otherwise
 	 */
-	public RequestPrenotation getRequestInstance(String requestId) {
-		Objects.requireNonNull(requestId);
-		Optional<RequestPrenotation> opt = repository.findById(requestId);
-		return opt.orElse(null);
+	public RequestPrenotation getRequestInstance(@NonNull String requestId) {
+		return repository.findById(requestId).orElse(null);
 	}
 
 }

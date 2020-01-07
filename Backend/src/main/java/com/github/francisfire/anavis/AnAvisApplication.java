@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.github.francisfire.anavis.models.*;
+import com.github.francisfire.anavis.models.Donor.DonorCategory;
 import com.github.francisfire.anavis.services.*;
 
 @SpringBootApplication
