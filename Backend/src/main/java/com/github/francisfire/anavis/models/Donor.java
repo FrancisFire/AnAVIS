@@ -68,4 +68,8 @@ public class Donor {
 			leftDonationsInYear--;
 		}
 	}
+
+	public enum DonorCategory {
+		MAN, FERTILEWOMAN, NONFERTILEWOMAN
+	}
 }

@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.francisfire.anavis.models.Donor;
-import com.github.francisfire.anavis.models.DonorCategory;
+import com.github.francisfire.anavis.models.Donor.DonorCategory;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.services.DonorServices;
 import com.github.francisfire.anavis.services.OfficeServices;

@@ -3,7 +3,6 @@ package com.github.francisfire.anavis.services;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +14,8 @@ import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.RequestPrenotation;
 import com.github.francisfire.anavis.repository.DonorRepository;
 import com.github.francisfire.anavis.repository.PrenotationRepository;
+
+import lombok.NonNull;
 
 @Service
 public class PrenotationServices {
@@ -78,8 +79,7 @@ public class PrenotationServices {
 	 *         collection didn't contain the added prenotation and a timeslot was
 	 *         present
 	 */
-	public boolean addPrenotation(ActivePrenotation prenotation) {
-		Objects.requireNonNull(prenotation);
+	public boolean addPrenotation(@NonNull ActivePrenotation prenotation) {
 		Date date = prenotation.getHour();
 		String officeId = prenotation.getOfficeId();
 		if (donorServices.checkDonationPossibility(prenotation.getDonorId())
@@ -105,8 +105,7 @@ public class PrenotationServices {
 	 * @return true if the collections contained the prenotation and the timeslot
 	 *         was succesfully increased
 	 */
-	public boolean removePrenotation(String prenotationId) {
-		Objects.requireNonNull(prenotationId);
+	public boolean removePrenotation(@NonNull String prenotationId) {
 		ActivePrenotation prenotation = getPrenotationInstance(prenotationId);
 		if (prenotation == null) {
 			return false;
@@ -131,8 +130,7 @@ public class PrenotationServices {
 	 *         the prenotation was present and updates succesfully and timeslots
 	 *         have been modified successfully, false otherwise
 	 */
-	public boolean updatePrenotation(ActivePrenotation prenotation) {
-		Objects.requireNonNull(prenotation);
+	public boolean updatePrenotation(@NonNull ActivePrenotation prenotation) {
 		ActivePrenotation oldPrenotation = getPrenotationInstance(prenotation.getId());
 		if (oldPrenotation == null) {
 			return false;
@@ -161,8 +159,7 @@ public class PrenotationServices {
 	 * @param officeId id of the office
 	 * @return collection of prenotations related to the office passed in input
 	 */
-	public Set<ActivePrenotation> getPrenotationsByOffice(String officeId) {
-		Objects.requireNonNull(officeId);
+	public Set<ActivePrenotation> getPrenotationsByOffice(@NonNull String officeId) {
 		return repository.findAll().stream().filter(prenotation -> prenotation.getOfficeId().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
@@ -174,8 +171,7 @@ public class PrenotationServices {
 	 * @param donorId id of the donor
 	 * @return a collection of prenotations related to the donor passed in input
 	 */
-	public Set<ActivePrenotation> getPrenotationsByDonor(String donorId) {
-		Objects.requireNonNull(donorId);
+	public Set<ActivePrenotation> getPrenotationsByDonor(@NonNull String donorId) {
 		return repository.findAll().stream().filter(prenotation -> prenotation.getDonorId().equalsIgnoreCase(donorId))
 				.collect(Collectors.toSet());
 	}
@@ -189,8 +185,7 @@ public class PrenotationServices {
 	 * @return false if prenotation was present and not already confirmed, true
 	 *         otherwise
 	 */
-	public boolean acceptPrenotationChange(String prenotationId) {
-		Objects.requireNonNull(prenotationId);
+	public boolean acceptPrenotationChange(@NonNull String prenotationId) {
 		ActivePrenotation prenotation = getPrenotationInstance(prenotationId);
 		if (prenotation == null || prenotation.isConfirmed()) {
 			return false;
@@ -209,27 +204,12 @@ public class PrenotationServices {
 	 * @return true if prenotation was present and succesfully removed, false
 	 *         otherwise
 	 */
-	public boolean denyPrenotationChange(String prenotationId) {
-		Objects.requireNonNull(prenotationId);
+	public boolean denyPrenotationChange(@NonNull String prenotationId) {
 		ActivePrenotation prenotation = getPrenotationInstance(prenotationId);
 		if (prenotation == null || prenotation.isConfirmed()) {
 			return false;
 		}
 		return this.removePrenotation(prenotationId);
-	}
-
-	/**
-	 * Gets the ActivePrenotation instance associated to the id that has been passed
-	 * in input to the method
-	 * 
-	 * @throws NullPointerException if prenotationId is null
-	 * @param prenotationId id of the request
-	 * @return the Prenotation object if present in the collection, null otherwise
-	 */
-	public ActivePrenotation getPrenotationInstance(String prenotationId) {
-		Objects.requireNonNull(prenotationId);
-		Optional<ActivePrenotation> opt = repository.findById(prenotationId);
-		return opt.orElse(null);
 	}
 
 	/**
@@ -242,9 +222,7 @@ public class PrenotationServices {
 	 * @return true if prenotation was present and succesfully closed, false
 	 *         otherwise
 	 */
-	public boolean closePrenotation(String prenotationId, String reportId) {
-		Objects.requireNonNull(prenotationId);
-		Objects.requireNonNull(reportId);
+	public boolean closePrenotation(@NonNull String prenotationId, @NonNull String reportId) {
 		ActivePrenotation prenotation = this.getPrenotationInstance(prenotationId);
 		if (this.removePrenotation(prenotationId) && donationServices.addDonation(prenotation, reportId)) {
 			String donorId = prenotation.getDonorId();
@@ -257,6 +235,18 @@ public class PrenotationServices {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Gets the ActivePrenotation instance associated to the id that has been passed
+	 * in input to the method
+	 * 
+	 * @throws NullPointerException if prenotationId is null
+	 * @param prenotationId id of the request
+	 * @return the Prenotation object if present in the collection, null otherwise
+	 */
+	public ActivePrenotation getPrenotationInstance(@NonNull String prenotationId) {
+		return repository.findById(prenotationId).orElse(null);
 	}
 
 }
