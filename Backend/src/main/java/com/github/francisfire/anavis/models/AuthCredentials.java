@@ -24,7 +24,7 @@ public class AuthCredentials {
 	private Set<Role> roles;
 
 	public enum Role{
-		DONOR, OFFICE;
+		DONOR, OFFICE, ADMIN;
 	}
 	
 }

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.francisfire.anavis.models.AuthCredentials;
+import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.services.AuthCredentialsServices;
+import com.github.francisfire.anavis.services.DonorServices;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,14 +24,18 @@ public class AuthCredentialsController {
 	@Autowired
 	private AuthCredentialsServices authCredentialsServices;
 
+	@Autowired
+	private DonorServices donorServices;
+
 	@GetMapping("/")
 	public List<AuthCredentials> getAuthCredentials() {
 		return authCredentialsServices.getAuthCredentials();
 	}
 
 	@PostMapping("/")
-	public boolean addDonorCredentials(@RequestBody AuthCredentials authCredentials) {
-		return authCredentialsServices.addDonorCredentials(authCredentials);
+	public boolean addDonorCredentials(@RequestBody UserAndDonor userAndDonor) {
+		donorServices.addDonor(userAndDonor.donor);
+		return authCredentialsServices.addDonorCredentials(userAndDonor.authCredentials);
 	}
 
 	@PutMapping("/")
@@ -39,7 +45,13 @@ public class AuthCredentialsController {
 
 	@DeleteMapping("/{email}")
 	public boolean removeDonorCredentials(@PathVariable("email") String email) {
+		donorServices.removeDonor(email);
 		return authCredentialsServices.removeDonorCredentials(email);
+	}
+
+	static class UserAndDonor {
+		private Donor donor;
+		private AuthCredentials authCredentials;
 	}
 
 }

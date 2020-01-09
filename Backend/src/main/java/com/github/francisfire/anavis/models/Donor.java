@@ -24,6 +24,10 @@ public class Donor {
 	private boolean canDonate;
 	private Date lastDonation;
 	private DonorCategory category;
+	private String name;
+	private String surname;
+	private Date birthday;
+	private String birthPlace;
 	private int leftDonationsInYear;
 	private Date firstDonationInYear;
 
@@ -32,6 +36,18 @@ public class Donor {
 		this.officeId = officeId;
 		this.category = category;
 		this.canDonate = true;
+		resetLeftDonationsInYear();
+	}
+	
+	public Donor(String mail, String officeId, DonorCategory category, String name, String surname, Date birthday, String birthPlace) {
+		this.mail = mail;
+		this.officeId = officeId;
+		this.category = category;
+		this.canDonate = true;
+		this.name = name;
+		this.surname = surname;
+		this.birthday = birthday;
+		this.birthPlace = birthPlace;
 		resetLeftDonationsInYear();
 	}
 
