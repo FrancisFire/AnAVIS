@@ -15,23 +15,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-	    http.sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().httpBasic();
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().httpBasic();
 	}
-	
+
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.inMemoryAuthentication().withUser("donor").password(encoder().encode("password")).roles("DONOR").and()
-				.withUser("office").password(encoder().encode("password")).roles("OFFICE");
+				.withUser("office").password(encoder().encode("password")).roles("OFFICE").and().withUser("admin")
+				.password(encoder().encode("password")).roles("ADMIN");
 	}
-	
+
 	@Bean
 	public PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 }
