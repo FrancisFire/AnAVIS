@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.github.francisfire.anavis.models.ActivePrenotation;
 import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.RequestPrenotation;
-import com.github.francisfire.anavis.repository.DonorRepository;
 import com.github.francisfire.anavis.repository.PrenotationRepository;
 
 import lombok.NonNull;
@@ -28,8 +27,6 @@ public class PrenotationServices {
 	private DonorServices donorServices;
 	@Autowired
 	private PrenotationRepository repository;
-	@Autowired
-	private DonorRepository donorRepository;
 
 	/**
 	 * Adds a prenotation to the prenotation collection from the request that has
@@ -48,10 +45,10 @@ public class PrenotationServices {
 				&& officeServices.decreaseTimeslotByOffice(request.getHour(), request.getOfficeId())) {
 			ActivePrenotation prenotation = new ActivePrenotation(request.getId(), request.getOfficeId(),
 					request.getDonorId(), request.getHour(), true);
-			if (repository.findAll().contains(prenotation)) {
+			if (repository.existsById(prenotation.getId())) {
 				return false;
 			} else {
-				repository.save(prenotation);
+				repository.insert(prenotation);
 				return true;
 			}
 		}
@@ -84,10 +81,10 @@ public class PrenotationServices {
 		String officeId = prenotation.getOfficeId();
 		if (donorServices.checkDonationPossibility(prenotation.getDonorId())
 				&& officeServices.decreaseTimeslotByOffice(date, officeId)) {
-			if (repository.findAll().contains(prenotation)) {
+			if (repository.existsById(prenotation.getId())) {
 				return false;
 			} else {
-				repository.save(prenotation);
+				repository.insert(prenotation);
 				return true;
 			}
 		} else {
@@ -143,8 +140,6 @@ public class PrenotationServices {
 		if (donorServices.checkDonationPossibility(prenotation.getDonorId())
 				&& officeServices.decreaseTimeslotByOffice(newDate, newOffice)
 				&& officeServices.increaseTimeslotByOffice(oldDate, oldOffice)) {
-
-			repository.delete(oldPrenotation);
 			repository.save(prenotation);
 			return true;
 		} else {
@@ -230,7 +225,7 @@ public class PrenotationServices {
 			Donor donor = donorServices.getDonorInstance(donorId);
 			donor.setCanDonate(false);
 			donor.setLastDonation(date);
-			donorRepository.save(donor);
+			donorServices.updateDonor(donor);
 			return true;
 		} else {
 			return false;

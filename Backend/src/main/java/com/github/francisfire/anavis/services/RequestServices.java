@@ -1,7 +1,6 @@
 package com.github.francisfire.anavis.services;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,13 +33,13 @@ public class RequestServices {
 	 *         associated with the request can donate and the date associated with
 	 *         the request is legit, false otherwise
 	 */
-	public boolean addRequest(RequestPrenotation request) {
+	public boolean addRequest(@NonNull RequestPrenotation request) {
 		if (donorServices.checkDonationPossibility(request.getDonorId())
 				&& officeServices.isDateAvailableByOffice(request.getHour(), request.getOfficeId())) {
-			if (repository.findAll().contains(request)) {
+			if (repository.existsById(request.getId())) {
 				return false;
 			} else {
-				repository.save(Objects.requireNonNull(request));
+				repository.insert(request);
 				return true;
 			}
 		} else
@@ -56,9 +55,9 @@ public class RequestServices {
 	 * @return true if the request was present in the set and eliminated, false
 	 *         otherwise
 	 */
-	public boolean removeRequest(String requestId) {
-		if (repository.findAll().contains(this.getRequestInstance(requestId))) {
-			repository.delete(getRequestInstance(Objects.requireNonNull(requestId)));
+	public boolean removeRequest(@NonNull String requestId) {
+		if (repository.existsById(requestId)) {
+			repository.delete(getRequestInstance(requestId));
 			return true;
 		} else {
 			return false;
@@ -73,8 +72,7 @@ public class RequestServices {
 	 * @return true if the donor associated with the request can donate and the
 	 *         prenotation has been correctly added, false otherwise
 	 */
-	public boolean approveRequest(String requestId) {
-		Objects.requireNonNull(requestId);
+	public boolean approveRequest(@NonNull String requestId) {
 		RequestPrenotation toApprove = this.getRequestInstance(requestId);
 		if (toApprove == null) {
 			return false;

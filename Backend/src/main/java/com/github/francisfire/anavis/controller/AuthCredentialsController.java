@@ -1,6 +1,6 @@
 package com.github.francisfire.anavis.controller;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +28,7 @@ public class AuthCredentialsController {
 	private DonorServices donorServices;
 
 	@GetMapping("/")
-	public List<AuthCredentials> getAuthCredentials() {
+	public Set<AuthCredentials> getAuthCredentials() {
 		return authCredentialsServices.getAuthCredentials();
 	}
 

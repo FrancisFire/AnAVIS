@@ -65,7 +65,7 @@ public class DonationServices {
 	public boolean addDonation(@NonNull ActivePrenotation prenotation, @NonNull String reportId) {
 		ClosedPrenotation donation = new ClosedPrenotation(prenotation.getId(), prenotation.getOfficeId(),
 				prenotation.getDonorId(), prenotation.getHour(), reportId);
-		if (repository.findAll().contains(donation)) {
+		if (repository.existsById(donation.getId())) {
 			return false;
 		} else {
 			repository.save(donation);
@@ -81,7 +81,7 @@ public class DonationServices {
 	 * @return true if the collections contained the donation
 	 */
 	public boolean removeDonation(@NonNull String donationId) {
-		if (repository.findAll().contains(this.getDonationInstance(donationId))) {
+		if (repository.existsById(donationId)) {
 			repository.delete(getDonationInstance(donationId));
 			return true;
 		} else {

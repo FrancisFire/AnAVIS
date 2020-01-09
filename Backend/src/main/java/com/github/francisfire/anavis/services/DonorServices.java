@@ -28,12 +28,29 @@ public class DonorServices {
 	 * @return true if the collection didn't contain the added donor
 	 */
 	public boolean addDonor(@NonNull Donor donor) {
-		if (repository.findAll().contains(donor)) {
+		if (repository.existsById(donor.getMail())) {
 			return false;
 		} else {
 			repository.save(donor);
 			return true;
 		}
+	}
+	
+	/**
+	 * Updates the donor passed in input to the method in the donor
+	 * collection
+	 * 
+	 * @throws NullPointerException if donor is null
+	 * @param donor the donor to update
+	 * @return true if the donor was present and updated succesfully
+	 */
+	public boolean updateDonor(@NonNull Donor donor) {
+		Donor oldDonor = getDonorInstance(donor.getMail());
+		if(oldDonor == null) {
+			return false;
+		}
+		repository.save(donor);
+		return true;
 	}
 
 	/**
@@ -110,7 +127,7 @@ public class DonorServices {
 	 * @return true if the collections contained the donor
 	 */
 	public boolean removeDonor(@NonNull String donorId) {
-		if (repository.findAll().contains(this.getDonorInstance(donorId))) {
+		if (repository.existsById(donorId)) {
 			repository.delete(getDonorInstance(donorId));
 			return true;
 		} else {

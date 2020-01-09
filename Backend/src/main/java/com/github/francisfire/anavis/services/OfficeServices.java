@@ -27,10 +27,10 @@ public class OfficeServices {
 	 *         false otherwise
 	 */
 	public boolean addOffice(@NonNull Office office) {
-		if (repository.findAll().contains(office)) {
+		if (repository.existsById(office.getId())) {
 			return false;
 		} else {
-			repository.save(office);
+			repository.insert(office);
 			return true;
 		}
 	}
@@ -144,8 +144,15 @@ public class OfficeServices {
 		return office.isDateAvailable(date);
 	}
 
+	/**
+	 * Removes the office assigned to the officeId 
+	 * 
+	 * @throws NullPointerException if officeId is null
+	 * @param officeId the id of the office to remove
+	 * @return true if the collections contained the office
+	 */
 	public boolean removeOffice(@NonNull String officeId) {
-		if (repository.findAll().contains(this.getOfficeInstance(officeId))) {
+		if (repository.existsById(officeId)) {
 			repository.delete(getOfficeInstance(officeId));
 			return true;
 		} else {
