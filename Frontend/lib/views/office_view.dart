@@ -2,73 +2,118 @@ import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/widgets/button_fab_homepage.dart';
 import 'package:anavis/widgets/clip_path.dart';
+import 'package:anavis/widgets/login_form.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class OfficeView extends StatefulWidget {
   @override
   _OfficeViewState createState() => _OfficeViewState();
 }
 
-class _OfficeViewState extends State<OfficeView> {
+class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
+  Map<DateTime, List> _events;
+  List _selectedEvents;
+  AnimationController _animationController;
+  CalendarController _calendarController;
+
+  @override
+  void initState() {
+    super.initState();
+    final _selectedDay = DateTime.now();
+
+    _events = {
+      _selectedDay.subtract(Duration(days: 30)): [
+        'Event A0',
+        'Event B0',
+        'Event C0'
+      ],
+      _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
+      _selectedDay.subtract(Duration(days: 20)): [
+        'Event A2',
+        'Event B2',
+        'Event C2',
+        'Event D2'
+      ],
+      _selectedDay.subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
+      _selectedDay.subtract(Duration(days: 10)): [
+        'Event A4',
+        'Event B4',
+        'Event C4'
+      ],
+      _selectedDay.subtract(Duration(days: 4)): [
+        'Event A5',
+        'Event B5',
+        'Event C5'
+      ],
+      _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
+      _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
+      _selectedDay.add(Duration(days: 1)): [
+        'Event A8',
+        'Event B8',
+        'Event C8',
+      ],
+      _selectedDay.add(Duration(days: 3)):
+          Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
+      _selectedDay.add(Duration(days: 7)): [
+        'Event A10',
+        'Event B10',
+        'Event C10'
+      ],
+      _selectedDay.add(Duration(days: 11)): ['Event A11', 'Event B11'],
+      _selectedDay.add(Duration(days: 17)): [
+        'Event A12',
+        'Event B12',
+        'Event C12',
+        'Event D12'
+      ],
+      _selectedDay.add(Duration(days: 22)): ['Event A13', 'Event B13'],
+      _selectedDay.add(Duration(days: 26)): [
+        'Event A14',
+        'Event B14',
+        'Event C14'
+      ],
+    };
+
+    _selectedEvents = _events[_selectedDay] ?? [];
+    _calendarController = CalendarController();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _calendarController.dispose();
+    super.dispose();
+  }
+
+  void _onDaySelected(DateTime day, List events) {
+    print('CALLBACK: _onDaySelected');
+    setState(() {
+      _selectedEvents = events;
+    });
+  }
+
+  void _onVisibleDaysChanged(
+      DateTime first, DateTime last, CalendarFormat format) {
+    print('CALLBACK: _onVisibleDaysChanged');
+  }
+
   String _officeName;
 
   int prenotationCount = 0;
-
-  DateTime _currentDate = DateTime.now();
-
-  static Widget _eventIcon = new Container(
-    decoration: new BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.all(
-        Radius.circular(
-          1000,
-        ),
-      ),
-      border: Border.all(
-        color: Colors.orange,
-        width: 2.0,
-      ),
-    ),
-    child: Icon(
-      Icons.person,
-      color: Colors.orange,
-    ),
-  );
-
-  EventList<Event> _markedDateMap = new EventList<Event>(
-    events: {
-      new DateTime(2019, 12, 28): [
-        new Event(
-          date: new DateTime(2019, 12, 28),
-          title: 'Event 1',
-          icon: _eventIcon,
-          dot: Container(
-            margin: EdgeInsets.symmetric(horizontal: 1.0),
-            color: Colors.red,
-            height: 5.0,
-            width: 5.0,
-          ),
-        ),
-        new Event(
-          date: new DateTime(2019, 12, 28),
-          title: 'Event 2',
-          icon: _eventIcon,
-        ),
-        new Event(
-          date: new DateTime(2019, 12, 28),
-          title: 'Event 3',
-          icon: _eventIcon,
-        ),
-      ],
-    },
-  );
 
   int getPrenotationCount() {
     Provider.of<CurrentOfficeState>(context).getOfficePrenotations().then(
@@ -226,46 +271,42 @@ class _OfficeViewState extends State<OfficeView> {
                   ),
                   child: Column(
                     children: <Widget>[
-                      Expanded(
-                        child: CalendarCarousel(
-                          selectedDayBorderColor: Colors.red,
-                          selectedDayButtonColor: Colors.red,
-                          thisMonthDayBorderColor: Colors.grey,
-                          locale: 'it',
-                          selectedDateTime: _currentDate,
-                          daysTextStyle: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Colors.grey,
+                      TableCalendar(
+                        calendarController: _calendarController,
+                        events: _events,
+                        locale: 'it_IT',
+                        initialCalendarFormat: CalendarFormat.week,
+                        availableCalendarFormats: const {
+                          CalendarFormat.month: 'Esteso',
+                          CalendarFormat.week: 'Ridotto',
+                        },
+                        startingDayOfWeek: StartingDayOfWeek.monday,
+                        calendarStyle: CalendarStyle(
+                          selectedColor: Colors.red[800],
+                          todayColor: Colors.grey[600],
+                          markersColor: Colors.orangeAccent[400],
+                          outsideDaysVisible: false,
+                        ),
+                        initialSelectedDay: DateTime.now(),
+                        headerStyle: HeaderStyle(
+                          titleTextBuilder: (date, locale) =>
+                              toBeginningOfSentenceCase(
+                            DateFormat.yMMMM(locale).format(date),
                           ),
-                          weekendTextStyle: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Colors.redAccent,
+                          formatButtonTextStyle: TextStyle().copyWith(
+                            color: Colors.white,
+                            fontSize: 12.0,
                           ),
-                          iconColor: Colors.red,
-                          headerTextStyle: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 32,
-                            color: Colors.red,
-                          ),
-                          markedDatesMap: _markedDateMap,
-                          markedDateIconBuilder: (event) {
-                            return event.icon;
-                          },
-                          markedDateShowIcon: true,
-                          markedDateIconMaxShown: 2,
-                          markedDateCustomShapeBorder: CircleBorder(
-                            side: BorderSide(
-                              color: Colors.transparent,
-                            ),
-                          ),
-                          markedDateMoreShowTotal: true,
-                          daysHaveCircularBorder: null,
-                          weekdayTextStyle: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Colors.red,
-                            fontSize: 16,
+                          formatButtonDecoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
                         ),
+                        onDaySelected: _onDaySelected,
+                        onVisibleDaysChanged: _onVisibleDaysChanged,
+                      ),
+                      Expanded(
+                        child: _buildEventList(),
                       ),
                     ],
                   ),
@@ -279,6 +320,42 @@ class _OfficeViewState extends State<OfficeView> {
         iconFab: iconFAB(),
       ),
     );
+  }
+
+  Widget _buildEventList() {
+    return _selectedEvents.isNotEmpty
+        ? ScrollConfiguration(
+            behavior: RemoveGlow(),
+            child: ListView(
+              children: _selectedEvents
+                  .map((event) => Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0.8),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        child: ListTile(
+                          title: Text(event.toString()),
+                          onTap: () => print('$event tapped!'),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          )
+        : Center(
+            child: ListTile(
+              title: Text("Non sono presenti donazioni"),
+              leading: Icon(
+                Icons.sentiment_dissatisfied,
+                size: 36,
+              ),
+              isThreeLine: true,
+              subtitle: Text(
+                "Inserisci nuove date utili per le donazioni per incentivare le donazioni nell'ufficio locale!",
+              ),
+            ),
+          );
   }
 
   List<SpeedDialChild> iconFAB() {

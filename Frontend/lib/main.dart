@@ -4,9 +4,13 @@ import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 const String ip = "46.101.201.248";
-void main() => runApp(AnAvis());
+
+void main() {
+  initializeDateFormatting().then((_) => runApp(AnAvis()));
+}
 
 class AnAvis extends StatelessWidget {
   // This widget is the root of your application.
