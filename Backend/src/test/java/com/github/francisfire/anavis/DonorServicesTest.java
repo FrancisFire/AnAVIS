@@ -29,14 +29,14 @@ public class DonorServicesTest {
 
 	@BeforeEach
 	public void initSingleTest() {
-		Office officeOne = new Office("officeOne");
+		Office officeOne = new Office("officeOne@office.com", "officeOne");
 		officeServices.addOffice(officeOne);
-		Office officeTwo = new Office("officeTwo");
+		Office officeTwo = new Office("officeTwo@office.com", "officeTwo");
 		officeServices.addOffice(officeTwo);
 
-		Donor donor = new Donor("donor@gmail.com", "officeOne", DonorCategory.MAN);
+		Donor donor = new Donor("donor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
 		donorServices.addDonor(donor);
-		Donor secondDonor = new Donor("secondDonor@gmail.com", "officeOne", DonorCategory.MAN);
+		Donor secondDonor = new Donor("secondDonor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
 		secondDonor.setCanDonate(false);
 		donorServices.addDonor(secondDonor);
 
@@ -45,15 +45,15 @@ public class DonorServicesTest {
 	@AfterEach
 	public void closeSingleTest() {
 		donorServices.removeDonor("donor@gmail.com");
-		officeServices.removeOffice("officeOne");
-		officeServices.removeOffice("officeTwo");
+		officeServices.removeOffice("officeOne@office.com");
+		officeServices.removeOffice("officeTwo@office.com");
 	}
 
 	@Test
 	public void addDonor() {
 		assertThrows(NullPointerException.class, () -> donorServices.addDonor(null));
 
-		Donor newDonor = new Donor("newDonor@gmail.com", "officeOne", DonorCategory.MAN);
+		Donor newDonor = new Donor("newDonor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
 		assertTrue(donorServices.addDonor(newDonor));
 		assertFalse(donorServices.addDonor(newDonor));
 		assertFalse(donorServices.getDonors().isEmpty());
@@ -63,8 +63,8 @@ public class DonorServicesTest {
 	public void getOfficeIdByDonor() {
 		assertThrows(NullPointerException.class, () -> donorServices.getOfficeIdByDonor(null));
 
-		assertEquals("officeOne", donorServices.getOfficeIdByDonor("donor@gmail.com"));
-		assertNotEquals("officeTwo", donorServices.getOfficeIdByDonor("donor@gmail.com"));
+		assertEquals("officeOne@office.com", donorServices.getOfficeIdByDonor("donor@gmail.com"));
+		assertNotEquals("officeTwo@office.com", donorServices.getOfficeIdByDonor("donor@gmail.com"));
 		assertNull(donorServices.getOfficeIdByDonor("fakeDonor@gmail.com"));
 	}
 
@@ -81,20 +81,20 @@ public class DonorServicesTest {
 	public void getDonorsByOfficeId() {
 		assertThrows(NullPointerException.class, () -> donorServices.getDonorsByOfficeId(null));
 
-		Donor donor = new Donor("donor@gmail.com", "officeOne", DonorCategory.MAN);
+		Donor donor = new Donor("donor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
 
-		assertTrue(donorServices.getDonorsByOfficeId("officeOne").contains(donor));
-		assertFalse(donorServices.getDonorsByOfficeId("officeTwo").contains(donor));
+		assertTrue(donorServices.getDonorsByOfficeId("officeOne@office.com").contains(donor));
+		assertFalse(donorServices.getDonorsByOfficeId("officeTwo@office.com").contains(donor));
 	}
 
 	@Test
 	public void getAvailableDonorsByOfficeId() {
 		assertThrows(NullPointerException.class, () -> donorServices.getAvailableDonorsByOfficeId(null));
 
-		Donor donor = new Donor("donor@gmail.com", "officeOne", DonorCategory.MAN);
-		Donor secondDonor = new Donor("secondDonor@gmail.com", "officeOne", DonorCategory.MAN);
-		assertTrue(donorServices.getAvailableDonorsByOfficeId("officeOne").contains(donor));
-		assertFalse(donorServices.getAvailableDonorsByOfficeId("officeOne").contains(secondDonor));
+		Donor donor = new Donor("donor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
+		Donor secondDonor = new Donor("secondDonor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
+		assertTrue(donorServices.getAvailableDonorsByOfficeId("officeOne@office.com").contains(donor));
+		assertFalse(donorServices.getAvailableDonorsByOfficeId("officeOne@office.com").contains(secondDonor));
 	}
 
 }

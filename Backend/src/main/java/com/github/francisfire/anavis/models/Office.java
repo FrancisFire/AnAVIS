@@ -21,11 +21,13 @@ public class Office {
 
 	@EqualsAndHashCode.Include
 	@Id
-	private String id;
+	private String mail;
+	private String place;
 	private Set<TimeSlot> donationTimeTable;
 
-	public Office(String name) {
-		this.id = name;
+	public Office(String name, String place) {
+		this.mail = name;
+		this.place = place;
 		this.donationTimeTable = new HashSet<>();
 	}
 

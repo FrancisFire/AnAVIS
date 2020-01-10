@@ -47,15 +47,15 @@ public class DonationReportServicesTest {
 	@BeforeEach
 	public void initSingleTest() {
 
-		Office officeOne = new Office("officeOne");
+		Office officeOne = new Office("officeOne@office.com", "officeOne");
 		officeServices.addOffice(officeOne);
 		TimeSlot timeSlotOne = new TimeSlot(new Date(6000000), 5);
-		officeServices.addTimeslotByOffice(timeSlotOne, "officeOne");
+		officeServices.addTimeslotByOffice(timeSlotOne, "officeOne@office.com");
 
-		Donor donor = new Donor("donor@gmail.com", "officeOne", DonorCategory.MAN);
+		Donor donor = new Donor("donor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
 		donorServices.addDonor(donor);
 
-		ActivePrenotation prenotationOne = new ActivePrenotation("prenotationId", "officeOne", "donor@gmail.com",
+		ActivePrenotation prenotationOne = new ActivePrenotation("prenotationId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), true);
 		prenotationServices.addPrenotation(prenotationOne);
 
@@ -77,7 +77,7 @@ public class DonationReportServicesTest {
 	public void closeSingleTest() {
 		prenotationServices.removePrenotation("prenotationId");
 		donorServices.removeDonor("donor@gmail.com");
-		officeServices.removeOffice("officeOne");
+		officeServices.removeOffice("officeOne@office.com");
 		donationReportServices.removeReport(reportId);
 	}
 
@@ -99,7 +99,7 @@ public class DonationReportServicesTest {
 
 	@Test
 	public void getReportInstance() {
-		DonationReport report = new DonationReport("donor@gmail.com", "officeOne", new Date(6000000));
+		DonationReport report = new DonationReport("donor@gmail.com", "officeOne@office.com", new Date(6000000));
 		report.setReportId(this.reportId);
 		assertEquals(report, donationReportServices.getReportInstance(this.reportId));
 	}

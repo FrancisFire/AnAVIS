@@ -16,8 +16,8 @@ public class ClosedPrenotation extends Prenotation {
 
 	private String reportId;
 
-	public ClosedPrenotation(String id, String officeId, String donorId, Date hour, String reportId) {
-		super(id, officeId, donorId, hour);
+	public ClosedPrenotation(String id, String officeMail, String donorMail, Date hour, String reportId) {
+		super(id, officeMail, donorMail, hour);
 		this.reportId = reportId;
 	}
 }

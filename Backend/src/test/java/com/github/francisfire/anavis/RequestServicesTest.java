@@ -39,24 +39,24 @@ public class RequestServicesTest {
 	@BeforeEach
 	public void initSingleTest() {
 
-		Office officeOne = new Office("officeOne");
+		Office officeOne = new Office("officeOne@office.com", "officeOne");
 		officeServices.addOffice(officeOne);
 		TimeSlot timeSlotOne = new TimeSlot(new Date(6000000), 5);
 		TimeSlot timeSlotTwo = new TimeSlot(new Date(8000000), 1);
-		officeServices.addTimeslotByOffice(timeSlotOne, "officeOne");
-		officeServices.addTimeslotByOffice(timeSlotTwo, "officeOne");
+		officeServices.addTimeslotByOffice(timeSlotOne, "officeOne@office.com");
+		officeServices.addTimeslotByOffice(timeSlotTwo, "officeOne@office.com");
 
-		Office officeTwo = new Office("officeTwo");
+		Office officeTwo = new Office("officeTwo@office.com", "officeTwo");
 		officeServices.addOffice(officeTwo);
 		TimeSlot timeSlotThree = new TimeSlot(new Date(2000000), 5);
 		TimeSlot timeSlotFour = new TimeSlot(new Date(4000000), 1);
-		officeServices.addTimeslotByOffice(timeSlotThree, "officeTwo");
-		officeServices.addTimeslotByOffice(timeSlotFour, "officeTwo");
+		officeServices.addTimeslotByOffice(timeSlotThree, "officeTwo@office.com");
+		officeServices.addTimeslotByOffice(timeSlotFour, "officeTwo@office.com");
 
-		Donor donor = new Donor("donor@gmail.com", "officeOne", DonorCategory.MAN);
+		Donor donor = new Donor("donor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
 		donorServices.addDonor(donor);
 
-		RequestPrenotation request = new RequestPrenotation("requestId", "officeOne", "donor@gmail.com",
+		RequestPrenotation request = new RequestPrenotation("requestId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000));
 		requestServices.addRequest(request);
 	}
@@ -65,8 +65,8 @@ public class RequestServicesTest {
 	public void closeSingleTest() {
 		prenotationServices.removePrenotation("requestId");
 		donorServices.removeDonor("donor@gmail.com");
-		officeServices.removeOffice("officeOne");
-		officeServices.removeOffice("officeTwo");
+		officeServices.removeOffice("officeOne@office.com");
+		officeServices.removeOffice("officeTwo@office.com");
 		requestServices.removeRequest("requestId");
 
 	}
@@ -75,11 +75,11 @@ public class RequestServicesTest {
 	public void addRequest() {
 		assertThrows(NullPointerException.class, () -> requestServices.addRequest(null));
 
-		RequestPrenotation request = new RequestPrenotation("newRequestId", "officeTwo", "donor@gmail.com",
+		RequestPrenotation request = new RequestPrenotation("newRequestId", "officeTwo@office.com", "donor@gmail.com",
 				new Date(4000000));
 		assertTrue(requestServices.addRequest(request));
 		assertFalse(requestServices.addRequest(request));
-		assertFalse(requestServices.getRequestsByOffice("officeTwo").isEmpty());
+		assertFalse(requestServices.getRequestsByOffice("officeTwo@office.com").isEmpty());
 	}
 
 	@Test
@@ -96,10 +96,10 @@ public class RequestServicesTest {
 
 		assertTrue(requestServices.approveRequest("requestId"));
 
-		RequestPrenotation newRequestOne = new RequestPrenotation("newRequestOne", "officeTwo", "donor@gmail.com",
+		RequestPrenotation newRequestOne = new RequestPrenotation("newRequestOne", "officeTwo@office.com", "donor@gmail.com",
 				new Date(4000000));
 		requestServices.addRequest(newRequestOne);
-		RequestPrenotation newRequestTwo = new RequestPrenotation("newRequestTwo", "officeTwo", "donor@gmail.com",
+		RequestPrenotation newRequestTwo = new RequestPrenotation("newRequestTwo", "officeTwo@office.com", "donor@gmail.com",
 				new Date(4000000));
 		requestServices.addRequest(newRequestTwo);
 		assertTrue(requestServices.approveRequest("newRequestOne"));
@@ -111,8 +111,8 @@ public class RequestServicesTest {
 	public void getRequestsByOffice() {
 		assertThrows(NullPointerException.class, () -> requestServices.getRequestsByOffice(null));
 
-		assertTrue(requestServices.getRequestsByOffice("officeOne")
-				.contains(new RequestPrenotation("requestId", "officeOne", "donor@gmail.com", new Date(6000000))));
+		assertTrue(requestServices.getRequestsByOffice("officeOne@office.com")
+				.contains(new RequestPrenotation("requestId", "officeOne@office.com", "donor@gmail.com", new Date(6000000))));
 		assertTrue(requestServices.getRequestsByOffice("officeThree").isEmpty());
 	}
 
@@ -120,7 +120,7 @@ public class RequestServicesTest {
 	public void getRequestInstance() {
 		assertThrows(NullPointerException.class, () -> requestServices.getRequestInstance(null));
 
-		RequestPrenotation request = new RequestPrenotation("requestId", "officeOne", "donor@gmail.com",
+		RequestPrenotation request = new RequestPrenotation("requestId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000));
 		assertEquals(request, requestServices.getRequestInstance("requestId"));
 		assertNull(requestServices.getRequestInstance("secondRequestId"));

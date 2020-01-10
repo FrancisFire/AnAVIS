@@ -22,13 +22,13 @@ public class DonationReport {
 	@Id
 	private String reportId;
 	private Binary reportFile;
-	private String donorId;
-	private String officeId;
+	private String donorMail;
+	private String officeMail;
 	private Date date;
 
-	public DonationReport(String donorId, String officeId, Date date) {
-		this.donorId = donorId;
-		this.officeId = officeId;
+	public DonationReport(String donorMail, String officeMail, Date date) {
+		this.donorMail = donorMail;
+		this.officeMail = officeMail;
 		this.date = date;
 	}
 

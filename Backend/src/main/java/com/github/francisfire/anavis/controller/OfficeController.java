@@ -26,14 +26,14 @@ public class OfficeController {
 		return officeServices.getOffices();
 	}
 
-	@GetMapping("/{officeId}/timeTable")
-	public Set<TimeSlot> getDonationsTimeTable(@PathVariable("officeId") String officeId) {
-		return officeServices.getDonationsTimeTable(officeId);
+	@GetMapping("/{officeMail}/timeTable")
+	public Set<TimeSlot> getDonationsTimeTable(@PathVariable("officeMail") String officeMail) {
+		return officeServices.getDonationsTimeTable(officeMail);
 	}
 	
-	@PutMapping("/{officeId}/addTimeSlot")
-	public boolean addTimeSlot(@PathVariable("officeId") String officeId, @RequestBody TimeSlot timeSlot) {
-		return officeServices.addTimeslotByOffice(timeSlot, officeId);
+	@PutMapping("/{officeMail}/addTimeSlot")
+	public boolean addTimeSlot(@PathVariable("officeMail") String officeMail, @RequestBody TimeSlot timeSlot) {
+		return officeServices.addTimeslotByOffice(timeSlot, officeMail);
 	}
 
 }

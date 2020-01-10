@@ -35,8 +35,8 @@ public class AuthCredentialsServices {
 	 * @param authCredentials the credentials to add
 	 * @return true if the collection didn't contain the added credentials
 	 */
-	public boolean addDonorCredentials(@NonNull AuthCredentials authCredentials) {
-		if (repository.existsById(authCredentials.getEmail())) {
+	public boolean addCredentials(@NonNull AuthCredentials authCredentials) {
+		if (repository.existsById(authCredentials.getMail())) {
 			return false;
 		} else {
 			repository.insert(authCredentials);
@@ -54,8 +54,8 @@ public class AuthCredentialsServices {
 	 * @return true if the credentials were present and updated succesfully, false
 	 *         otherwise
 	 */
-	public boolean updateDonorCredentials(@NonNull AuthCredentials authCredentials) {
-		AuthCredentials oldAuthCredentials = getAuthCredentialsInstance(authCredentials.getEmail());
+	public boolean updateCredentials(@NonNull AuthCredentials authCredentials) {
+		AuthCredentials oldAuthCredentials = getAuthCredentialsInstance(authCredentials.getMail());
 		if (oldAuthCredentials == null) {
 			return false;
 		}
@@ -67,15 +67,15 @@ public class AuthCredentialsServices {
 	 * Removes the credentials assigned to the email from the credentials collection
 	 * 
 	 * @throws NullPointerException if email is null
-	 * @param email the email of the credentials to remove
+	 * @param mail the email of the credentials to remove
 	 * @return true if the collections contained the credentials
 	 */
-	public boolean removeDonorCredentials(@NonNull String email) {
-		AuthCredentials oldAuthCredentials = getAuthCredentialsInstance(email);
+	public boolean removeCredentials(@NonNull String mail) {
+		AuthCredentials oldAuthCredentials = getAuthCredentialsInstance(mail);
 		if (oldAuthCredentials == null) {
 			return false;
 		}
-		repository.delete(getAuthCredentialsInstance(email));
+		repository.delete(getAuthCredentialsInstance(mail));
 		return false;
 	}
 
@@ -84,12 +84,12 @@ public class AuthCredentialsServices {
 	 * passed in input to the method
 	 * 
 	 * @throws NullPointerException if email is null
-	 * @param email id of the credentials
+	 * @param mail id of the credentials
 	 * @return the AuthCredentials object if present in the collection, null
 	 *         otherwise
 	 */
-	public AuthCredentials getAuthCredentialsInstance(@NonNull String email) {
-		return repository.findById(email).orElse(null);
+	public AuthCredentials getAuthCredentialsInstance(@NonNull String mail) {
+		return repository.findById(mail).orElse(null);
 	}
 
 }

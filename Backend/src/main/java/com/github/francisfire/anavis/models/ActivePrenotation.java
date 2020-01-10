@@ -17,8 +17,8 @@ public class ActivePrenotation extends Prenotation {
 
 	private boolean confirmed;
 
-	public ActivePrenotation(String id, String officeId, String donorId, Date hour, boolean confirmed) {
-		super(id, officeId, donorId, hour);
+	public ActivePrenotation(String id, String officeMail, String donorMail, Date hour, boolean confirmed) {
+		super(id, officeMail, donorMail, hour);
 		this.confirmed = confirmed;
 	}
 

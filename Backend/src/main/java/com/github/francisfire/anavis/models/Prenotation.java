@@ -18,14 +18,14 @@ abstract class Prenotation {
 	@EqualsAndHashCode.Include
 	@Id
 	private String id;
-	private String officeId;
-	private String donorId;
+	private String officeMail;
+	private String donorMail;
 	private Date hour;
 
-	public Prenotation(String id, String officeId, String donorId, Date hour) {
+	public Prenotation(String id, String officeMail, String donorMail, Date hour) {
 		this.id = id;
-		this.officeId = officeId;
-		this.donorId = donorId;
+		this.officeMail = officeMail;
+		this.donorMail = donorMail;
 		this.hour = hour;
 	}
 

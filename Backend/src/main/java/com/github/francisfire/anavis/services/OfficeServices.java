@@ -27,7 +27,7 @@ public class OfficeServices {
 	 *         false otherwise
 	 */
 	public boolean addOffice(@NonNull Office office) {
-		if (repository.existsById(office.getId())) {
+		if (repository.existsById(office.getMail())) {
 			return false;
 		} else {
 			repository.insert(office);
@@ -50,13 +50,13 @@ public class OfficeServices {
 	 * Returns a set of dates in which prenotations can be made, associated to the
 	 * office whose id has been passed as an input to the function
 	 * 
-	 * @throws NullPointerException if officeId is null
-	 * @param officeId the id of the office
+	 * @throws NullPointerException if officeMail is null
+	 * @param officeMail the id of the office
 	 * @return the set of Date objects in which prenotations can be made
 	 */
-	public Set<TimeSlot> getDonationsTimeTable(@NonNull String officeId) {
-		Office office = getOfficeInstance(officeId);
-		return (office == null) ? new HashSet<>() : getOfficeInstance(officeId).getDonationTimeTable();
+	public Set<TimeSlot> getDonationsTimeTable(@NonNull String officeMail) {
+		Office office = getOfficeInstance(officeMail);
+		return (office == null) ? new HashSet<>() : getOfficeInstance(officeMail).getDonationTimeTable();
 	}
 
 	/**
@@ -67,14 +67,14 @@ public class OfficeServices {
 	 * 
 	 * @param timeSlot that contains the date, hour and number of reserved
 	 *                 prenotations
-	 * @param officeId associated to the office that needs to have a new TimeSlot
+	 * @param officeMail associated to the office that needs to have a new TimeSlot
 	 *                 object inserted
 	 * @return true if the office associated with the officeId didn't have already
 	 *         registered a TimeSlot object associated with the same hour and date,
 	 *         false otherwise
 	 */
-	public boolean addTimeslotByOffice(@NonNull TimeSlot timeSlot, @NonNull String officeId) {
-		Office office = getOfficeInstance(officeId);
+	public boolean addTimeslotByOffice(@NonNull TimeSlot timeSlot, @NonNull String officeMail) {
+		Office office = getOfficeInstance(officeMail);
 		if (office.addTimeSlot(timeSlot)) {
 			repository.save(office);
 			return true;
@@ -90,14 +90,14 @@ public class OfficeServices {
 	 * 
 	 * @param date     that contains the date and hour that need to have the number
 	 *                 of left available prenotations increased
-	 * @param officeId associated to the office that needs to have increased the
+	 * @param officeMail associated to the office that needs to have increased the
 	 *                 number of left available prenotations' slots associated with
 	 *                 a date and hour
 	 * @return true if it is possible to increase the number of left available
 	 *         prenotations, false otherwise
 	 */
-	public boolean increaseTimeslotByOffice(@NonNull Date date, @NonNull String officeId) {
-		Office office = getOfficeInstance(officeId);
+	public boolean increaseTimeslotByOffice(@NonNull Date date, @NonNull String officeMail) {
+		Office office = getOfficeInstance(officeMail);
 		if (office.increaseSlotByDate(date)) {
 			repository.save(office);
 			return true;
@@ -113,14 +113,14 @@ public class OfficeServices {
 	 * 
 	 * @param date     that contains the date and hour that need to have the number
 	 *                 of left available prenotations decreased
-	 * @param officeId associated to the office that needs to have decreased the
+	 * @param officeMail associated to the office that needs to have decreased the
 	 *                 number of left available prenotations' slots associated with
 	 *                 a date and hour
 	 * @return true if it is possible to decrease the number of left available
 	 *         prenotations, false otherwise
 	 */
-	public boolean decreaseTimeslotByOffice(@NonNull Date date, @NonNull String officeId) {
-		Office office = getOfficeInstance(officeId);
+	public boolean decreaseTimeslotByOffice(@NonNull Date date, @NonNull String officeMail) {
+		Office office = getOfficeInstance(officeMail);
 		if (office.decreaseSlotByDate(date)) {
 			repository.save(office);
 			return true;
@@ -134,26 +134,26 @@ public class OfficeServices {
 	 * date and hour
 	 * 
 	 * @param date     that contains the date and hour
-	 * @param officeId associated to the office of which a date needs to be verified
+	 * @param officeMail associated to the office of which a date needs to be verified
 	 * @return true is there are available prenotations' slots with the date and
 	 *         hour in the office associated by the officeId specified, false
 	 *         otherwise
 	 */
-	public boolean isDateAvailableByOffice(@NonNull Date date, @NonNull String officeId) {
-		Office office = getOfficeInstance(officeId);
+	public boolean isDateAvailableByOffice(@NonNull Date date, @NonNull String officeMail) {
+		Office office = getOfficeInstance(officeMail);
 		return office.isDateAvailable(date);
 	}
 
 	/**
-	 * Removes the office assigned to the officeId 
+	 * Removes the office assigned to the officeMail 
 	 * 
-	 * @throws NullPointerException if officeId is null
-	 * @param officeId the id of the office to remove
+	 * @throws NullPointerException if officeMail is null
+	 * @param officeMail the id of the office to remove
 	 * @return true if the collections contained the office
 	 */
-	public boolean removeOffice(@NonNull String officeId) {
-		if (repository.existsById(officeId)) {
-			repository.delete(getOfficeInstance(officeId));
+	public boolean removeOffice(@NonNull String officeMail) {
+		if (repository.existsById(officeMail)) {
+			repository.delete(getOfficeInstance(officeMail));
 			return true;
 		} else {
 			return false;
@@ -164,11 +164,11 @@ public class OfficeServices {
 	 * Gets the Office instance from the id which has been passed as an input to the
 	 * method. Returns null if such office hasn'b been found in the collection.
 	 * 
-	 * @throws NullPointerException if officeId is null
-	 * @param officeId id of the office
+	 * @throws NullPointerException if officeMail is null
+	 * @param officeMail id of the office
 	 * @return the Office instance, or null if such instance hasn't been found
 	 */
-	public Office getOfficeInstance(@NonNull String officeId) {
-		return repository.findById(officeId).orElse(null);
+	public Office getOfficeInstance(@NonNull String officeMail) {
+		return repository.findById(officeMail).orElse(null);
 	}
 }

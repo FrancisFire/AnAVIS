@@ -20,7 +20,7 @@ public class Donor {
 	@EqualsAndHashCode.Include
 	@Id
 	private String mail;
-	private String officeId;
+	private String officeMail;
 	private boolean canDonate;
 	private Date lastDonation;
 	private DonorCategory category;
@@ -31,17 +31,17 @@ public class Donor {
 	private int leftDonationsInYear;
 	private Date firstDonationInYear;
 
-	public Donor(String mail, String officeId, DonorCategory category) {
+	public Donor(String mail, String officeMail, DonorCategory category) {
 		this.mail = mail;
-		this.officeId = officeId;
+		this.officeMail = officeMail;
 		this.category = category;
 		this.canDonate = true;
 		resetLeftDonationsInYear();
 	}
 	
-	public Donor(String mail, String officeId, DonorCategory category, String name, String surname, Date birthday, String birthPlace) {
+	public Donor(String mail, String officeMail, DonorCategory category, String name, String surname, Date birthday, String birthPlace) {
 		this.mail = mail;
-		this.officeId = officeId;
+		this.officeMail = officeMail;
 		this.category = category;
 		this.canDonate = true;
 		this.name = name;

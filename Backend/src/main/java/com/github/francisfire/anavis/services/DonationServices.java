@@ -27,7 +27,7 @@ public class DonationServices {
 	 * @return collection of donations related to the office passed in input
 	 */
 	public Set<ClosedPrenotation> getDonationsByOffice(@NonNull String officeId) {
-		return repository.findAll().stream().filter(donation -> donation.getOfficeId().equalsIgnoreCase(officeId))
+		return repository.findAll().stream().filter(donation -> donation.getOfficeMail().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
 
@@ -39,7 +39,7 @@ public class DonationServices {
 	 * @return a collection of donations related to the donor passed in input
 	 */
 	public Set<ClosedPrenotation> getDonationsByDonor(@NonNull String donorId) {
-		return repository.findAll().stream().filter(donation -> donation.getDonorId().equalsIgnoreCase(donorId))
+		return repository.findAll().stream().filter(donation -> donation.getDonorMail().equalsIgnoreCase(donorId))
 				.collect(Collectors.toSet());
 	}
 
@@ -63,8 +63,8 @@ public class DonationServices {
 	 * @return true if the collection didn't contain the added donation
 	 */
 	public boolean addDonation(@NonNull ActivePrenotation prenotation, @NonNull String reportId) {
-		ClosedPrenotation donation = new ClosedPrenotation(prenotation.getId(), prenotation.getOfficeId(),
-				prenotation.getDonorId(), prenotation.getHour(), reportId);
+		ClosedPrenotation donation = new ClosedPrenotation(prenotation.getId(), prenotation.getOfficeMail(),
+				prenotation.getDonorMail(), prenotation.getHour(), reportId);
 		if (repository.existsById(donation.getId())) {
 			return false;
 		} else {

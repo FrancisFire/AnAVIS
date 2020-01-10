@@ -34,8 +34,8 @@ public class RequestServices {
 	 *         the request is legit, false otherwise
 	 */
 	public boolean addRequest(@NonNull RequestPrenotation request) {
-		if (donorServices.checkDonationPossibility(request.getDonorId())
-				&& officeServices.isDateAvailableByOffice(request.getHour(), request.getOfficeId())) {
+		if (donorServices.checkDonationPossibility(request.getDonorMail())
+				&& officeServices.isDateAvailableByOffice(request.getHour(), request.getOfficeMail())) {
 			if (repository.existsById(request.getId())) {
 				return false;
 			} else {
@@ -77,7 +77,7 @@ public class RequestServices {
 		if (toApprove == null) {
 			return false;
 		}
-		if (donorServices.checkDonationPossibility(toApprove.getDonorId())) {
+		if (donorServices.checkDonationPossibility(toApprove.getDonorMail())) {
 			repository.delete(toApprove);
 			return prenotationServices.addPrenotation(toApprove);
 		}
@@ -104,7 +104,7 @@ public class RequestServices {
 	 * @return a collection of requests associated to the office
 	 */
 	public Set<RequestPrenotation> getRequestsByOffice(@NonNull String officeId) {
-		return repository.findAll().stream().filter(request -> request.getOfficeId().equals(officeId))
+		return repository.findAll().stream().filter(request -> request.getOfficeMail().equals(officeId))
 				.collect(Collectors.toSet());
 	}
 
@@ -117,7 +117,7 @@ public class RequestServices {
 	 * @return a collection of requests associated to the donor
 	 */
 	public Set<RequestPrenotation> getRequestsByDonor(@NonNull String donorId) {
-		return repository.findAll().stream().filter(request -> request.getDonorId().equals(donorId))
+		return repository.findAll().stream().filter(request -> request.getDonorMail().equals(donorId))
 				.collect(Collectors.toSet());
 	}
 

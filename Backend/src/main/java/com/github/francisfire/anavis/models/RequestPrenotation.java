@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Document(collection = "requestprenotation")
 public class RequestPrenotation extends Prenotation {
-	public RequestPrenotation(String id, String officeId, String donorId, Date hour) {
-		super(id, officeId, donorId, hour);
+	public RequestPrenotation(String id, String officeMail, String donorMail, Date hour) {
+		super(id, officeMail, donorMail, hour);
 	}
 }

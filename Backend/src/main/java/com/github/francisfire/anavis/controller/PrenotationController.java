@@ -32,14 +32,14 @@ public class PrenotationController {
 		return prenotationServices.addPrenotation(prenotation);
 	}
 
-	@GetMapping("/office/{officeId}")
-	public Set<ActivePrenotation> getPrenotationsByOffice(@PathVariable("officeId") String officeId) {
-		return prenotationServices.getPrenotationsByOffice(officeId);
+	@GetMapping("/office/{officeMail}")
+	public Set<ActivePrenotation> getPrenotationsByOffice(@PathVariable("officeMail") String officeMail) {
+		return prenotationServices.getPrenotationsByOffice(officeMail);
 	}
 
-	@GetMapping("/donor/{donorId}")
-	public Set<ActivePrenotation> getPrenotationsByDonor(@PathVariable("donorId") String donorId) {
-		return prenotationServices.getPrenotationsByDonor(donorId);
+	@GetMapping("/donor/{donorMail}")
+	public Set<ActivePrenotation> getPrenotationsByDonor(@PathVariable("donorMail") String donorMail) {
+		return prenotationServices.getPrenotationsByDonor(donorMail);
 	}
 
 	@PutMapping("")

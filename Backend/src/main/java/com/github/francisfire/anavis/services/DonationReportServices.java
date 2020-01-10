@@ -33,7 +33,7 @@ public class DonationReportServices {
 	 */
 	public String addReport(@NonNull String prenotationId, @NonNull MultipartFile reportFile) {
 		ActivePrenotation prenotation = prenotationServices.getPrenotationInstance(prenotationId);
-		DonationReport report = new DonationReport(prenotation.getDonorId(), prenotation.getOfficeId(),
+		DonationReport report = new DonationReport(prenotation.getDonorMail(), prenotation.getOfficeMail(),
 				prenotation.getHour());
 		try {
 			report.setReportFile(new Binary(BsonBinarySubType.BINARY, reportFile.getBytes()));

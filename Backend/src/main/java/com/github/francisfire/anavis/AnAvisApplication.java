@@ -31,10 +31,10 @@ public class AnAvisApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Office officeOne = new Office("Osimo");
-		Office officeTwo = new Office("Fabriano");
-		Office officeThree = new Office("Casette Verdini");
-		Office officeFour = new Office("Tolentino");
+		Office officeOne = new Office("osimo@office.com", "Osimo");
+		Office officeTwo = new Office("fabriano@office.com", "Fabriano");
+		Office officeThree = new Office("casetteverdini@office.com", "Casette Verdini");
+		Office officeFour = new Office("tolentino@office.com","Tolentino");
 		officeOne.addTimeSlot(new TimeSlot(new Date(260000), 5));
 		officeOne.addTimeSlot(new TimeSlot(new Date(550000), 5));
 		officeTwo.addTimeSlot(new TimeSlot(new Date(270000), 5));
@@ -44,12 +44,12 @@ public class AnAvisApplication implements CommandLineRunner {
 		officeServices.addOffice(officeThree);
 		officeServices.addOffice(officeFour);
 
-		Donor donorOne = new Donor("stelluti@mail.com", officeOne.getId(), DonorCategory.MAN);
-		Donor donorTwo = new Donor("coppola@mail.com", officeTwo.getId(), DonorCategory.MAN);
-		Donor donorThree = new Donor("clelio@mail.com", officeTwo.getId(), DonorCategory.MAN);
-		Donor donorFour = new Donor("zamponi@mail.com", officeThree.getId(), DonorCategory.MAN);
+		Donor donorOne = new Donor("stelluti@donor.com", officeOne.getMail(), DonorCategory.MAN);
+		Donor donorTwo = new Donor("coppola@donor.com", officeTwo.getMail(), DonorCategory.MAN);
+		Donor donorThree = new Donor("clelio@donor.com", officeTwo.getMail(), DonorCategory.MAN);
+		Donor donorFour = new Donor("zamponi@donor.com", officeThree.getMail(), DonorCategory.MAN);
 		donorFour.setCanDonate(false);
-		Donor donorFive = new Donor("sasso@mail.com", officeFour.getId(), DonorCategory.MAN);
+		Donor donorFive = new Donor("sasso@donor.com", officeFour.getMail(), DonorCategory.MAN);
 		donorFive.setCanDonate(false);
 
 		donorServices.addDonor(donorOne);
@@ -58,16 +58,16 @@ public class AnAvisApplication implements CommandLineRunner {
 		donorServices.addDonor(donorFour);
 		donorServices.addDonor(donorFive);
 
-		RequestPrenotation requestOne = new RequestPrenotation("one", officeOne.getId(), donorOne.getMail(),
+		RequestPrenotation requestOne = new RequestPrenotation("one", officeOne.getMail(), donorOne.getMail(),
 				new Date(550000));
-		RequestPrenotation requestTwo = new RequestPrenotation("two", officeTwo.getId(), donorThree.getMail(),
+		RequestPrenotation requestTwo = new RequestPrenotation("two", officeTwo.getMail(), donorThree.getMail(),
 				new Date(270000));
 		requestServices.addRequest(requestOne);
 		requestServices.addRequest(requestTwo);
 
-		ActivePrenotation prenotationOne = new ActivePrenotation("ciccio", officeOne.getId(), donorOne.getMail(),
+		ActivePrenotation prenotationOne = new ActivePrenotation("ciccio", officeOne.getMail(), donorOne.getMail(),
 				new Date(260000), true);
-		ActivePrenotation prenotationTwo = new ActivePrenotation("ciccia", officeTwo.getId(), donorThree.getMail(),
+		ActivePrenotation prenotationTwo = new ActivePrenotation("ciccia", officeTwo.getMail(), donorThree.getMail(),
 				new Date(300000), true);
 		prenotationServices.addPrenotation(prenotationOne);
 		prenotationServices.addPrenotation(prenotationTwo);

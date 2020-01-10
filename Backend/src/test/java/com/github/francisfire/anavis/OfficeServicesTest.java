@@ -28,46 +28,46 @@ public class OfficeServicesTest {
 
 	@BeforeEach
 	public void initSingleTest() {
-		Office officeOne = new Office("officeOne");
+		Office officeOne = new Office("officeOne@office.com", "officeOne");
 		officeServices.addOffice(officeOne);
 		TimeSlot timeSlotOne = new TimeSlot(new Date(6000000), 5);
 		TimeSlot timeSlotTwo = new TimeSlot(new Date(8000000), 1);
-		officeServices.addTimeslotByOffice(timeSlotOne, "officeOne");
-		officeServices.addTimeslotByOffice(timeSlotTwo, "officeOne");
+		officeServices.addTimeslotByOffice(timeSlotOne, "officeOne@office.com");
+		officeServices.addTimeslotByOffice(timeSlotTwo, "officeOne@office.com");
 		
-		Office officeTwo = new Office("officeTwo");
+		Office officeTwo = new Office("officeTwo@office.com", "officeTwo");
 		officeServices.addOffice(officeTwo);
 		TimeSlot timeSlotThree = new TimeSlot(new Date(2000000), 1);
-		officeServices.addTimeslotByOffice(timeSlotThree, "officeTwo");
+		officeServices.addTimeslotByOffice(timeSlotThree, "officeTwo@office.com");
 	}
 
 	@AfterEach
 	public void closeSingleTest() {
-		officeServices.removeOffice("officeOne");
-		officeServices.removeOffice("officeTwo");
+		officeServices.removeOffice("officeOne@office.com");
+		officeServices.removeOffice("officeTwo@office.com");
 	}
 	
 	@Test
 	public void getDonationTimeTable() {
 		assertThrows(NullPointerException.class, () -> officeServices.getDonationsTimeTable(null));
 
-		assertTrue(officeServices.getDonationsTimeTable("officeOne").contains(new TimeSlot(new Date(6000000), 3)));
-		assertFalse(officeServices.getDonationsTimeTable("officeOne").contains(new TimeSlot(new Date(7000000), 1)));
+		assertTrue(officeServices.getDonationsTimeTable("officeOne@office.com").contains(new TimeSlot(new Date(6000000), 3)));
+		assertFalse(officeServices.getDonationsTimeTable("officeOne@office.com").contains(new TimeSlot(new Date(7000000), 1)));
 	}
 
 	@Test
 	public void getOffices() {
-		assertTrue(officeServices.getOffices().contains(new Office("officeOne")));
-		assertFalse(officeServices.getOffices().contains(new Office("officeErr")));
+		assertTrue(officeServices.getOffices().contains(new Office("officeOne@office.com", "officeOne")));
+		assertFalse(officeServices.getOffices().contains(new Office("officeErr@office.com", "officeErr")));
 	}
 
 	@Test
 	public void addOffice() {
 		assertThrows(NullPointerException.class, () -> officeServices.addOffice(null));
 
-		assertTrue(officeServices.addOffice(new Office("officeThree")));
-		assertTrue(officeServices.getOffices().contains(new Office("officeThree")));
-		assertFalse(officeServices.addOffice(new Office("officeOne")));
+		assertTrue(officeServices.addOffice(new Office("officeThree@office.com", "officeThree")));
+		assertTrue(officeServices.getOffices().contains(new Office("officeThree@office.com", "officeThree")));
+		assertFalse(officeServices.addOffice(new Office("officeOne@office.com", "officeOne")));
 	}
 
 	@Test
@@ -75,25 +75,25 @@ public class OfficeServicesTest {
 		assertThrows(NullPointerException.class, () -> officeServices.addTimeslotByOffice(null, null));
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
 		Date today = calendar.getTime();
-		assertTrue(officeServices.addTimeslotByOffice(new TimeSlot(today, 5), "officeOne"));
-		assertFalse(officeServices.addTimeslotByOffice(new TimeSlot(today, 10), "officeOne"));
+		assertTrue(officeServices.addTimeslotByOffice(new TimeSlot(today, 5), "officeOne@office.com"));
+		assertFalse(officeServices.addTimeslotByOffice(new TimeSlot(today, 10), "officeOne@office.com"));
 		assertThrows(NullPointerException.class,
-				() -> officeServices.addTimeslotByOffice(new TimeSlot(new Date(), 6), "officeError"));
+				() -> officeServices.addTimeslotByOffice(new TimeSlot(new Date(), 6), "officeError@office.com"));
 	}
 
 	@Test
 	public void increaseTimeslotByOffice() {
 		assertThrows(NullPointerException.class, () -> officeServices.increaseTimeslotByOffice(null, null));
-		assertTrue(officeServices.increaseTimeslotByOffice(new Date(2000000), "officeTwo"));
-		assertEquals(2, officeServices.getDonationsTimeTable("officeTwo").iterator().next().getDonorSlots());
-		assertThrows(NullPointerException.class, () -> officeServices.increaseTimeslotByOffice(new Date(2000000), "officeError"));
+		assertTrue(officeServices.increaseTimeslotByOffice(new Date(2000000), "officeTwo@office.com"));
+		assertEquals(2, officeServices.getDonationsTimeTable("officeTwo@office.com").iterator().next().getDonorSlots());
+		assertThrows(NullPointerException.class, () -> officeServices.increaseTimeslotByOffice(new Date(2000000), "officeError@office.com"));
 	}
 
 	@Test
 	public void decreaseTimeslotByOffice() {
 		assertThrows(NullPointerException.class, () -> officeServices.decreaseTimeslotByOffice(null, null));
-		assertTrue(officeServices.decreaseTimeslotByOffice(new Date(2000000), "officeTwo"));
-		assertEquals(0, officeServices.getDonationsTimeTable("officeTwo").iterator().next().getDonorSlots());
-		assertThrows(NullPointerException.class, () -> officeServices.decreaseTimeslotByOffice(new Date(2000000), "officeError"));
+		assertTrue(officeServices.decreaseTimeslotByOffice(new Date(2000000), "officeTwo@office.com"));
+		assertEquals(0, officeServices.getDonationsTimeTable("officeTwo@office.com").iterator().next().getDonorSlots());
+		assertThrows(NullPointerException.class, () -> officeServices.decreaseTimeslotByOffice(new Date(2000000), "officeError@office.com"));
 	}
 }

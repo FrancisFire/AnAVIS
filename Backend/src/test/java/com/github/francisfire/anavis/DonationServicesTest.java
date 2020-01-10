@@ -39,28 +39,28 @@ public class DonationServicesTest {
 	@BeforeEach
 	public void initSingleTest() {
 
-		Office officeOne = new Office("officeOne");
+		Office officeOne = new Office("officeOne@office.com", "officeOne");
 		officeServices.addOffice(officeOne);
 		TimeSlot timeSlotOne = new TimeSlot(new Date(6000000), 5);
 		TimeSlot timeSlotTwo = new TimeSlot(new Date(8000000), 1);
-		officeServices.addTimeslotByOffice(timeSlotOne, "officeOne");
-		officeServices.addTimeslotByOffice(timeSlotTwo, "officeOne");
+		officeServices.addTimeslotByOffice(timeSlotOne, "officeOne@office.com");
+		officeServices.addTimeslotByOffice(timeSlotTwo, "officeOne@office.com");
 
-		Office officeTwo = new Office("officeTwo");
+		Office officeTwo = new Office("officeTwo@office.com", "officeTwo");
 		officeServices.addOffice(officeTwo);
 		TimeSlot timeSlotThree = new TimeSlot(new Date(2000000), 5);
 		TimeSlot timeSlotFour = new TimeSlot(new Date(4000000), 1);
-		officeServices.addTimeslotByOffice(timeSlotThree, "officeTwo");
-		officeServices.addTimeslotByOffice(timeSlotFour, "officeTwo");
+		officeServices.addTimeslotByOffice(timeSlotThree, "officeTwo@office.com");
+		officeServices.addTimeslotByOffice(timeSlotFour, "officeTwo@office.com");
 
-		Donor donor = new Donor("donor@gmail.com", "officeOne", DonorCategory.MAN);
+		Donor donor = new Donor("donor@gmail.com", "officeOne@office.com", DonorCategory.MAN);
 		donorServices.addDonor(donor);
 
-		ActivePrenotation prenotationOne = new ActivePrenotation("prenotationId", "officeOne", "donor@gmail.com",
+		ActivePrenotation prenotationOne = new ActivePrenotation("prenotationId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), true);
 		prenotationServices.addPrenotation(prenotationOne);
 
-		ActivePrenotation prenotationTwo = new ActivePrenotation("prenotationIdTwo", "officeOne", "donor@gmail.com",
+		ActivePrenotation prenotationTwo = new ActivePrenotation("prenotationIdTwo", "officeOne@office.com", "donor@gmail.com",
 				new Date(8000000), true);
 		prenotationServices.addPrenotation(prenotationTwo);
 
@@ -75,33 +75,33 @@ public class DonationServicesTest {
 		donationServices.removeDonation("prenotationId");
 		donationServices.removeDonation("prenotationIdTwo");
 		donorServices.removeDonor("donor@gmail.com");
-		officeServices.removeOffice("officeOne");
-		officeServices.removeOffice("officeTwo");
+		officeServices.removeOffice("officeOne@office.com");
+		officeServices.removeOffice("officeTwo@office.com");
 	}
 
 	@Test
 	public void getDonationInstance() {
 		assertTrue(donationServices.getDonationInstance("prenotationId").equals(
-				new ClosedPrenotation("prenotationId", "officeOne", "donor@gmail.com", new Date(6000000), "reportId")));
+				new ClosedPrenotation("prenotationId", "officeOne@office.com", "donor@gmail.com", new Date(6000000), "reportId")));
 		assertNull(donationServices.getDonationInstance("fakePrenotationId"));
 	}
 
 	@Test
 	public void getDonationsByOffice() {
-		ClosedPrenotation trueDonation = new ClosedPrenotation("prenotationId", "officeOne", "donor@gmail.com",
+		ClosedPrenotation trueDonation = new ClosedPrenotation("prenotationId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), "reportId");
-		ClosedPrenotation fakeDonation = new ClosedPrenotation("fakeDonationId", "officeOne", "donor@gmail.com",
+		ClosedPrenotation fakeDonation = new ClosedPrenotation("fakeDonationId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), "reportId");
-		assertTrue(donationServices.getDonationsByOffice("officeOne").contains(trueDonation));
-		assertFalse(donationServices.getDonationsByOffice("officeOne").contains(fakeDonation));
+		assertTrue(donationServices.getDonationsByOffice("officeOne@office.com").contains(trueDonation));
+		assertFalse(donationServices.getDonationsByOffice("officeOne@office.com").contains(fakeDonation));
 		assertTrue(donationServices.getDonationsByOffice("fakeOffice").isEmpty());
 	}
 
 	@Test
 	public void getDonationsByDonor() {
-		ClosedPrenotation trueDonation = new ClosedPrenotation("prenotationId", "officeOne", "donor@gmail.com",
+		ClosedPrenotation trueDonation = new ClosedPrenotation("prenotationId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), "reportId");
-		ClosedPrenotation fakeDonation = new ClosedPrenotation("fakeDonationId", "officeOne", "donor@gmail.com",
+		ClosedPrenotation fakeDonation = new ClosedPrenotation("fakeDonationId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), "reportId");
 		assertTrue(donationServices.getDonationsByDonor("donor@gmail.com").contains(trueDonation));
 		assertFalse(donationServices.getDonationsByDonor("donor@gmail.com").contains(fakeDonation));
@@ -110,9 +110,9 @@ public class DonationServicesTest {
 
 	@Test
 	public void getDonations() {
-		ClosedPrenotation trueDonation = new ClosedPrenotation("prenotationId", "officeOne", "donor@gmail.com",
+		ClosedPrenotation trueDonation = new ClosedPrenotation("prenotationId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), "reportId");
-		ClosedPrenotation fakeDonation = new ClosedPrenotation("fakeDonationId", "officeOne", "donor@gmail.com",
+		ClosedPrenotation fakeDonation = new ClosedPrenotation("fakeDonationId", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), "reportId");
 		assertTrue(donationServices.getDonations().contains(trueDonation));
 		assertFalse(donationServices.getDonations().contains(fakeDonation));
@@ -121,7 +121,7 @@ public class DonationServicesTest {
 	@Test
 	public void addDonation() {
 		assertThrows(NullPointerException.class, () -> donationServices.addDonation(null, null));
-		ActivePrenotation prenotationThree = new ActivePrenotation("prenotationIdThree", "officeOne", "donor@gmail.com",
+		ActivePrenotation prenotationThree = new ActivePrenotation("prenotationIdThree", "officeOne@office.com", "donor@gmail.com",
 				new Date(6000000), true);
 		assertTrue(donationServices.addDonation(prenotationThree, "reportId"));
 		assertFalse(donationServices.addDonation(prenotationThree, "reportId"));

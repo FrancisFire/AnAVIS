@@ -22,9 +22,9 @@ public class DonationController {
 	@Autowired
 	private DonationReportServices closedPrenotationReportServices;
 
-	@GetMapping("/donor/{donorId}")
-	public Set<ClosedPrenotation> getDonationsByDonor(@PathVariable("donorId") String donorId) {
-		return donationServices.getDonationsByDonor(donorId);
+	@GetMapping("/donor/{donorMail}")
+	public Set<ClosedPrenotation> getDonationsByDonor(@PathVariable("donorMail") String donorMail) {
+		return donationServices.getDonationsByDonor(donorMail);
 	}
 	
 	@GetMapping("/report/{donationId}")

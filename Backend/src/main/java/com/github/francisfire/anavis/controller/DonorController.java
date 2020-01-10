@@ -20,14 +20,14 @@ public class DonorController {
 	private DonorServices donorServices;
 
 	@PreAuthorize("hasRole('DONOR')")
-	@GetMapping("/{donorId}/canDonate")
-	public boolean checkDonationPossibility(@PathVariable("donorId") String donorId) {
-		return donorServices.checkDonationPossibility(donorId);
+	@GetMapping("/{donorMail}/canDonate")
+	public boolean checkDonationPossibility(@PathVariable("donorMail") String donorMail) {
+		return donorServices.checkDonationPossibility(donorMail);
 	}
 
-	@GetMapping("/office/{officeId}/available")
-	public Set<Donor> getAvailableDonorsByOfficeId(@PathVariable("officeId") String officeId) {
-		return donorServices.getAvailableDonorsByOfficeId(officeId);
+	@GetMapping("/office/{officeMail}/available")
+	public Set<Donor> getAvailableDonorsByOfficeId(@PathVariable("officeMail") String officeMail) {
+		return donorServices.getAvailableDonorsByOfficeId(officeMail);
 	}
 
 }

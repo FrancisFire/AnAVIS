@@ -27,9 +27,9 @@ public class RequestController {
 		return requestServices.addRequest(request);
 	}
 
-	@GetMapping("/office/{office}")
-	public Set<RequestPrenotation> getRequestsByOffice(@PathVariable("office") String officeId) {
-		return requestServices.getRequestsByOffice(officeId);
+	@GetMapping("/office/{officeMail}")
+	public Set<RequestPrenotation> getRequestsByOffice(@PathVariable("officeMail") String officeMail) {
+		return requestServices.getRequestsByOffice(officeMail);
 	}
 
 	@GetMapping("/{requestId}")

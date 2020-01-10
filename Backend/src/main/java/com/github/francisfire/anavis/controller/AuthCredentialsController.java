@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.francisfire.anavis.models.AuthCredentials;
 import com.github.francisfire.anavis.models.Donor;
+import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.services.AuthCredentialsServices;
 import com.github.francisfire.anavis.services.DonorServices;
+import com.github.francisfire.anavis.services.OfficeServices;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,31 +29,53 @@ public class AuthCredentialsController {
 	@Autowired
 	private DonorServices donorServices;
 
+	@Autowired
+	private OfficeServices officeServices;
+
 	@GetMapping("/")
 	public Set<AuthCredentials> getAuthCredentials() {
 		return authCredentialsServices.getAuthCredentials();
 	}
 
-	@PostMapping("/")
+	@PostMapping("/newdonor")
 	public boolean addDonorCredentials(@RequestBody UserAndDonor userAndDonor) {
 		donorServices.addDonor(userAndDonor.donor);
-		return authCredentialsServices.addDonorCredentials(userAndDonor.authCredentials);
+		return authCredentialsServices.addCredentials(userAndDonor.authCredentials);
+	}
+
+	@PostMapping("/newoffice")
+	public boolean addOfficeCredentials(@RequestBody UserAndOffice userAndOffice) {
+		officeServices.addOffice(userAndOffice.office);
+		return authCredentialsServices.addCredentials(userAndOffice.authCredentials);
 	}
 
 	@PutMapping("/")
-	public boolean updateDonorCredentials(@RequestBody AuthCredentials authCredentials) {
-		return authCredentialsServices.updateDonorCredentials(authCredentials);
+	public boolean updateCredentials(@RequestBody AuthCredentials authCredentials) {
+		return authCredentialsServices.updateCredentials(authCredentials);
 	}
 
-	@DeleteMapping("/{email}")
-	public boolean removeDonorCredentials(@PathVariable("email") String email) {
-		donorServices.removeDonor(email);
-		return authCredentialsServices.removeDonorCredentials(email);
+	@DeleteMapping("/{mail}")
+	public boolean removeCredentials(@PathVariable("mail") String mail) {
+		return authCredentialsServices.removeCredentials(mail);
 	}
 
 	static class UserAndDonor {
 		private Donor donor;
 		private AuthCredentials authCredentials;
+
+		public UserAndDonor(Donor donor, AuthCredentials authCredentials) {
+			this.donor = donor;
+			this.authCredentials = authCredentials;
+		}
 	}
 
+	static class UserAndOffice {
+		private Office office;
+		private AuthCredentials authCredentials;
+
+		public UserAndOffice(Office office, AuthCredentials authCredentials) {
+			this.office = office;
+			this.authCredentials = authCredentials;
+		}
+	}
 }

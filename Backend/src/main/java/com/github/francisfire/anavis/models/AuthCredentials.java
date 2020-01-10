@@ -19,7 +19,7 @@ public class AuthCredentials {
 	
 	@EqualsAndHashCode.Include
 	@Id
-	private String email;
+	private String mail;
 	private String password;
 	private Set<Role> roles;
 

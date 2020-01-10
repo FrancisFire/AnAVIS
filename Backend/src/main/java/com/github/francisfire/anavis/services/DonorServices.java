@@ -76,7 +76,7 @@ public class DonorServices {
 	 */
 	public String getOfficeIdByDonor(@NonNull String donorId) {
 		Donor donor = getDonorInstance(donorId);
-		return (donor == null) ? null : donor.getOfficeId();
+		return (donor == null) ? null : donor.getOfficeMail();
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class DonorServices {
 	 * @return collection of donors associated to the office
 	 */
 	public Set<Donor> getDonorsByOfficeId(@NonNull String officeId) {
-		return repository.findAll().stream().filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId))
+		return repository.findAll().stream().filter(donor -> donor.getOfficeMail().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
 
@@ -115,7 +115,7 @@ public class DonorServices {
 	 */
 	public Set<Donor> getAvailableDonorsByOfficeId(@NonNull String officeId) {
 		return repository.findAll().stream()
-				.filter(donor -> donor.getOfficeId().equalsIgnoreCase(officeId) && donor.isCanDonate())
+				.filter(donor -> donor.getOfficeMail().equalsIgnoreCase(officeId) && donor.isCanDonate())
 				.collect(Collectors.toSet());
 	}
 
