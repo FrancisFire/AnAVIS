@@ -1,3 +1,4 @@
+import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/widgets/button_fab_homepage.dart';
@@ -23,65 +24,12 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   AnimationController _animationController;
   CalendarController _calendarController;
 
+  bool state = false;
+
   @override
   void initState() {
     super.initState();
-    final _selectedDay = DateTime.now();
 
-    _events = {
-      _selectedDay.subtract(Duration(days: 30)): [
-        'Event A0',
-        'Event B0',
-        'Event C0'
-      ],
-      _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
-      _selectedDay.subtract(Duration(days: 20)): [
-        'Event A2',
-        'Event B2',
-        'Event C2',
-        'Event D2'
-      ],
-      _selectedDay.subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
-      _selectedDay.subtract(Duration(days: 10)): [
-        'Event A4',
-        'Event B4',
-        'Event C4'
-      ],
-      _selectedDay.subtract(Duration(days: 4)): [
-        'Event A5',
-        'Event B5',
-        'Event C5'
-      ],
-      _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-      _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
-      _selectedDay.add(Duration(days: 1)): [
-        'Event A8',
-        'Event B8',
-        'Event C8',
-      ],
-      _selectedDay.add(Duration(days: 3)):
-          Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
-      _selectedDay.add(Duration(days: 7)): [
-        'Event A10',
-        'Event B10',
-        'Event C10'
-      ],
-      _selectedDay.add(Duration(days: 11)): ['Event A11', 'Event B11'],
-      _selectedDay.add(Duration(days: 17)): [
-        'Event A12',
-        'Event B12',
-        'Event C12',
-        'Event D12'
-      ],
-      _selectedDay.add(Duration(days: 22)): ['Event A13', 'Event B13'],
-      _selectedDay.add(Duration(days: 26)): [
-        'Event A14',
-        'Event B14',
-        'Event C14'
-      ],
-    };
-
-    _selectedEvents = _events[_selectedDay] ?? [];
     _calendarController = CalendarController();
 
     _animationController = AnimationController(
@@ -100,15 +48,25 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   }
 
   void _onDaySelected(DateTime day, List events) {
-    print('CALLBACK: _onDaySelected');
     setState(() {
       _selectedEvents = events;
     });
   }
 
   void _onVisibleDaysChanged(
-      DateTime first, DateTime last, CalendarFormat format) {
-    print('CALLBACK: _onVisibleDaysChanged');
+      DateTime first, DateTime last, CalendarFormat format) {}
+
+  Future<Map<DateTime, List>> _fetchEvents() async {
+    Map<DateTime, List> nicerEvents = new Map<DateTime, List>();
+    List<ActivePrenotation> prenotations =
+        await Provider.of<CurrentOfficeState>(context).getOfficePrenotations();
+    for (var activePrenotation in prenotations) {
+      if (activePrenotation.isConfirmed()) {
+        nicerEvents.putIfAbsent(DateTime.parse(activePrenotation.getHour()),
+            () => [activePrenotation.getDonorId()]);
+      }
+    }
+    return nicerEvents;
   }
 
   String _officeName;
@@ -271,39 +229,48 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
                   ),
                   child: Column(
                     children: <Widget>[
-                      TableCalendar(
-                        calendarController: _calendarController,
-                        events: _events,
-                        locale: 'it_IT',
-                        initialCalendarFormat: CalendarFormat.week,
-                        availableCalendarFormats: const {
-                          CalendarFormat.month: 'Esteso',
-                          CalendarFormat.week: 'Ridotto',
+                      FutureBuilder(
+                        future: _fetchEvents(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return CircularProgressIndicator();
+                          }
+
+                          return TableCalendar(
+                            calendarController: _calendarController,
+                            events: snapshot.data,
+                            locale: 'it_IT',
+                            initialCalendarFormat: CalendarFormat.week,
+                            availableCalendarFormats: const {
+                              CalendarFormat.month: 'Esteso',
+                              CalendarFormat.week: 'Ridotto',
+                            },
+                            startingDayOfWeek: StartingDayOfWeek.monday,
+                            calendarStyle: CalendarStyle(
+                              selectedColor: Colors.red[800],
+                              todayColor: Colors.grey[600],
+                              markersColor: Colors.orangeAccent[400],
+                              outsideDaysVisible: false,
+                            ),
+                            initialSelectedDay: DateTime.now(),
+                            headerStyle: HeaderStyle(
+                              titleTextBuilder: (date, locale) =>
+                                  toBeginningOfSentenceCase(
+                                DateFormat.yMMMM(locale).format(date),
+                              ),
+                              formatButtonTextStyle: TextStyle().copyWith(
+                                color: Colors.white,
+                                fontSize: 12.0,
+                              ),
+                              formatButtonDecoration: BoxDecoration(
+                                color: Colors.grey[400],
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                            ),
+                            onDaySelected: _onDaySelected,
+                            onVisibleDaysChanged: _onVisibleDaysChanged,
+                          );
                         },
-                        startingDayOfWeek: StartingDayOfWeek.monday,
-                        calendarStyle: CalendarStyle(
-                          selectedColor: Colors.red[800],
-                          todayColor: Colors.grey[600],
-                          markersColor: Colors.orangeAccent[400],
-                          outsideDaysVisible: false,
-                        ),
-                        initialSelectedDay: DateTime.now(),
-                        headerStyle: HeaderStyle(
-                          titleTextBuilder: (date, locale) =>
-                              toBeginningOfSentenceCase(
-                            DateFormat.yMMMM(locale).format(date),
-                          ),
-                          formatButtonTextStyle: TextStyle().copyWith(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                          ),
-                          formatButtonDecoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(16.0),
-                          ),
-                        ),
-                        onDaySelected: _onDaySelected,
-                        onVisibleDaysChanged: _onVisibleDaysChanged,
                       ),
                       Expanded(
                         child: _buildEventList(),
@@ -323,39 +290,61 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   }
 
   Widget _buildEventList() {
-    return _selectedEvents.isNotEmpty
-        ? ScrollConfiguration(
-            behavior: RemoveGlow(),
-            child: ListView(
-              children: _selectedEvents
-                  .map((event) => Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.8),
-                          borderRadius: BorderRadius.circular(12.0),
+    if (_selectedEvents == null) {
+      return Center(
+        child: ListTile(
+          title: Text("Seleziona una data"),
+          leading: Icon(
+            Icons.info,
+            size: 36,
+          ),
+          isThreeLine: true,
+          subtitle: Text(
+            "Si prega di selezionare una data per visualizzare gli eventi presenti in un determinato giorno",
+          ),
+        ),
+      );
+    } else if (_selectedEvents.isNotEmpty) {
+      return ScrollConfiguration(
+        behavior: RemoveGlow(),
+        child: ListView(
+          children: _selectedEvents
+              .map((event) => Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(12.0),
+                      ),
+                    ),
+                    elevation: 6,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.red,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
                         ),
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4.0),
-                        child: ListTile(
-                          title: Text(event.toString()),
-                          onTap: () => print('$event tapped!'),
-                        ),
-                      ))
-                  .toList(),
-            ),
-          )
-        : Center(
-            child: ListTile(
-              title: Text("Non sono presenti donazioni"),
-              leading: Icon(
-                Icons.sentiment_dissatisfied,
-                size: 36,
-              ),
-              isThreeLine: true,
-              subtitle: Text(
-                "Inserisci nuove date utili per le donazioni per incentivare le donazioni nell'ufficio locale!",
-              ),
-            ),
-          );
+                      ),
+                      title: Text(event.toString()),
+                    ),
+                  ))
+              .toList(),
+        ),
+      );
+    } else {
+      return Center(
+        child: ListTile(
+          title: Text("Non sono presenti donazioni"),
+          leading: Icon(
+            Icons.sentiment_dissatisfied,
+            size: 36,
+          ),
+          isThreeLine: true,
+          subtitle: Text(
+            "Inserisci nuove date utili per le donazioni per incentivare le donazioni nell'ufficio locale!",
+          ),
+        ),
+      );
+    }
   }
 
   List<SpeedDialChild> iconFAB() {
