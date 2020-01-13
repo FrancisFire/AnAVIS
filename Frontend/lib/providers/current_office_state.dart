@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'dart:core';
 
 class CurrentOfficeState extends ChangeNotifier {
-  String _officeName;
+  String _officeMail;
   bool _statusBody;
 
   Set<TimeSlot> _officeTimeTables = new Set<TimeSlot>();
@@ -18,13 +18,13 @@ class CurrentOfficeState extends ChangeNotifier {
     _ipReference = ip;
   }
 
-  void setOffice(String office) {
-    _officeName = office;
+  void setOfficeMail(String officeMail) {
+    _officeMail = officeMail;
   }
 
   Future<void> setOfficeTimeTables() async {
     var request = await http
-        .get("http://${_ipReference}:8080/api/office/${_officeName}/timeTable");
+        .get("http://${_ipReference}:8080/api/office/${_officeMail}/timeTable");
     var parsedJson = json.decode(request.body);
     _officeTimeTables.clear();
     for (var time in parsedJson) {
@@ -48,11 +48,11 @@ class CurrentOfficeState extends ChangeNotifier {
   Future<List<RequestPrenotation>> getOfficeRequests() async {
     List<RequestPrenotation> requests = new List<RequestPrenotation>();
     var request = await http
-        .get("http://${_ipReference}:8080/api/request/office/${_officeName}");
+        .get("http://${_ipReference}:8080/api/request/office/${_officeMail}");
     var parsedJson = json.decode(request.body);
     for (var req in parsedJson) {
       RequestPrenotation newRequest = new RequestPrenotation(
-          req['id'], req['officeId'], req['donorId'], req['hour']);
+          req['id'], req['officeMail'], req['donorMail'], req['hour']);
       requests.add(newRequest);
     }
     return requests;
@@ -61,11 +61,15 @@ class CurrentOfficeState extends ChangeNotifier {
   Future<List<ActivePrenotation>> getOfficePrenotations() async {
     List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
     var request = await http.get(
-        "http://${_ipReference}:8080/api/prenotation/office/${_officeName}");
+        "http://${_ipReference}:8080/api/prenotation/office/${_officeMail}");
     var parsedJson = json.decode(request.body);
     for (var pren in parsedJson) {
-      ActivePrenotation newPrenotation = ActivePrenotation(pren['id'],
-          pren['officeId'], pren['donorId'], pren['hour'], pren['confirmed']);
+      ActivePrenotation newPrenotation = ActivePrenotation(
+          pren['id'],
+          pren['officeMail'],
+          pren['donorMail'],
+          pren['hour'],
+          pren['confirmed']);
       prenotations.add(newPrenotation);
     }
     return prenotations;
@@ -97,8 +101,8 @@ class CurrentOfficeState extends ChangeNotifier {
       Uri.encodeFull("http://${_ipReference}:8080/api/prenotation"),
       body: json.encode({
         "id": prenotation.getId(),
-        "officeId": prenotation.getOfficeId(),
-        "donorId": prenotation.getDonorId(),
+        "officeMail": prenotation.getOfficeMail(),
+        "donorMail": prenotation.getDonorMail(),
         "hour": prenotation.getHour(),
         "confirmed": prenotation.isConfirmed(),
       }),
@@ -120,8 +124,8 @@ class CurrentOfficeState extends ChangeNotifier {
       Uri.encodeFull("http://${_ipReference}:8080/api/prenotation"),
       body: json.encode({
         "id": prenotation.getId(),
-        "officeId": prenotation.getOfficeId(),
-        "donorId": prenotation.getDonorId(),
+        "officeMail": prenotation.getOfficeMail(),
+        "donorMail": prenotation.getDonorMail(),
         "hour": prenotation.getHour(),
         "confirmed": prenotation.isConfirmed(),
       }),
@@ -141,7 +145,7 @@ class CurrentOfficeState extends ChangeNotifier {
   Future<dynamic> addTimeTableSlot(TimeSlot timeslot) async {
     return await http.put(
       Uri.encodeFull(
-          "http://${_ipReference}:8080/api/office/$_officeName/addTimeSlot"),
+          "http://${_ipReference}:8080/api/office/$_officeMail/addTimeSlot"),
       body: json.encode({
         "dateTime": timeslot.getDateTime(),
         "donorSlots": timeslot.getSlots(),
@@ -187,7 +191,7 @@ class CurrentOfficeState extends ChangeNotifier {
     return available;
   }
 
-  String getOfficeName() {
-    return _officeName;
+  String getOfficeMail() {
+    return _officeMail;
   }
 }

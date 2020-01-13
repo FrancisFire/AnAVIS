@@ -99,7 +99,7 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return CardForPrenotationAndRequest(
-                          email: snapshot.data[index].getOfficeId(),
+                          email: snapshot.data[index].getOfficeMail(),
                           hour: snapshot.data[index].getHour(),
                           id: snapshot.data[index].getId(),
                           buttonBar: ButtonBar(

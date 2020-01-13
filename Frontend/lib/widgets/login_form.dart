@@ -23,13 +23,13 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void setOfficeMail(BuildContext context, String mail) async {
-    await Provider.of<CurrentOfficeState>(context).setOffice(mail);
+    await Provider.of<CurrentOfficeState>(context).setOfficeMail(mail);
   }
 
   @override
   Widget build(BuildContext context) {
-    this.setDonorEmail(context, 'stelluti@mail.com');
-    this.setOfficeMail(context, 'Osimo');
+    this.setDonorEmail(context, 'stelluti@donor.com');
+    this.setOfficeMail(context, 'osimo@office.com');
     return ScrollConfiguration(
       behavior: RemoveGlow(),
       child: SingleChildScrollView(

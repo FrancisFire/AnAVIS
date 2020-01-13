@@ -29,5 +29,9 @@ public class DonorController {
 	public Set<Donor> getAvailableDonorsByOfficeId(@PathVariable("officeMail") String officeMail) {
 		return donorServices.getAvailableDonorsByOfficeId(officeMail);
 	}
+	
+	@GetMapping("/{donorMail}") public Donor getDonorByMail(@PathVariable("donorMail") String donorMail) {
+		return donorServices.getDonorInstance(donorMail);
+	}
 
 }

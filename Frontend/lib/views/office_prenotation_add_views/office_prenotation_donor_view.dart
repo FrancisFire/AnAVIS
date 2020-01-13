@@ -25,14 +25,14 @@ class _OfficePrenotationDonorViewState
 
   void fetchDonorByOffice() async {
     await Provider.of<AppState>(context)
-        .setAvailableDonorsByOffice(this.widget.officeName);
+        .setAvailableDonorsMailsByOffice(this.widget.officeName);
   }
 
   List<DropdownMenuItem> createListItem() {
     this.fetchDonorByOffice();
     List<DropdownMenuItem> listDonorItem = new List<DropdownMenuItem>();
     for (var donor
-        in Provider.of<AppState>(context).getAvailableDonorsByOffice()) {
+        in Provider.of<AppState>(context).getAvailableDonorsMailsByOffice()) {
       listDonorItem.add(
         new DropdownMenuItem(
           value: donor,

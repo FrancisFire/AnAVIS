@@ -116,7 +116,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                     itemBuilder: (context, index) {
                       return CardForPrenotationAndRequest(
                         id: snapshot.data[index].getId(),
-                        email: snapshot.data[index].getDonorId(),
+                        email: snapshot.data[index].getDonorMail(),
                         hour: snapshot.data[index].getHour(),
                         buttonBar: ButtonBar(
                           children: <Widget>[

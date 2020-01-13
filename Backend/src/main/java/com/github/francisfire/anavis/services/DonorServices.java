@@ -70,12 +70,12 @@ public class DonorServices {
 	 * in the collection.
 	 * 
 	 * @throws NullPointerException if donorId is null
-	 * @param donorId the id of the donor
+	 * @param donorMail the id of the donor
 	 * @return the id of the office associated to the donor, null if the donor
 	 *         hasn't been found
 	 */
-	public String getOfficeIdByDonor(@NonNull String donorId) {
-		Donor donor = getDonorInstance(donorId);
+	public String getOfficeIdByDonor(@NonNull String donorMail) {
+		Donor donor = getDonorInstance(donorMail);
 		return (donor == null) ? null : donor.getOfficeMail();
 	}
 
@@ -84,11 +84,11 @@ public class DonorServices {
 	 * donate or not.
 	 * 
 	 * @throws NullPointerException if donorId is null
-	 * @param donorId the id of the donor
+	 * @param donorMail the id of the donor
 	 * @return true if the donor can donate, false otherwise
 	 */
-	public boolean checkDonationPossibility(@NonNull String donorId) {
-		Donor donor = getDonorInstance(donorId);
+	public boolean checkDonationPossibility(@NonNull String donorMail) {
+		Donor donor = getDonorInstance(donorMail);
 		return (donor == null) ? false : donor.isCanDonate();
 	}
 
@@ -97,11 +97,11 @@ public class DonorServices {
 	 * id given to the method
 	 * 
 	 * @throws NullPointerException if officeId is null
-	 * @param officeId id of the office
+	 * @param officeMail id of the office
 	 * @return collection of donors associated to the office
 	 */
-	public Set<Donor> getDonorsByOfficeId(@NonNull String officeId) {
-		return repository.findAll().stream().filter(donor -> donor.getOfficeMail().equalsIgnoreCase(officeId))
+	public Set<Donor> getDonorsByOfficeId(@NonNull String officeMail) {
+		return repository.findAll().stream().filter(donor -> donor.getOfficeMail().equalsIgnoreCase(officeMail))
 				.collect(Collectors.toSet());
 	}
 
@@ -110,12 +110,12 @@ public class DonorServices {
 	 * id given to the method and that can donate
 	 * 
 	 * @throws NullPointerException if officeId is null
-	 * @param officeId id of the office
+	 * @param officeMail id of the office
 	 * @return collection of donors associated to the office and that can donate
 	 */
-	public Set<Donor> getAvailableDonorsByOfficeId(@NonNull String officeId) {
+	public Set<Donor> getAvailableDonorsByOfficeId(@NonNull String officeMail) {
 		return repository.findAll().stream()
-				.filter(donor -> donor.getOfficeMail().equalsIgnoreCase(officeId) && donor.isCanDonate())
+				.filter(donor -> donor.getOfficeMail().equalsIgnoreCase(officeMail) && donor.isCanDonate())
 				.collect(Collectors.toSet());
 	}
 
@@ -123,12 +123,12 @@ public class DonorServices {
 	 * Removes the donor assigned to the donorId 
 	 * 
 	 * @throws NullPointerException if donorId is null
-	 * @param donorId the id of the donor to remove
+	 * @param donorMail the id of the donor to remove
 	 * @return true if the collections contained the donor
 	 */
-	public boolean removeDonor(@NonNull String donorId) {
-		if (repository.existsById(donorId)) {
-			repository.delete(getDonorInstance(donorId));
+	public boolean removeDonor(@NonNull String donorMail) {
+		if (repository.existsById(donorMail)) {
+			repository.delete(getDonorInstance(donorMail));
 			return true;
 		} else {
 			return false;
@@ -141,11 +141,11 @@ public class DonorServices {
 	 * returns null
 	 * 
 	 * @throws NullPointerException if donorId is null
-	 * @param donorId id of the donor to find
+	 * @param donorMail id of the donor to find
 	 * @return the Donor object associated to the id, null if it hasn't been found
 	 */
-	public Donor getDonorInstance(@NonNull String donorId) {
-		return repository.findById(donorId).orElse(null);
+	public Donor getDonorInstance(@NonNull String donorMail) {
+		return repository.findById(donorMail).orElse(null);
 	}
 
 	@Scheduled(cron = "0 0 * * * ?")

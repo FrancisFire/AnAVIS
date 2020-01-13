@@ -113,8 +113,8 @@ class _DonorPendingPrenotationViewState
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return CardForPrenotationAndRequest(
-                          id: snapshot.data[index].getOfficeId(),
-                          email: snapshot.data[index].getDonorId(),
+                          id: snapshot.data[index].getOfficeMail(),
+                          email: snapshot.data[index].getDonorMail(),
                           hour: snapshot.data[index].getHour(),
                           buttonBar: ButtonBar(
                             children: <Widget>[
@@ -130,7 +130,7 @@ class _DonorPendingPrenotationViewState
                                       arguments:
                                           new DonorPrenotationUpdateRecapArgs(
                                               snapshot.data[index]
-                                                  .getOfficeId(),
+                                                  .getOfficeMail(),
                                               snapshot.data[index].getHour(),
                                               nicerTime(snapshot.data[index]
                                                   .getHour()),

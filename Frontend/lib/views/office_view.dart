@@ -63,13 +63,13 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
     for (var activePrenotation in prenotations) {
       if (activePrenotation.isConfirmed()) {
         nicerEvents.putIfAbsent(DateTime.parse(activePrenotation.getHour()),
-            () => [activePrenotation.getDonorId()]);
+            () => [activePrenotation.getDonorMail()]);
       }
     }
     return nicerEvents;
   }
 
-  String _officeName;
+  String _officeMail;
 
   int prenotationCount = 0;
 
@@ -99,7 +99,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _officeName = Provider.of<CurrentOfficeState>(context).getOfficeName();
+    _officeMail = Provider.of<CurrentOfficeState>(context).getOfficeMail();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -151,7 +151,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
                 ),
                 Flexible(
                   child: AutoSizeText(
-                    _officeName,
+                    _officeMail,
                     style: TextStyle(
                       fontSize: 52,
                       color: Colors.white,
@@ -377,7 +377,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
           Navigator.pushNamed(
             context,
             '/office/requests',
-            arguments: _officeName,
+            arguments: _officeMail,
           );
         },
       ),
@@ -395,9 +395,9 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
         ),
         onTap: () async {
           await Provider.of<AppState>(context)
-              .setAvailableDonorsByOffice(_officeName);
+              .setAvailableDonorsMailsByOffice(_officeMail);
           if (Provider.of<AppState>(context)
-              .getAvailableDonorsByOffice()
+              .getAvailableDonorsMailsByOffice()
               .isEmpty) {
             Provider.of<AppState>(context).showFlushbar(
               'Nessun donatore',
@@ -409,7 +409,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
             Navigator.pushNamed(
               context,
               '/office/prenotations',
-              arguments: _officeName,
+              arguments: _officeMail,
             );
           }
         },
