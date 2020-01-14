@@ -14,19 +14,21 @@ class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
 
   List<DropdownMenuItem> createListItem() {
     List<DropdownMenuItem> listOfficeItem = new List<DropdownMenuItem>();
-    for (var officeString in Provider.of<AppState>(context).getOfficeNames()) {
+    Provider.of<AppState>(context)
+        .getOfficeMailsAndNames()
+        .forEach((key, value) {
       listOfficeItem.add(new DropdownMenuItem(
-        value: officeString,
+        value: key,
         child: Container(
           child: Text(
-            officeString,
+            value,
             style: TextStyle(
               color: Colors.white,
             ),
           ),
         ),
       ));
-    }
+    });
     return listOfficeItem;
   }
 

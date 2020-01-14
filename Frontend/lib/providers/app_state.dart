@@ -8,20 +8,20 @@ import 'dart:convert';
 import 'dart:core';
 
 class AppState extends ChangeNotifier {
-  List<String> _officeNames = new List<String>();
+  Map<String, String> _officeMailsAndNames = new Map<String, String>();
   String _ipReference;
   Set<String> _availableDonorsMailsByOffice = new Set<String>();
 
   AppState(String ip) {
     _ipReference = ip;
-    setOfficeNames();
+    setOfficeMailsAndNames();
   }
 
-  void setOfficeNames() async {
+  void setOfficeMailsAndNames() async {
     var request = await http.get("http://${_ipReference}:8080/api/office");
     var parsedJson = json.decode(request.body);
     for (var office in parsedJson) {
-      _officeNames.add(office['place']);
+      _officeMailsAndNames.putIfAbsent(office['mail'], () => office['place']);
     }
     notifyListeners();
   }
@@ -36,8 +36,8 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> getOfficeNames() {
-    return _officeNames;
+  Map<String, String> getOfficeMailsAndNames() {
+    return _officeMailsAndNames;
   }
 
   Set<String> getAvailableDonorsMailsByOffice() {

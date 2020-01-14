@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:date_format/date_format.dart';
 
+import 'donor_request_office_view.dart';
+
 class DonorRequestTimeView extends StatefulWidget {
   final String office;
 
@@ -20,14 +22,15 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
   String _timeFormatted;
 
   void fetchTimeFromOffice() async {
-    await Provider.of<CurrentOfficeState>(context).setOfficeTimeTables();
+    await Provider.of<CurrentOfficeState>(context)
+        .setOfficeTimeTablesByOffice(widget.office);
   }
 
   List<DropdownMenuItem> createListItem() {
     this.fetchTimeFromOffice();
     List<DropdownMenuItem> listTimeItem = new List<DropdownMenuItem>();
-    for (var slot
-        in Provider.of<CurrentOfficeState>(context).getAvailableTimeTables()) {
+    for (var slot in Provider.of<CurrentOfficeState>(context)
+        .getOfficeAvailableTimeTablesByOffice()) {
       String restrictFractionalSeconds(String dateTime) =>
           dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
       _timeFormatted = formatDate(
@@ -46,6 +49,7 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
         ),
       ));
     }
+
     return listTimeItem;
   }
 
@@ -64,7 +68,8 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
           : FABLeftArrow(
               nameOffice: widget.office,
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/donor/officerequest',
+                    arguments: new DonorRequestOfficeView());
               },
             ),
       body: BuildDonorRequestWidget(
@@ -82,6 +87,7 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
         onChanged: (newValue) {
           setState(() {
             _timeSelected = newValue;
+            print(_timeSelected);
           });
         },
       ),

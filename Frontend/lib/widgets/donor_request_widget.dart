@@ -24,76 +24,83 @@ class BuildDonorRequestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: Painter(
-        first: Colors.red[100],
-        second: Colors.orange[200],
-        background: Colors.white,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            AutoSizeText(
-              title,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 64,
-              ),
-              maxLines: 1,
-            ),
-            AutoSizeText(
-              subtitle,
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 32,
-              ),
-              maxLines: 3,
-            ),
-            SizedBox(
-              height: 24.0,
-            ),
-            Theme(
-              data: Theme.of(context).copyWith(
-                canvasColor: Colors.red,
-              ),
-              child: ButtonTheme(
-                child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.red,
-                    icon: icon,
-                    enabledBorder: UnderlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          24.0,
+    return Scaffold(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        child: CustomPaint(
+          painter: Painter(
+            first: Colors.red[100],
+            second: Colors.orange[200],
+            background: Colors.white,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                AutoSizeText(
+                  title,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 64,
+                  ),
+                  maxLines: 1,
+                ),
+                AutoSizeText(
+                  subtitle,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 32,
+                  ),
+                  maxLines: 3,
+                ),
+                SizedBox(
+                  height: 24.0,
+                ),
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    canvasColor: Colors.red,
+                  ),
+                  child: ButtonTheme(
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.red,
+                        icon: icon,
+                        enabledBorder: UnderlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              24.0,
+                            ),
+                          ),
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                      borderSide: BorderSide(
-                        color: Colors.white,
+                      hint: Text(
+                        labelDropDown,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
+                      iconEnabledColor: Colors.white,
+                      elevation: 18,
+                      items: fetchItems,
+                      value: valueSelected,
+                      onChanged: (newValue) {
+                        onChanged(newValue);
+                      },
                     ),
                   ),
-                  hint: Text(
-                    labelDropDown,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  iconEnabledColor: Colors.white,
-                  elevation: 18,
-                  items: fetchItems,
-                  value: valueSelected,
-                  onChanged: (newValue) {
-                    onChanged(newValue);
-                  },
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

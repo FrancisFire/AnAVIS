@@ -174,7 +174,6 @@ class RouteGenerator {
               builder: (_) => DonorRequestRecap(
                     office: args.getOffice(),
                     time: args.getTime(),
-                    nicerTime: args.getNicerTime(),
                   ),
               settings: RouteSettings(
                 name: 'DonorRequestRecap',
