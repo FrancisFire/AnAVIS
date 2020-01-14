@@ -1,16 +1,35 @@
 package com.github.francisfire.anavis;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.github.francisfire.anavis.models.*;
+import com.github.francisfire.anavis.models.ActivePrenotation;
+import com.github.francisfire.anavis.models.AuthCredentials;
+import com.github.francisfire.anavis.models.AuthCredentials.Role;
+import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.Donor.DonorCategory;
-import com.github.francisfire.anavis.services.*;
+import com.github.francisfire.anavis.models.Office;
+import com.github.francisfire.anavis.models.RequestPrenotation;
+import com.github.francisfire.anavis.models.TimeSlot;
+import com.github.francisfire.anavis.services.AuthCredentialsServices;
+import com.github.francisfire.anavis.services.DonationReportServices;
+import com.github.francisfire.anavis.services.DonationServices;
+import com.github.francisfire.anavis.services.DonorServices;
+import com.github.francisfire.anavis.services.OfficeServices;
+import com.github.francisfire.anavis.services.PrenotationServices;
+import com.github.francisfire.anavis.services.RequestServices;
 
 @SpringBootApplication
 @EnableScheduling
@@ -24,6 +43,12 @@ public class AnAvisApplication implements CommandLineRunner {
 	private PrenotationServices prenotationServices;
 	@Autowired
 	private RequestServices requestServices;
+	@Autowired
+	private DonationServices donationServices;
+	@Autowired
+	private DonationReportServices donationReportServices;
+	@Autowired
+	private AuthCredentialsServices authCredentialsServices;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AnAvisApplication.class, args);
@@ -71,5 +96,10 @@ public class AnAvisApplication implements CommandLineRunner {
 				new Date(300000), true);
 		prenotationServices.addPrenotation(prenotationOne);
 		prenotationServices.addPrenotation(prenotationTwo);
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(Role.DONOR);
+		AuthCredentials userOne = new AuthCredentials("stelluti@donor.com", "sasso", roles);
+		authCredentialsServices.addCredentials(userOne);
 	}
 }

@@ -4,9 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.github.francisfire.anavis.models.AuthCredentials;
+import com.github.francisfire.anavis.models.AuthCredentials.Role;
 import com.github.francisfire.anavis.repository.AuthCredentialsRepository;
 
 import lombok.NonNull;
@@ -16,6 +18,14 @@ public class AuthCredentialsServices {
 
 	@Autowired
 	private AuthCredentialsRepository repository;
+	
+	public Set<Role> loginWithCredentials(AuthCredentials authCredentials) {
+		AuthCredentials serverAuthCredentials = getAuthCredentialsInstance(authCredentials.getMail());
+		if (serverAuthCredentials.getPassword().equals(authCredentials.getPassword())) {
+			return serverAuthCredentials.getRoles();
+		}
+		return null;
+	}
 
 	/**
 	 * Returns a view of the collection of authcredentials, modifying this view
@@ -36,6 +46,7 @@ public class AuthCredentialsServices {
 	 * @return true if the collection didn't contain the added credentials
 	 */
 	public boolean addCredentials(@NonNull AuthCredentials authCredentials) {
+		authCredentials.setPassword(new BCryptPasswordEncoder().encode(authCredentials.getPassword()));
 		if (repository.existsById(authCredentials.getMail())) {
 			return false;
 		} else {
@@ -59,6 +70,7 @@ public class AuthCredentialsServices {
 		if (oldAuthCredentials == null) {
 			return false;
 		}
+		authCredentials.setPassword(new BCryptPasswordEncoder().encode(authCredentials.getPassword()));
 		repository.save(authCredentials);
 		return false;
 	}

@@ -37,13 +37,13 @@ public class AuthCredentialsController {
 		return authCredentialsServices.getAuthCredentials();
 	}
 
-	@PostMapping("/newdonor")
+	@PostMapping("/donor")
 	public boolean addDonorCredentials(@RequestBody UserAndDonor userAndDonor) {
 		donorServices.addDonor(userAndDonor.donor);
 		return authCredentialsServices.addCredentials(userAndDonor.authCredentials);
 	}
 
-	@PostMapping("/newoffice")
+	@PostMapping("/office")
 	public boolean addOfficeCredentials(@RequestBody UserAndOffice userAndOffice) {
 		officeServices.addOffice(userAndOffice.office);
 		return authCredentialsServices.addCredentials(userAndOffice.authCredentials);
