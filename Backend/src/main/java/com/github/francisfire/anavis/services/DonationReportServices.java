@@ -36,7 +36,7 @@ public class DonationReportServices {
 		DonationReport report = new DonationReport(prenotation.getDonorMail(), prenotation.getOfficeMail(),
 				prenotation.getHour());
 		try {
-			report.setReportFile(new Binary(BsonBinarySubType.BINARY, reportFile.getBytes()));
+			report.setReportFile(reportFile.getBytes());
 		} catch (IOException e) {
 			return null;
 		}

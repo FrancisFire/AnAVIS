@@ -21,7 +21,7 @@ public class DonationReport {
 	@EqualsAndHashCode.Include
 	@Id
 	private String reportId;
-	private Binary reportFile;
+	private byte[] reportFile;
 	private String donorMail;
 	private String officeMail;
 	private Date date;
