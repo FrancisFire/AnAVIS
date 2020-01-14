@@ -19,7 +19,7 @@ public class DonorController {
 	@Autowired
 	private DonorServices donorServices;
 
-	@PreAuthorize("hasAuthority('DONOR')")
+	//@PreAuthorize("hasAuthority('DONOR')")
 	@GetMapping("/{donorMail}/canDonate")
 	public boolean checkDonationPossibility(@PathVariable("donorMail") String donorMail) {
 		return donorServices.checkDonationPossibility(donorMail);
