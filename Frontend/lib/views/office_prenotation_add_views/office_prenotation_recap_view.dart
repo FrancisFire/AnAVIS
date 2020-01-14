@@ -54,8 +54,8 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
   Future<void> postRequest() async {
     await Provider.of<CurrentOfficeState>(context).sendPrenotation(
         ActivePrenotation(
-            "${widget.donor}@${Provider.of<CurrentOfficeState>(context).getOfficeName()}@${widget.time}-${rng.nextInt(500)}",
-            Provider.of<CurrentOfficeState>(context).getOfficeName(),
+            "${widget.donor}@${Provider.of<CurrentOfficeState>(context).getOfficeMail()}@${widget.time}-${rng.nextInt(500)}",
+            Provider.of<CurrentOfficeState>(context).getOfficeMail(),
             widget.donor,
             widget.time,
             true));

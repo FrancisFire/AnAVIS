@@ -33,8 +33,12 @@ class CurrentDonorState extends ChangeNotifier {
         .get("http://${_ipReference}:8080/api/prenotation/donor/${_donorMail}");
     var parsedJson = json.decode(request.body);
     for (var pren in parsedJson) {
-      ActivePrenotation newPrenotation = ActivePrenotation(pren['id'],
-          pren['officeId'], pren['donorId'], pren['hour'], pren['confirmed']);
+      ActivePrenotation newPrenotation = ActivePrenotation(
+          pren['id'],
+          pren['officeMail'],
+          pren['donorMail'],
+          pren['hour'],
+          pren['confirmed']);
       if (newPrenotation.isConfirmed()) {
         prenotations.add(newPrenotation);
       }
@@ -48,8 +52,12 @@ class CurrentDonorState extends ChangeNotifier {
         .get("http://${_ipReference}:8080/api/prenotation/donor/${_donorMail}");
     var parsedJson = json.decode(request.body);
     for (var pren in parsedJson) {
-      ActivePrenotation newPrenotation = ActivePrenotation(pren['id'],
-          pren['officeId'], pren['donorId'], pren['hour'], pren['confirmed']);
+      ActivePrenotation newPrenotation = ActivePrenotation(
+          pren['id'],
+          pren['officeMail'],
+          pren['donorMail'],
+          pren['hour'],
+          pren['confirmed']);
       if (!newPrenotation.isConfirmed()) {
         prenotations.add(newPrenotation);
       }
@@ -83,8 +91,8 @@ class CurrentDonorState extends ChangeNotifier {
       Uri.encodeFull("http://${_ipReference}:8080/api/request"),
       body: json.encode({
         "id": request.getId(),
-        "officeId": request.getOfficeId(),
-        "donorId": request.getDonorId(),
+        "officeMail": request.getOfficeMail(),
+        "donorMail": request.getDonorMail(),
         "hour": request.getHour()
       }),
       headers: {

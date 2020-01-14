@@ -3,9 +3,9 @@ import 'package:anavis/models/prenotation.dart';
 class ActivePrenotation extends Prenotation {
   bool _confirmed;
   ActivePrenotation(
-      String id, String officeId, String donorId, String hour, bool conf)
+      String id, String officeMail, String donorMail, String hour, bool conf)
       : _confirmed = conf,
-        super.withParams(id, officeId, donorId, hour);
+        super.withParams(id, officeMail, donorMail, hour);
   bool isConfirmed() {
     return _confirmed;
   }

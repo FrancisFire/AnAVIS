@@ -36,7 +36,7 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Prenotazioni per ${Provider.of<CurrentOfficeState>(context).getOfficeName()}",
+          "Prenotazioni per ${Provider.of<CurrentOfficeState>(context).getOfficeMail()}",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -107,7 +107,7 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return CardForPrenotationAndRequest(
-                          email: snapshot.data[index].getDonorId(),
+                          email: snapshot.data[index].getDonorMail(),
                           hour: snapshot.data[index].getHour(),
                           id: snapshot.data[index].getId(),
                           afterTitle: snapshot.data[index].isConfirmed()
@@ -134,7 +134,8 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                                         DialogModificationPrenotation(
                                       prenotationId:
                                           snapshot.data[index].getId(),
-                                      donor: snapshot.data[index].getDonorId(),
+                                      donor:
+                                          snapshot.data[index].getDonorMail(),
                                     ),
                                   );
                                 },

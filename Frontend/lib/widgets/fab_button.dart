@@ -50,7 +50,7 @@ class FABLeftArrow extends StatelessWidget {
             this.nameOffice,
             style: TextStyle(
               color: Colors.red,
-              fontSize: 24,
+              fontSize: 16,
             ),
           ),
           onPressed: () {

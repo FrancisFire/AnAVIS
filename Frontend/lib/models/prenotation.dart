@@ -1,13 +1,13 @@
 abstract class Prenotation {
   String _id;
-  String _officeId;
-  String _donorId;
+  String _officeMail;
+  String _donorMail;
   String _hour;
   Prenotation.withParams(
-      String id, String officeId, String donorId, String hour) {
+      String id, String officeMail, String donorMail, String hour) {
     this._id = id;
-    this._officeId = officeId;
-    this._donorId = donorId;
+    this._officeMail = officeMail;
+    this._donorMail = donorMail;
     this._hour = hour;
   }
 
@@ -16,12 +16,12 @@ abstract class Prenotation {
     return _id;
   }
 
-  String getOfficeId() {
-    return _officeId;
+  String getOfficeMail() {
+    return _officeMail;
   }
 
-  String getDonorId() {
-    return _donorId;
+  String getDonorMail() {
+    return _donorMail;
   }
 
   String getHour() {

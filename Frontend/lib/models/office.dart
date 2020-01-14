@@ -1,18 +1,28 @@
 import 'package:anavis/models/timeslot.dart';
 
 class Office {
-  String _name;
+  String _mail;
+  String _place;
   Set<TimeSlot> _timeTables;
-  Office(String name, Set<TimeSlot> timeTables) {
-    this._name = name;
+  Office(String mail, String place) {
+    this._mail = mail;
+    this._place = place;
+  }
+
+  Office.complete(String mail, String place, Set<TimeSlot> timeTables) {
+    Office(mail, place);
     this._timeTables = timeTables;
   }
 
-  String getName() {
-    return _name;
+  String getMail() {
+    return _mail;
   }
 
   Set<TimeSlot> getTimeTables() {
     return _timeTables;
+  }
+
+  String getPlace() {
+    return _place;
   }
 }
