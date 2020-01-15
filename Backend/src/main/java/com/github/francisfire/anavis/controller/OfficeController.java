@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.models.TimeSlot;
 import com.github.francisfire.anavis.services.OfficeServices;

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.francisfire.anavis.models.AuthCredentials;
+import com.github.francisfire.anavis.models.AuthCredentials.Role;
 import com.github.francisfire.anavis.models.Donor;
 import com.github.francisfire.anavis.models.Office;
 import com.github.francisfire.anavis.services.AuthCredentialsServices;
@@ -31,6 +32,11 @@ public class AuthCredentialsController {
 
 	@Autowired
 	private OfficeServices officeServices;
+
+	@GetMapping("/roles/{mail}")
+	public Set<Role> getUserRoles(@PathVariable("mail") String mail) {
+		return authCredentialsServices.getAuthCredentialsInstance(mail).getRoles();
+	}
 
 	@GetMapping("/")
 	public Set<AuthCredentials> getAuthCredentials() {
