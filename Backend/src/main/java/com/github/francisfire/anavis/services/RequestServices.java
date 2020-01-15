@@ -100,11 +100,11 @@ public class RequestServices {
 	 * passed in input to the function
 	 * 
 	 * @throws NullPointerException if officeId is null
-	 * @param officeId id of the office
+	 * @param officeMail id of the office
 	 * @return a collection of requests associated to the office
 	 */
-	public Set<RequestPrenotation> getRequestsByOffice(@NonNull String officeId) {
-		return repository.findAll().stream().filter(request -> request.getOfficeMail().equals(officeId))
+	public Set<RequestPrenotation> getRequestsByOffice(@NonNull String officeMail) {
+		return repository.findAll().stream().filter(request -> request.getOfficeMail().equals(officeMail))
 				.collect(Collectors.toSet());
 	}
 
@@ -113,11 +113,11 @@ public class RequestServices {
 	 * passed in input to the function
 	 * 
 	 * @throws NullPointerException if officeId is null
-	 * @param donorId id of the donor
+	 * @param donorMail id of the donor
 	 * @return a collection of requests associated to the donor
 	 */
-	public Set<RequestPrenotation> getRequestsByDonor(@NonNull String donorId) {
-		return repository.findAll().stream().filter(request -> request.getDonorMail().equals(donorId))
+	public Set<RequestPrenotation> getRequestsByDonor(@NonNull String donorMail) {
+		return repository.findAll().stream().filter(request -> request.getDonorMail().equals(donorMail))
 				.collect(Collectors.toSet());
 	}
 
