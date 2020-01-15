@@ -92,10 +92,10 @@ class CurrentDonorState extends ChangeNotifier {
     for (var don in parsedJson) {
       ClosedPrenotation newDonation = ClosedPrenotation(
         don['id'],
-        don['reportId'],
         don['officeMail'],
         don['donorMail'],
         don['hour'],
+        don['reportId'],
       );
       donations.add(newDonation);
     }
