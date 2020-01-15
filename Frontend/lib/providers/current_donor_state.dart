@@ -1,4 +1,6 @@
 import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/models/closedprenotation.dart';
+import 'package:anavis/models/donationreport.dart';
 import 'package:anavis/models/requestprenotation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -80,6 +82,38 @@ class CurrentDonorState extends ChangeNotifier {
       }
     }
     return prenotations;
+  }
+
+  Future<List<ClosedPrenotation>> getDonorDonations() async {
+    List<ClosedPrenotation> donations = new List<ClosedPrenotation>();
+    var request = await http
+        .get("http://${_ipReference}:8080/api/donation/donor/${_donorMail}");
+    var parsedJson = json.decode(request.body);
+    for (var don in parsedJson) {
+      ClosedPrenotation newDonation = ClosedPrenotation(
+        don['id'],
+        don['reportId'],
+        don['officeMail'],
+        don['donorMail'],
+        don['hour'],
+      );
+      donations.add(newDonation);
+    }
+    return donations;
+  }
+
+  Future<DonationReport> getReportByDonationID(String donationId) async {
+    var request = await http
+        .get("http://${_ipReference}:8080/api/donation/report/${donationId}");
+    var parsedJson = json.decode(request.body);
+    var rep = parsedJson[0];
+    return new DonationReport(
+      rep['id'],
+      rep['reportFile'],
+      rep['donorMail'],
+      rep['officeMail'],
+      rep['date'],
+    );
   }
 
   Future<void> removePrenotationByID(String id) async {

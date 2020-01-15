@@ -100,19 +100,13 @@ class CurrentOfficeState extends ChangeNotifier {
   }
 
   Future<void> closePrenotation(String id, File file) async {
-    // var req = http.MultipartRequest("PUT",
-    //     Uri.parse("http://${_ipReference}:8080/api/prenotation/$id/close"));
-
-    FormData formData = new FormData.fromMap(
-        {"file": MultipartFile.fromBytes(await file.readAsBytes())});
+    FormData formData = new FormData();
+    formData.files
+        .add(MapEntry("file", await MultipartFile.fromFile(file.path)));
 
     var response = await Dio().put(
         "http://${_ipReference}:8080/api/prenotation/$id/close",
         data: formData);
-
-    // req.files.add(
-    //     new http.MultipartFile.fromBytes('file', await file.readAsBytes()));
-
     if (response.statusCode == 200) {
       _statusBody = true;
     } else {

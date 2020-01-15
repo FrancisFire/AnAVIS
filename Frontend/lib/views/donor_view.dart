@@ -495,7 +495,7 @@ class _DonorViewState extends State<DonorView> {
             showBadge: getPendingRequestCount() > 0 ? true : false,
             badgeContent: Padding(
               padding: const EdgeInsets.all(1.4),
-              child: Text(getPendingCount().toString()),
+              child: Text(getPendingRequestCount().toString()),
             ),
             position: BadgePosition.topRight(top: -9, right: -2),
             badgeColor: Colors.white,
