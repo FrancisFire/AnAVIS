@@ -5,6 +5,7 @@ import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
 import 'package:anavis/widgets/confirm_alert_dialog.dart';
 import 'package:anavis/widgets/custom_dialog_mod_prenotation.dart';
+import 'package:anavis/widgets/custom_dialog_upload_file.dart';
 import 'package:anavis/widgets/loading_circluar.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
@@ -122,6 +123,23 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                                 ),
                           buttonBar: ButtonBar(
                             children: <Widget>[
+                              ButtonForCardBottom(
+                                icon: Icon(
+                                  Icons.file_upload,
+                                  color: Colors.white,
+                                ),
+                                color: Colors.indigo,
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        CustomDialogUploadFile(
+                                      prenotation: snapshot.data[index],
+                                    ),
+                                  );
+                                },
+                                title: 'Chiudi',
+                              ),
                               ButtonForCardBottom(
                                 icon: Icon(
                                   Icons.mode_edit,

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/models/requestprenotation.dart';
 import 'package:anavis/models/timeslot.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -93,6 +96,28 @@ class CurrentOfficeState extends ChangeNotifier {
     http.Response res =
         await http.delete("http://${_ipReference}:8080/api/prenotation/$id");
     _statusBody = res.body == 'true';
+    notifyListeners();
+  }
+
+  Future<void> closePrenotation(String id, File file) async {
+    // var req = http.MultipartRequest("PUT",
+    //     Uri.parse("http://${_ipReference}:8080/api/prenotation/$id/close"));
+
+    FormData formData = new FormData.fromMap(
+        {"file": MultipartFile.fromBytes(await file.readAsBytes())});
+
+    var response = await Dio().put(
+        "http://${_ipReference}:8080/api/prenotation/$id/close",
+        data: formData);
+
+    // req.files.add(
+    //     new http.MultipartFile.fromBytes('file', await file.readAsBytes()));
+
+    if (response.statusCode == 200) {
+      _statusBody = true;
+    } else {
+      _statusBody = false;
+    }
     notifyListeners();
   }
 
