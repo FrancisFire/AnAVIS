@@ -25,6 +25,7 @@ class _DonorViewState extends State<DonorView> {
 
   int prenotationCount = 0;
   int pendingCount = 0;
+  int pendingRequestCount = 0;
 
   List<int> selectedSpots = [];
   int touchedIndex;
@@ -46,6 +47,17 @@ class _DonorViewState extends State<DonorView> {
       (onValue) {
         setState(() {
           pendingCount = onValue.length;
+        });
+      },
+    );
+    return pendingCount;
+  }
+
+  int getPendingRequestCount() {
+    Provider.of<CurrentDonorState>(context).getDonorRequests().then(
+      (onValue) {
+        setState(() {
+          pendingRequestCount = onValue.length;
         });
       },
     );
@@ -466,6 +478,37 @@ class _DonorViewState extends State<DonorView> {
           Navigator.pushNamed(
             context,
             '/donor/prenotationsview',
+          );
+        },
+      ),
+      SpeedDialChild(
+        label: 'Lista di richieste',
+        labelBackgroundColor: Colors.redAccent,
+        backgroundColor: Colors.redAccent,
+        labelStyle: TextStyle(
+          fontSize: 18.0,
+          color: Colors.white,
+        ),
+        child: Center(
+          child: Badge(
+            toAnimate: false,
+            showBadge: getPendingRequestCount() > 0 ? true : false,
+            badgeContent: Padding(
+              padding: const EdgeInsets.all(1.4),
+              child: Text(getPendingCount().toString()),
+            ),
+            position: BadgePosition.topRight(top: -9, right: -2),
+            badgeColor: Colors.white,
+            child: Icon(
+              Icons.calendar_view_day,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            '/donor/requestsview',
           );
         },
       ),

@@ -4,6 +4,7 @@ import 'package:anavis/models/requestprenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
 import 'package:anavis/widgets/confirm_alert_dialog.dart';
+import 'package:anavis/widgets/loading_circluar.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -263,23 +264,6 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                 );
             }
           },
-        ),
-      ),
-    );
-  }
-}
-
-class RequestCircularLoading extends StatelessWidget {
-  const RequestCircularLoading({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        child: CircularProgressIndicator(
-          strokeWidth: 5,
         ),
       ),
     );

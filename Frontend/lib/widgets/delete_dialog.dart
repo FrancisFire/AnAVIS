@@ -9,8 +9,18 @@ import 'button_card_bottom.dart';
 import 'package:flushbar/flushbar_route.dart' as route;
 
 class DeleteDialog extends StatelessWidget {
-  final String prenotationId;
-  DeleteDialog({@required this.prenotationId});
+  final String id;
+  final String title;
+  final String subtitle;
+  final bool isPrenotation;
+
+  DeleteDialog({
+    @required this.id,
+    @required this.title,
+    @required this.subtitle,
+    @required this.isPrenotation,
+  });
+
   Future showFlushbar(Flushbar instance, BuildContext context) {
     final _route = route.showFlushbar(
       context: context,
@@ -29,6 +39,102 @@ class DeleteDialog extends StatelessWidget {
       String prenotationId, BuildContext context) async {
     return await Provider.of<CurrentDonorState>(context)
         .removePrenotationByID(prenotationId);
+  }
+
+  Future<void> _removeRequest(
+      String prenotationId, BuildContext context) async {
+    return await Provider.of<CurrentDonorState>(context)
+        .removeRequestByID(prenotationId);
+  }
+
+  Function removePrenotationFunction(BuildContext context) {
+    this._removePrenotation(id, context).then((_) {
+      if (Provider.of<CurrentDonorState>(context).getStatusBody()) {
+        var confirm = new Flushbar(
+          margin: EdgeInsets.all(8),
+          shouldIconPulse: true,
+          borderRadius: 26,
+          title: "Prenotazione eliminata",
+          icon: Icon(
+            Icons.check,
+            size: 28.0,
+            color: Colors.green,
+          ),
+          message: "La prenotazione è stata annullata con successo!",
+          duration: Duration(
+            seconds: 6,
+          ),
+          isDismissible: true,
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        );
+        this.showFlushbar(confirm, context);
+      } else {
+        var err = new Flushbar(
+          margin: EdgeInsets.all(8),
+          shouldIconPulse: true,
+          borderRadius: 26,
+          title: "Impossibile annullare",
+          icon: Icon(
+            Icons.error,
+            size: 28.0,
+            color: Colors.red,
+          ),
+          message:
+              "Non è stato possibile annullare la prenotazione, riprova più tardi",
+          duration: Duration(
+            seconds: 6,
+          ),
+          isDismissible: true,
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        );
+        this.showFlushbar(err, context);
+      }
+    });
+  }
+
+  Function removeRequestFunction(BuildContext context) {
+    this._removeRequest(id, context).then((_) {
+      if (Provider.of<CurrentDonorState>(context).getStatusBody()) {
+        var confirm = new Flushbar(
+          margin: EdgeInsets.all(8),
+          shouldIconPulse: true,
+          borderRadius: 26,
+          title: "Richiesta eliminata",
+          icon: Icon(
+            Icons.check,
+            size: 28.0,
+            color: Colors.green,
+          ),
+          message: "La richiesta è stata annullata con successo!",
+          duration: Duration(
+            seconds: 6,
+          ),
+          isDismissible: true,
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        );
+        this.showFlushbar(confirm, context);
+      } else {
+        var err = new Flushbar(
+          margin: EdgeInsets.all(8),
+          shouldIconPulse: true,
+          borderRadius: 26,
+          title: "Impossibile annullare",
+          icon: Icon(
+            Icons.error,
+            size: 28.0,
+            color: Colors.red,
+          ),
+          message:
+              "Non è stato possibile annullare la prenotazione, riprova più tardi",
+          duration: Duration(
+            seconds: 6,
+          ),
+          isDismissible: true,
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        );
+        this.showFlushbar(err, context);
+      }
+    });
   }
 
   @override
@@ -51,7 +157,7 @@ class DeleteDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min, // To make the card compact
               children: <Widget>[
                 Text(
-                  "Cancella prenotazione",
+                  this.title,
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.w700,
@@ -59,7 +165,7 @@ class DeleteDialog extends StatelessWidget {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  "Vuoi seriamente eliminare la tua prenotazione?",
+                  this.subtitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.grey[850],
@@ -81,7 +187,7 @@ class DeleteDialog extends StatelessWidget {
                         Navigator.pop(context);
                         Provider.of<AppState>(context).showFlushbar(
                           "Operazione annullata",
-                          "L'operazione di rimozione della prenotazione è stata annullata",
+                          "L'operazione di rimozione è stata annullata",
                           false,
                           context,
                         );
@@ -98,54 +204,9 @@ class DeleteDialog extends StatelessWidget {
                       ),
                       color: Colors.green,
                       onTap: () {
-                        this
-                            ._removePrenotation(prenotationId, context)
-                            .then((_) {
-                          if (Provider.of<CurrentDonorState>(context)
-                              .getStatusBody()) {
-                            var confirm = new Flushbar(
-                              margin: EdgeInsets.all(8),
-                              shouldIconPulse: true,
-                              borderRadius: 26,
-                              title: "Prenotazione eliminata",
-                              icon: Icon(
-                                Icons.check,
-                                size: 28.0,
-                                color: Colors.green,
-                              ),
-                              message:
-                                  "La prenotazione è stata annullata con successo!",
-                              duration: Duration(
-                                seconds: 6,
-                              ),
-                              isDismissible: true,
-                              dismissDirection:
-                                  FlushbarDismissDirection.HORIZONTAL,
-                            );
-                            this.showFlushbar(confirm, context);
-                          } else {
-                            var err = new Flushbar(
-                              margin: EdgeInsets.all(8),
-                              shouldIconPulse: true,
-                              borderRadius: 26,
-                              title: "Impossibile annullare",
-                              icon: Icon(
-                                Icons.error,
-                                size: 28.0,
-                                color: Colors.red,
-                              ),
-                              message:
-                                  "Non è stato possibile annullare la prenotazione, riprova più tardi",
-                              duration: Duration(
-                                seconds: 6,
-                              ),
-                              isDismissible: true,
-                              dismissDirection:
-                                  FlushbarDismissDirection.HORIZONTAL,
-                            );
-                            this.showFlushbar(err, context);
-                          }
-                        });
+                        this.isPrenotation
+                            ? removePrenotationFunction(context)
+                            : removeRequestFunction(context);
                       },
                       title: 'Conferma',
                     ),

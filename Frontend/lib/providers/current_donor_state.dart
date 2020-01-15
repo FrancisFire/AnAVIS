@@ -27,6 +27,23 @@ class CurrentDonorState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<RequestPrenotation>> getDonorRequests() async {
+    List<RequestPrenotation> requests = new List<RequestPrenotation>();
+    var request = await http
+        .get("http://${_ipReference}:8080/api/request/donor/${_donorMail}");
+    var parsedJson = json.decode(request.body);
+    for (var pren in parsedJson) {
+      RequestPrenotation newRequest = RequestPrenotation(
+        pren['id'],
+        pren['officeMail'],
+        pren['donorMail'],
+        pren['hour'],
+      );
+      requests.add(newRequest);
+    }
+    return requests;
+  }
+
   Future<List<ActivePrenotation>> getDonorActivePrenotations() async {
     List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
     var request = await http
@@ -68,6 +85,13 @@ class CurrentDonorState extends ChangeNotifier {
   Future<void> removePrenotationByID(String id) async {
     http.Response res =
         await http.delete("http://${_ipReference}:8080/api/prenotation/$id");
+    _statusBody = res.body == 'true';
+    notifyListeners();
+  }
+
+  Future<void> removeRequestByID(String id) async {
+    http.Response res =
+        await http.put("http://${_ipReference}:8080/api/request/$id/deny");
     _statusBody = res.body == 'true';
     notifyListeners();
   }

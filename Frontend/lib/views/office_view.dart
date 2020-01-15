@@ -233,7 +233,10 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
                         future: _fetchEvents(),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
-                            return CircularProgressIndicator();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 42.0),
+                              child: CircularProgressIndicator(),
+                            );
                           }
 
                           return TableCalendar(

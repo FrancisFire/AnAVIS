@@ -1,37 +1,27 @@
+import 'package:anavis/models/requestprenotation.dart';
 import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
-import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
+import 'package:anavis/widgets/delete_dialog.dart';
 import 'package:anavis/widgets/loading_circluar.dart';
 import 'package:anavis/widgets/painter.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class DonorPendingPrenotationView extends StatefulWidget {
+class DonorRequestView extends StatefulWidget {
   @override
-  _DonorPendingPrenotationViewState createState() =>
-      _DonorPendingPrenotationViewState();
+  _DonorRequestViewState createState() => _DonorRequestViewState();
 }
 
-class _DonorPendingPrenotationViewState
-    extends State<DonorPendingPrenotationView> {
+class _DonorRequestViewState extends State<DonorRequestView> {
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
 
   void _onRefresh() async {
-    await Provider.of<CurrentDonorState>(context).getDonorPendingPrenotations();
+    await Provider.of<CurrentDonorState>(context).getDonorActivePrenotations();
     _refreshController.refreshCompleted();
-  }
-
-  static String restrictFractionalSeconds(String dateTime) =>
-      dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
-  static String nicerTime(String timeNotNice) {
-    return formatDate(DateTime.parse(restrictFractionalSeconds(timeNotNice)),
-        ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
   }
 
   @override
@@ -39,7 +29,7 @@ class _DonorPendingPrenotationViewState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Le tue prenotazioni in attesa",
+          "Le tue richieste attive",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -56,9 +46,8 @@ class _DonorPendingPrenotationViewState
           background: Colors.white,
         ),
         child: Center(
-          child: FutureBuilder<List<Prenotation>>(
-            future: Provider.of<CurrentDonorState>(context)
-                .getDonorPendingPrenotations(),
+          child: FutureBuilder<List<RequestPrenotation>>(
+            future: Provider.of<CurrentDonorState>(context).getDonorRequests(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -86,7 +75,7 @@ class _DonorPendingPrenotationViewState
                               16.0,
                             ),
                             child: Text(
-                              "Non sono presenti richieste di donazione al momento, si prega di riprovare più tardi",
+                              "Non sono presenti richieste di donazione al momento, si prega di aggiungerne per visualizzarle",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,
@@ -110,30 +99,30 @@ class _DonorPendingPrenotationViewState
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return CardForPrenotationAndRequest(
-                          id: snapshot.data[index].getOfficeMail(),
-                          email: snapshot.data[index].getDonorMail(),
+                          email: snapshot.data[index].getOfficeMail(),
                           hour: snapshot.data[index].getHour(),
+                          id: snapshot.data[index].getId(),
                           buttonBar: ButtonBar(
                             children: <Widget>[
                               ButtonForCardBottom(
                                 icon: Icon(
-                                  Icons.calendar_today,
-                                  color: Colors.white,
+                                  Icons.cancel,
                                 ),
-                                color: Colors.orange,
+                                color: Colors.deepOrangeAccent,
                                 onTap: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/donor/prenotationupdate/recap',
-                                      arguments:
-                                          new DonorPrenotationUpdateRecapArgs(
-                                              snapshot.data[index]
-                                                  .getOfficeMail(),
-                                              snapshot.data[index].getHour(),
-                                              nicerTime(snapshot.data[index]
-                                                  .getHour()),
-                                              snapshot.data[index].getId()));
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        DeleteDialog(
+                                      id: snapshot.data[index].getId(),
+                                      isPrenotation: false,
+                                      title: "Elimina richiesta",
+                                      subtitle:
+                                          "Puoi eliminare la richiesta effettuata in precendenza",
+                                    ),
+                                  );
                                 },
-                                title: 'Visualizza riepilogo',
+                                title: 'Cancella richiesta',
                               ),
                             ],
                           ),

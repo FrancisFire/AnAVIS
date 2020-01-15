@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-const String ip = "10.0.11.200";
+const String ip = "192.168.43.133";
 
 void main() {
   initializeDateFormatting().then((_) => runApp(AnAvis()));

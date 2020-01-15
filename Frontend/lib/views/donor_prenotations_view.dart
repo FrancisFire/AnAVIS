@@ -3,6 +3,7 @@ import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/widgets/button_card_bottom.dart';
 import 'package:anavis/widgets/card_prenotation_request.dart';
 import 'package:anavis/widgets/delete_dialog.dart';
+import 'package:anavis/widgets/loading_circluar.dart';
 import 'package:anavis/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -114,8 +115,11 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
                                     context: context,
                                     builder: (BuildContext context) =>
                                         DeleteDialog(
-                                      prenotationId:
-                                          snapshot.data[index].getId(),
+                                      id: snapshot.data[index].getId(),
+                                      isPrenotation: true,
+                                      title: "Elimina prenotazione",
+                                      subtitle:
+                                          "Puoi eliminare la prenotazione effettuata",
                                     ),
                                   );
                                 },
@@ -132,21 +136,6 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
             },
           ),
         ),
-      ),
-    );
-  }
-}
-
-class RequestCircularLoading extends StatelessWidget {
-  const RequestCircularLoading({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: CircularProgressIndicator(
-        strokeWidth: 5,
       ),
     );
   }
