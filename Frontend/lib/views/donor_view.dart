@@ -1,7 +1,11 @@
+import 'package:anavis/models/closedprenotation.dart';
+import 'package:anavis/models/donationreport.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/widgets/button_fab_homepage.dart';
 import 'package:anavis/widgets/clip_path.dart';
+import 'package:anavis/widgets/loading_circluar.dart';
+import 'package:anavis/widgets/main_card_donation.dart';
 import 'package:anavis/widgets/value_blood_info.dart';
 import 'package:badges/badges.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -61,7 +65,7 @@ class _DonorViewState extends State<DonorView> {
         });
       },
     );
-    return pendingCount;
+    return pendingRequestCount;
   }
 
   @override
@@ -195,94 +199,59 @@ class _DonorViewState extends State<DonorView> {
                     top: (MediaQuery.of(context).size.height / 4),
                     child: Align(
                       alignment: Alignment.bottomCenter,
-                      child: Swiper(
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            color: Colors.white,
-                            elevation: 7,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(26.0),
-                              ),
-                            ),
-                            child: Center(
+                      child: FutureBuilder<List<ClosedPrenotation>>(
+                        future: Provider.of<CurrentDonorState>(context)
+                            .getDonorDonations(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
                               child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Chip(
-                                          avatar: CircleAvatar(
-                                            backgroundColor:
-                                                Colors.grey.shade800,
-                                            child: Icon(
-                                              Icons.calendar_today,
-                                              size: 14,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          label: Text('12 Dicembre 2019'),
-                                        ),
-                                        CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor: Colors.grey.shade800,
-                                          child: Icon(
-                                            Icons.file_download,
-                                            size: 22,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 32),
+                                child: Card(
+                                  elevation: 8,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(26.0),
                                     ),
-                                    PieChart(
-                                      PieChartData(
-                                        pieTouchData: PieTouchData(
-                                          touchCallback: (pieTouchResponse) {
-                                            setState(() {
-                                              if (pieTouchResponse.touchInput
-                                                      is FlLongPressEnd ||
-                                                  pieTouchResponse.touchInput
-                                                      is FlPanEnd) {
-                                                touchedIndex = -1;
-                                                showLegend = true;
-                                              } else {
-                                                touchedIndex = pieTouchResponse
-                                                    .touchedSectionIndex;
-                                                showLegend = false;
-                                              }
-                                            });
-                                          },
-                                        ),
-                                        borderData: FlBorderData(
-                                          show: false,
-                                        ),
-                                        sectionsSpace: 5,
-                                        centerSpaceRadius: 60,
-                                        sections: showingSections(),
-                                      ),
-                                    ),
-                                    showLegend
-                                        ? buildLegend()
-                                        : InfoValueBlood(
-                                            value: 1,
-                                            indexValue: touchedIndex,
-                                          )
-                                  ],
+                                  ),
+                                  child: ListTile(
+                                    title: Text("Storico donazioni vuoto"),
+                                    subtitle: Text(
+                                        "Non è presente alcuna donazione effettuata"),
+                                  ),
                                 ),
                               ),
-                            ),
+                            );
+                          }
+
+                          if (snapshot.data.length == 1) {
+                            return Center(
+                              child: Container(
+                                width: 330,
+                                height:
+                                    (MediaQuery.of(context).size.height / 1.7),
+                                child: MainCardDonorRecapDonation(
+                                  closedPrenotation: snapshot.data[0],
+                                ),
+                              ),
+                            );
+                          }
+
+                          return Swiper(
+                            itemBuilder: (BuildContext context, int index) {
+                              return MainCardDonorRecapDonation(
+                                closedPrenotation: snapshot.data[index],
+                              );
+                            },
+                            itemCount: snapshot.data.length,
+                            itemWidth: 330.0,
+                            index: 0,
+                            itemHeight:
+                                (MediaQuery.of(context).size.height / 1.7),
+                            layout: SwiperLayout.STACK,
                           );
                         },
-                        itemCount: 10,
-                        itemWidth: 330.0,
-                        itemHeight: (MediaQuery.of(context).size.height / 1.7),
-                        layout: SwiperLayout.STACK,
                       ),
                     ),
                   ),
@@ -296,110 +265,6 @@ class _DonorViewState extends State<DonorView> {
         iconFab: iconFAB(),
       ),
     );
-  }
-
-  Column buildLegend() {
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Chip(
-              avatar: CircleAvatar(
-                backgroundColor: Colors.red,
-              ),
-              backgroundColor: Colors.red.withOpacity(0.3),
-              label: Text(
-                'Globuli rossi',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Chip(
-              avatar: CircleAvatar(
-                backgroundColor: Colors.grey,
-              ),
-              backgroundColor: Colors.grey.withOpacity(0.3),
-              label: Text(
-                'Globuli bianchi',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Chip(
-              avatar: CircleAvatar(
-                backgroundColor: Colors.orange,
-              ),
-              backgroundColor: Colors.orange.withOpacity(0.3),
-              label: Text(
-                'Piastrine',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Chip(
-              avatar: CircleAvatar(
-                backgroundColor: Colors.green,
-              ),
-              backgroundColor: Colors.green.withOpacity(0.3),
-              label: Text(
-                'Colesterolo',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
-      final isTouched = i == touchedIndex;
-      final double radius = isTouched ? 60 : 50;
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: Colors.red,
-            value: 40,
-            showTitle: false,
-            radius: radius,
-          );
-        case 1:
-          return PieChartSectionData(
-            color: Colors.orange,
-            value: 30,
-            showTitle: false,
-            radius: radius,
-          );
-        case 2:
-          return PieChartSectionData(
-            color: Colors.grey,
-            value: 15,
-            showTitle: false,
-            radius: radius,
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.green,
-            value: 15,
-            showTitle: false,
-            radius: radius,
-          );
-        default:
-          return null;
-      }
-    });
   }
 
   List<SpeedDialChild> iconFAB() {

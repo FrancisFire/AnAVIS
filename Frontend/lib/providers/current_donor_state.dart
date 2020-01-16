@@ -106,9 +106,9 @@ class CurrentDonorState extends ChangeNotifier {
     var request = await http
         .get("http://${_ipReference}:8080/api/donation/report/${donationId}");
     var parsedJson = json.decode(request.body);
-    var rep = parsedJson[0];
+    var rep = parsedJson;
     return new DonationReport(
-      rep['id'],
+      rep['reportId'],
       rep['reportFile'],
       rep['donorMail'],
       rep['officeMail'],

@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:file_picker/file_picker.dart';
@@ -74,6 +76,7 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
                 ),
                 onPressed: () {
                   _openFileExplorer(widget.prenotation.getId());
+                  //Navigator.pop(context);
                 },
                 label: Text(
                   "Seleziona il file",
@@ -113,6 +116,21 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
   void _openFileExplorer(String id) async {
     File file = await FilePicker.getFile(type: FileType.ANY);
     await Provider.of<CurrentOfficeState>(context).closePrenotation(id, file);
+    // if (Provider.of<CurrentDonorState>(context).getStatusBody()) {
+    //   Provider.of<AppState>(context).showFlushbar(
+    //     "Operazione confermata",
+    //     "L'operazione di upload è stata effettuata con successo e la chiusura della prenotazione chiusa",
+    //     true,
+    //     context,
+    //   );
+    // } else {
+    //   Provider.of<AppState>(context).showFlushbar(
+    //     "Operazione non riuscita",
+    //     "L'operazione di upload è stata annullata e di consegunza la chiusura della prenotazione non è riuscita",
+    //     false,
+    //     context,
+    //   );
+    // }
   }
 }
 
