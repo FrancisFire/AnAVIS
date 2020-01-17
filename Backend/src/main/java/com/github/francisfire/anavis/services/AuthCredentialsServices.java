@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +17,7 @@ import com.github.francisfire.anavis.repository.AuthCredentialsRepository;
 import lombok.NonNull;
 
 @Service
-public class AuthCredentialsServices {
+public class AuthCredentialsServices implements UserDetailsService {
 
 	@Autowired
 	private AuthCredentialsRepository repository;
@@ -103,5 +106,11 @@ public class AuthCredentialsServices {
 	public AuthCredentials getAuthCredentialsInstance(@NonNull String mail) {
 		return repository.findById(mail).orElse(null);
 	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return repository.findById(username).orElse(null);
+	}
+
 
 }
