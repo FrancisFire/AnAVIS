@@ -20,6 +20,10 @@ import com.github.francisfire.anavis.services.AuthCredentialsServices;
 import com.github.francisfire.anavis.services.DonorServices;
 import com.github.francisfire.anavis.services.OfficeServices;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthCredentialsController {
@@ -65,6 +69,9 @@ public class AuthCredentialsController {
 		return authCredentialsServices.removeCredentials(mail);
 	}
 
+	@Setter
+	@Getter
+	@NoArgsConstructor
 	static class UserAndDonor {
 		private Donor donor;
 		private AuthCredentials authCredentials;
@@ -75,6 +82,9 @@ public class AuthCredentialsController {
 		}
 	}
 
+	@Setter
+	@Getter
+	@NoArgsConstructor
 	static class UserAndOffice {
 		private Office office;
 		private AuthCredentials authCredentials;

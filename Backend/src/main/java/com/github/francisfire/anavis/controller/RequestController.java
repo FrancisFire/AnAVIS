@@ -30,6 +30,7 @@ public class RequestController {
 	@GetMapping("/donor/{donorMail}")
 	public Set<RequestPrenotation> getRequestsByDonor(@PathVariable("donorMail") String donorMail){
 		return requestServices.getRequestsByDonor(donorMail);
+		
 	}
 	@GetMapping("/office/{officeMail}")
 	public Set<RequestPrenotation> getRequestsByOffice(@PathVariable("officeMail") String officeMail) {
