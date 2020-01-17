@@ -100,19 +100,26 @@ class CurrentOfficeState extends ChangeNotifier {
   }
 
   Future<void> closePrenotation(String id, File file) async {
+    if (file == null) {
+      _statusBody = false;
+      notifyListeners();
+      return;
+    }
     FormData formData = new FormData();
+
     formData.files
         .add(MapEntry("file", await MultipartFile.fromFile(file.path)));
 
-    var response = await Dio().put(
-        "http://${_ipReference}:8080/api/prenotation/$id/close",
-        data: formData);
-    if (response.statusCode == 200) {
-      _statusBody = true;
-    } else {
+    return await Dio()
+        .put("http://${_ipReference}:8080/api/prenotation/$id/close",
+            data: formData)
+        .then((res) {
+      _statusBody = res.data.toString() == 'true';
+      notifyListeners();
+    }).catchError((err) {
       _statusBody = false;
-    }
-    notifyListeners();
+      notifyListeners();
+    });
   }
 
   Future<dynamic> sendPrenotation(ActivePrenotation prenotation) async {

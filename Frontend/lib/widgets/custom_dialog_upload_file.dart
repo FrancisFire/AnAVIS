@@ -74,9 +74,27 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(26),
                 ),
-                onPressed: () {
-                  _openFileExplorer(widget.prenotation.getId());
-                  //Navigator.pop(context);
+                onPressed: () async {
+                  _closePrenotation(widget.prenotation.getId()).then((_) {
+                    if (Provider.of<CurrentOfficeState>(context)
+                        .getStatusBody()) {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Provider.of<AppState>(context).showFlushbar(
+                        "Operazione confermata",
+                        "L'operazione di upload è stata effettuata con successo e la chiusura della prenotazione chiusa",
+                        true,
+                        context,
+                      );
+                    } else {
+                      Provider.of<AppState>(context).showFlushbar(
+                        "Operazione non riuscita",
+                        "L'operazione di upload è stata annullata e di consegunza la chiusura della prenotazione non è riuscita",
+                        false,
+                        context,
+                      );
+                    }
+                  });
                 },
                 label: Text(
                   "Seleziona il file",
@@ -113,24 +131,9 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
     );
   }
 
-  void _openFileExplorer(String id) async {
+  Future<void> _closePrenotation(String id) async {
     File file = await FilePicker.getFile(type: FileType.ANY);
     await Provider.of<CurrentOfficeState>(context).closePrenotation(id, file);
-    // if (Provider.of<CurrentDonorState>(context).getStatusBody()) {
-    //   Provider.of<AppState>(context).showFlushbar(
-    //     "Operazione confermata",
-    //     "L'operazione di upload è stata effettuata con successo e la chiusura della prenotazione chiusa",
-    //     true,
-    //     context,
-    //   );
-    // } else {
-    //   Provider.of<AppState>(context).showFlushbar(
-    //     "Operazione non riuscita",
-    //     "L'operazione di upload è stata annullata e di consegunza la chiusura della prenotazione non è riuscita",
-    //     false,
-    //     context,
-    //   );
-    // }
   }
 }
 
