@@ -1,4 +1,4 @@
-import 'package:anavis/models/activeprenotation.dart';
+/*import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/models/closedprenotation.dart';
 import 'package:anavis/models/donationreport.dart';
 import 'package:anavis/models/requestprenotation.dart';
@@ -15,91 +15,6 @@ class CurrentDonorState extends ChangeNotifier {
 
   CurrentDonorState(String ip) {
     this._ipReference = ip;
-  }
-
-  Future<void> setEmail(String email) async {
-    _donorMail = email;
-    this.setCanDonate();
-  }
-
-  void setCanDonate() async {
-    var request = await http
-        .get("http://${_ipReference}:8080/api/donor/$_donorMail/canDonate");
-    _donorCanDonate = request.body == 'true';
-    notifyListeners();
-  }
-
-  Future<List<RequestPrenotation>> getDonorRequests() async {
-    List<RequestPrenotation> requests = new List<RequestPrenotation>();
-    var request = await http
-        .get("http://${_ipReference}:8080/api/request/donor/${_donorMail}");
-    var parsedJson = json.decode(request.body);
-    for (var pren in parsedJson) {
-      RequestPrenotation newRequest = RequestPrenotation(
-        pren['id'],
-        pren['officeMail'],
-        pren['donorMail'],
-        pren['hour'],
-      );
-      requests.add(newRequest);
-    }
-    return requests;
-  }
-
-  Future<List<ActivePrenotation>> getDonorActivePrenotations() async {
-    List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
-    var request = await http
-        .get("http://${_ipReference}:8080/api/prenotation/donor/${_donorMail}");
-    var parsedJson = json.decode(request.body);
-    for (var pren in parsedJson) {
-      ActivePrenotation newPrenotation = ActivePrenotation(
-          pren['id'],
-          pren['officeMail'],
-          pren['donorMail'],
-          pren['hour'],
-          pren['confirmed']);
-      if (newPrenotation.isConfirmed()) {
-        prenotations.add(newPrenotation);
-      }
-    }
-    return prenotations;
-  }
-
-  Future<List<ActivePrenotation>> getDonorPendingPrenotations() async {
-    List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
-    var request = await http
-        .get("http://${_ipReference}:8080/api/prenotation/donor/${_donorMail}");
-    var parsedJson = json.decode(request.body);
-    for (var pren in parsedJson) {
-      ActivePrenotation newPrenotation = ActivePrenotation(
-          pren['id'],
-          pren['officeMail'],
-          pren['donorMail'],
-          pren['hour'],
-          pren['confirmed']);
-      if (!newPrenotation.isConfirmed()) {
-        prenotations.add(newPrenotation);
-      }
-    }
-    return prenotations;
-  }
-
-  Future<List<ClosedPrenotation>> getDonorDonations() async {
-    List<ClosedPrenotation> donations = new List<ClosedPrenotation>();
-    var request = await http
-        .get("http://${_ipReference}:8080/api/donation/donor/${_donorMail}");
-    var parsedJson = json.decode(request.body);
-    for (var don in parsedJson) {
-      ClosedPrenotation newDonation = ClosedPrenotation(
-        don['id'],
-        don['officeMail'],
-        don['donorMail'],
-        don['hour'],
-        don['reportId'],
-      );
-      donations.add(newDonation);
-    }
-    return donations;
   }
 
   Future<DonationReport> getReportByDonationID(String donationId) async {
@@ -166,15 +81,83 @@ class CurrentDonorState extends ChangeNotifier {
     });
   }
 
-  bool getCanDonate() {
-    return _donorCanDonate;
-  }
-
-  String getDonorMail() {
-    return _donorMail;
-  }
-
   bool getStatusBody() {
     return _statusBody;
   }
+
+  Future<List<RequestPrenotation>> getDonorRequests(String donorMail) async {
+    List<RequestPrenotation> requests = new List<RequestPrenotation>();
+    String controllerRequest =
+        await _requestController.getRequestsByDonor(donorMail);
+    var parsedJson = json.decode(controllerRequest);
+    for (var pren in parsedJson) {
+      RequestPrenotation newRequest = RequestPrenotation(
+        pren['id'],
+        pren['officeMail'],
+        pren['donorMail'],
+        pren['hour'],
+      );
+      requests.add(newRequest);
+    }
+    return requests;
+  }
+
+  Future<List<ActivePrenotation>> getDonorActivePrenotations(
+      String donorMail) async {
+    List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
+    var request = await http
+        .get("http://${_ipReference}:8080/api/prenotation/donor/${donorMail}");
+    var parsedJson = json.decode(request.body);
+    for (var pren in parsedJson) {
+      ActivePrenotation newPrenotation = ActivePrenotation(
+          pren['id'],
+          pren['officeMail'],
+          pren['donorMail'],
+          pren['hour'],
+          pren['confirmed']);
+      if (newPrenotation.isConfirmed()) {
+        prenotations.add(newPrenotation);
+      }
+    }
+    return prenotations;
+  }
+
+  Future<List<ActivePrenotation>> getDonorPendingPrenotations(
+      String donorMail) async {
+    List<ActivePrenotation> prenotations = new List<ActivePrenotation>();
+    var request = await http
+        .get("http://${_ipReference}:8080/api/prenotation/donor/${donorMail}");
+    var parsedJson = json.decode(request.body);
+    for (var pren in parsedJson) {
+      ActivePrenotation newPrenotation = ActivePrenotation(
+          pren['id'],
+          pren['officeMail'],
+          pren['donorMail'],
+          pren['hour'],
+          pren['confirmed']);
+      if (!newPrenotation.isConfirmed()) {
+        prenotations.add(newPrenotation);
+      }
+    }
+    return prenotations;
+  }
+
+  Future<List<ClosedPrenotation>> getDonorDonations(String donorMail) async {
+    List<ClosedPrenotation> donations = new List<ClosedPrenotation>();
+    var request = await http
+        .get("http://${_ipReference}:8080/api/donation/donor/${donorMail}");
+    var parsedJson = json.decode(request.body);
+    for (var don in parsedJson) {
+      ClosedPrenotation newDonation = ClosedPrenotation(
+        don['id'],
+        don['officeMail'],
+        don['donorMail'],
+        don['hour'],
+        don['reportId'],
+      );
+      donations.add(newDonation);
+    }
+    return donations;
+  }
 }
+*/

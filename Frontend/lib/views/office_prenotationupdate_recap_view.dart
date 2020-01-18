@@ -1,9 +1,8 @@
 import 'package:anavis/models/activeprenotation.dart';
-import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:avatar_glow/avatar_glow.dart';
@@ -33,6 +32,7 @@ class OfficePrenotationUpdateRecap extends StatefulWidget {
 
 class _OfficePrenotationUpdateRecapState
     extends State<OfficePrenotationUpdateRecap> {
+  PrenotationService _prenotationService;
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -46,6 +46,7 @@ class _OfficePrenotationUpdateRecapState
   void initState() {
     super.initState();
     setNicerTime();
+    this._prenotationService = new PrenotationService(context);
   }
 
   void setNicerTime() {
@@ -53,12 +54,6 @@ class _OfficePrenotationUpdateRecapState
       dayValue = this.takeDay(widget.nicerTime);
       hourValue = this.takeHour(widget.nicerTime);
     });
-  }
-
-  Future<void> postRequest() async {
-    await Provider.of<CurrentOfficeState>(context).updatePrenotation(
-        ActivePrenotation(
-            widget.id, widget.officeName, widget.donor, widget.time, false));
   }
 
   Future showFlushbar(Flushbar instance) {
@@ -266,10 +261,16 @@ class _OfficePrenotationUpdateRecapState
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        this.postRequest().then((_) {
-                                          if (Provider.of<CurrentOfficeState>(
-                                                  context)
-                                              .getStatusBody()) {
+                                        _prenotationService
+                                            .updatePrenotation(
+                                                new ActivePrenotation(
+                                                    widget.id,
+                                                    widget.officeName,
+                                                    widget.donor,
+                                                    widget.time,
+                                                    false))
+                                            .then((status) {
+                                          if (status) {
                                             confirm = new Flushbar(
                                               margin: EdgeInsets.all(8),
                                               shouldIconPulse: true,

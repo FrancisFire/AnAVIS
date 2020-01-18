@@ -1,13 +1,15 @@
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/widgets/button_card_bottom.dart';
-import 'package:anavis/widgets/card_prenotation_request.dart';
-import 'package:anavis/widgets/confirm_alert_dialog.dart';
-import 'package:anavis/widgets/custom_dialog_mod_prenotation.dart';
-import 'package:anavis/widgets/custom_dialog_upload_file.dart';
-import 'package:anavis/widgets/loading_circluar.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/views/widgets/button_card_bottom.dart';
+import 'package:anavis/views/widgets/card_prenotation_request.dart';
+import 'package:anavis/views/widgets/confirm_alert_dialog.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/custom_dialog_mod_prenotation.dart';
+import 'package:anavis/views/widgets/custom_dialog_upload_file.dart';
+import 'package:anavis/views/widgets/loading_circular.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -18,19 +20,29 @@ class OfficePrenotationView extends StatefulWidget {
 }
 
 class _OfficePrenotationViewState extends State<OfficePrenotationView> {
+  List<ActivePrenotation> _officePrenotations;
+  PrenotationService _prenotationService;
+  String _mail;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
 
   void _onRefresh() async {
-    await Provider.of<CurrentOfficeState>(context).getOfficePrenotations();
+    await this.getPrenotations();
     _refreshController.refreshCompleted();
   }
 
-  Future<void> _removePrenotation(
-      String prenotationId, BuildContext context) async {
-    return await Provider.of<CurrentOfficeState>(context)
-        .removePrenotationByID(prenotationId);
+  Future<List<ActivePrenotation>> getPrenotations() async {
+    _officePrenotations =
+        await _prenotationService.getPrenotationsByOffice(this._mail);
+    return _officePrenotations;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _mail = AppState().getUserMail();
+    _prenotationService = new PrenotationService(context);
   }
 
   @override
@@ -38,7 +50,7 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Prenotazioni per ${Provider.of<CurrentOfficeState>(context).getOfficeMail()}",
+          "Prenotazioni per ${this._mail}",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -56,8 +68,7 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
         ),
         child: Center(
           child: FutureBuilder<List<ActivePrenotation>>(
-            future: Provider.of<CurrentOfficeState>(context)
-                .getOfficePrenotations(),
+            future: this.getPrenotations(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -175,46 +186,58 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                                               context,
                                               ModalRoute.withName(
                                                   'OfficeView'));
-                                          Provider.of<AppState>(context)
+                                          ConfirmationFlushbar(
+                                            "Operazione annullata",
+                                            "L'operazione è stata annulata correttamente",
+                                            false,
+                                          ).show(context);
+                                          /* Provider.of<AppState>(context)
                                               .showFlushbar(
                                             "Operazione annullata",
                                             "L'operazione è stata annulata correttamente",
                                             false,
                                             context,
-                                          );
+                                          );*/
                                         },
                                         confirmFunction: () {
-                                          this
-                                              ._removePrenotation(
-                                                  snapshot.data[index].getId(),
-                                                  context)
-                                              .then((_) {
-                                            if (Provider.of<CurrentOfficeState>(
-                                                    context)
-                                                .getStatusBody()) {
+                                          _prenotationService
+                                              .removePrenotation(
+                                                  snapshot.data[index].getId())
+                                              .then((status) {
+                                            if (status) {
                                               Navigator.popUntil(
                                                   context,
                                                   ModalRoute.withName(
                                                       'OfficeView'));
-                                              Provider.of<AppState>(context)
+                                              ConfirmationFlushbar(
+                                                "Operazione effettuata",
+                                                "L'operazione è stata effettuata correttamente",
+                                                true,
+                                              ).show(context);
+                                              /*Provider.of<AppState>(context)
                                                   .showFlushbar(
                                                 "Operazione effettuata",
                                                 "L'operazione è stata effettuata correttamente",
                                                 true,
                                                 context,
-                                              );
+                                              );*/
                                             } else {
                                               Navigator.popUntil(
                                                   context,
                                                   ModalRoute.withName(
                                                       'OfficeView'));
-                                              Provider.of<AppState>(context)
+                                              ConfirmationFlushbar(
+                                                "Operazione non effettuata",
+                                                "C'è stato un errore nell'esecuzione dell'operazione",
+                                                false,
+                                              ).show(context);
+                                              /* Provider.of<AppState>(context)
                                                   .showFlushbar(
                                                 "Operazione non effettuata",
                                                 "C'è stato un errore nell'esecuzione dell'operazione",
                                                 false,
                                                 context,
-                                              );
+                                              );*/
                                             }
                                           });
                                         },

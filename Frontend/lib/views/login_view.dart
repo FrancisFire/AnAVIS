@@ -1,9 +1,14 @@
-import 'package:anavis/widgets/card_painter.dart';
-import 'package:anavis/widgets/login_form.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/views/widgets/card_painter.dart';
+import 'package:anavis/views/widgets/login_form.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:provider/provider.dart';
+
+const donorMail = "stelluti@donor.com";
+const officeMail = "osimo@office.com";
 
 class LoginView extends StatefulWidget {
   @override
@@ -180,12 +185,14 @@ class CardLogin extends StatelessWidget {
                                   children: [
                                     LoginForm(
                                       onTap: () {
+                                        AppState().setUserMail(donorMail);
                                         Navigator.pushReplacementNamed(
                                             context, '/donor');
                                       },
                                     ),
                                     LoginForm(
                                       onTap: () {
+                                        AppState().setUserMail(officeMail);
                                         Navigator.pushReplacementNamed(
                                             context, '/office');
                                       },

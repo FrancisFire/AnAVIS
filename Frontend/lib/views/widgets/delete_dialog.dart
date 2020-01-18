@@ -1,14 +1,14 @@
-import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_donor_state.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/services/request_service.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'button_card_bottom.dart';
 import 'package:flushbar/flushbar_route.dart' as route;
 
-class DeleteDialog extends StatelessWidget {
+class DeleteDialog extends StatefulWidget {
   final String id;
   final String title;
   final String subtitle;
@@ -20,6 +20,14 @@ class DeleteDialog extends StatelessWidget {
     @required this.subtitle,
     @required this.isPrenotation,
   });
+
+  @override
+  _DeleteDialogState createState() => _DeleteDialogState();
+}
+
+class _DeleteDialogState extends State<DeleteDialog> {
+  PrenotationService _prenotationService;
+  RequestService _requestService;
 
   Future showFlushbar(Flushbar instance, BuildContext context) {
     final _route = route.showFlushbar(
@@ -35,22 +43,13 @@ class DeleteDialog extends StatelessWidget {
     );
   }
 
-  Future<void> _removePrenotation(
-      String prenotationId, BuildContext context) async {
-    return await Provider.of<CurrentDonorState>(context)
-        .removePrenotationByID(prenotationId);
-  }
-
-  Future<void> _removeRequest(
-      String prenotationId, BuildContext context) async {
-    return await Provider.of<CurrentDonorState>(context)
-        .removeRequestByID(prenotationId);
-  }
-
   Function removePrenotationFunction(BuildContext context) {
-    this._removePrenotation(id, context).then((_) {
-      if (Provider.of<CurrentDonorState>(context).getStatusBody()) {
-        var confirm = new Flushbar(
+    _prenotationService.removePrenotation(widget.id).then((status) {
+      if (status) {
+        new ConfirmationFlushbar("Prenotazione eliminata",
+                "La prenotazione è stata annullata con successo!", true)
+            .show(context);
+        /*var confirm = new Flushbar(
           margin: EdgeInsets.all(8),
           shouldIconPulse: true,
           borderRadius: 26,
@@ -67,9 +66,14 @@ class DeleteDialog extends StatelessWidget {
           isDismissible: true,
           dismissDirection: FlushbarDismissDirection.HORIZONTAL,
         );
-        this.showFlushbar(confirm, context);
+        this.showFlushbar(confirm, context);*/
       } else {
-        var err = new Flushbar(
+        new ConfirmationFlushbar(
+                "Impossibile annullare",
+                "Non è stato possibile annullare la prenotazione, riprova più tardi",
+                true)
+            .show(context);
+        /*var err = new Flushbar(
           margin: EdgeInsets.all(8),
           shouldIconPulse: true,
           borderRadius: 26,
@@ -87,15 +91,18 @@ class DeleteDialog extends StatelessWidget {
           isDismissible: true,
           dismissDirection: FlushbarDismissDirection.HORIZONTAL,
         );
-        this.showFlushbar(err, context);
+        this.showFlushbar(err, context);*/
       }
     });
   }
 
   Function removeRequestFunction(BuildContext context) {
-    this._removeRequest(id, context).then((_) {
-      if (Provider.of<CurrentDonorState>(context).getStatusBody()) {
-        var confirm = new Flushbar(
+    _requestService.denyRequest(widget.id).then((status) {
+      if (status) {
+        new ConfirmationFlushbar("Richiesta eliminata",
+                "La richiesta è stata annullata con successo!", true)
+            .show(context);
+        /* var confirm = new Flushbar(
           margin: EdgeInsets.all(8),
           shouldIconPulse: true,
           borderRadius: 26,
@@ -112,9 +119,15 @@ class DeleteDialog extends StatelessWidget {
           isDismissible: true,
           dismissDirection: FlushbarDismissDirection.HORIZONTAL,
         );
-        this.showFlushbar(confirm, context);
+        this.showFlushbar(confirm, context);*/
       } else {
-        var err = new Flushbar(
+        new ConfirmationFlushbar(
+                "Impossibile annullare",
+                "Non è stato possibile annullare la prenotazione, riprova più tardi",
+                false)
+            .show(context);
+
+        /*var err = new Flushbar(
           margin: EdgeInsets.all(8),
           shouldIconPulse: true,
           borderRadius: 26,
@@ -132,9 +145,17 @@ class DeleteDialog extends StatelessWidget {
           isDismissible: true,
           dismissDirection: FlushbarDismissDirection.HORIZONTAL,
         );
-        this.showFlushbar(err, context);
+        this.showFlushbar(err, context);*/
       }
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._prenotationService = new PrenotationService(context);
+    this._requestService = new RequestService(context);
   }
 
   @override
@@ -157,7 +178,7 @@ class DeleteDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min, // To make the card compact
               children: <Widget>[
                 Text(
-                  this.title,
+                  this.widget.title,
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.w700,
@@ -165,7 +186,7 @@ class DeleteDialog extends StatelessWidget {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  this.subtitle,
+                  this.widget.subtitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.grey[850],
@@ -185,12 +206,17 @@ class DeleteDialog extends StatelessWidget {
                       color: Colors.red,
                       onTap: () {
                         Navigator.pop(context);
-                        Provider.of<AppState>(context).showFlushbar(
+                        ConfirmationFlushbar(
+                                "Operazione annullata",
+                                "L'operazione di rimozione è stata annullata",
+                                false)
+                            .show(context);
+                        /*Provider.of<AppState>(context).showFlushbar(
                           "Operazione annullata",
                           "L'operazione di rimozione è stata annullata",
                           false,
                           context,
-                        );
+                        );*/
                       },
                       title: 'Annulla',
                     ),
@@ -204,7 +230,7 @@ class DeleteDialog extends StatelessWidget {
                       ),
                       color: Colors.green,
                       onTap: () {
-                        this.isPrenotation
+                        this.widget.isPrenotation
                             ? removePrenotationFunction(context)
                             : removeRequestFunction(context);
                       },

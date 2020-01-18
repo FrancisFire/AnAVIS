@@ -2,11 +2,14 @@ import 'package:anavis/models/closedprenotation.dart';
 import 'package:anavis/models/donationreport.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/widgets/button_fab_homepage.dart';
-import 'package:anavis/widgets/clip_path.dart';
-import 'package:anavis/widgets/loading_circluar.dart';
-import 'package:anavis/widgets/main_card_donation.dart';
-import 'package:anavis/widgets/value_blood_info.dart';
+import 'package:anavis/services/donation_service.dart';
+import 'package:anavis/services/donor_service.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/services/request_service.dart';
+import 'package:anavis/views/widgets/button_fab_homepage.dart';
+import 'package:anavis/views/widgets/clip_path.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/main_card_donation.dart';
 import 'package:badges/badges.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +25,8 @@ class DonorView extends StatefulWidget {
 }
 
 class _DonorViewState extends State<DonorView> {
-  bool _donorCanDonate;
-  String _email;
+  bool _donorCanDonate = false;
+  String _email = "";
 
   bool showLegend = true;
 
@@ -34,9 +37,13 @@ class _DonorViewState extends State<DonorView> {
   List<int> selectedSpots = [];
   int touchedIndex;
   int lastPanStartOnIndex = -1;
+  PrenotationService _prenotationService;
+  RequestService _requestService;
+  DonationService _donationService;
+  DonorService _donorService;
 
   int getPrenotationCount() {
-    Provider.of<CurrentDonorState>(context).getDonorActivePrenotations().then(
+    _prenotationService.getPrenotationsByDonor(this._email).then(
       (onValue) {
         setState(() {
           prenotationCount = onValue.length;
@@ -47,7 +54,7 @@ class _DonorViewState extends State<DonorView> {
   }
 
   int getPendingCount() {
-    Provider.of<CurrentDonorState>(context).getDonorPendingPrenotations().then(
+    _prenotationService.getDonorNotConfirmedPrenotations(this._email).then(
       (onValue) {
         setState(() {
           pendingCount = onValue.length;
@@ -58,7 +65,7 @@ class _DonorViewState extends State<DonorView> {
   }
 
   int getPendingRequestCount() {
-    Provider.of<CurrentDonorState>(context).getDonorRequests().then(
+    _requestService.getRequestsByDonor(this._email).then(
       (onValue) {
         setState(() {
           pendingRequestCount = onValue.length;
@@ -68,11 +75,25 @@ class _DonorViewState extends State<DonorView> {
     return pendingRequestCount;
   }
 
+  void setCanDonate() async {
+    this._donorCanDonate =
+        await _donorService.checkDonationPossibility(this._email);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _prenotationService = new PrenotationService(context);
+    _requestService = new RequestService(context);
+    _donationService = new DonationService(context);
+    _donorService = new DonorService(context);
+    _email = AppState().getUserMail();
+    this.setCanDonate();
+  }
+
   @override
   Widget build(BuildContext context) {
-    _email = Provider.of<CurrentDonorState>(context).getDonorMail();
-    _donorCanDonate = Provider.of<CurrentDonorState>(context).getCanDonate();
-
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -136,27 +157,21 @@ class _DonorViewState extends State<DonorView> {
                   child: Row(
                     children: <Widget>[
                       Chip(
-                        backgroundColor: Provider.of<CurrentDonorState>(context)
-                                .getCanDonate()
-                            ? Colors.green
-                            : Colors.red,
+                        backgroundColor:
+                            this._donorCanDonate ? Colors.green : Colors.red,
                         elevation: 14,
                         avatar: CircleAvatar(
                           backgroundColor: Colors.white,
                           child: Icon(
-                            Provider.of<CurrentDonorState>(context)
-                                    .getCanDonate()
-                                ? Icons.check
-                                : Icons.warning,
-                            color: Provider.of<CurrentDonorState>(context)
-                                    .getCanDonate()
+                            this._donorCanDonate ? Icons.check : Icons.warning,
+                            color: this._donorCanDonate
                                 ? Colors.green
                                 : Colors.red,
                             size: 18.0,
                           ),
                         ),
                         label: Text(
-                          Provider.of<CurrentDonorState>(context).getCanDonate()
+                          this._donorCanDonate
                               ? 'Puoi donare'
                               : 'Non puoi donare',
                           style: TextStyle(
@@ -200,8 +215,8 @@ class _DonorViewState extends State<DonorView> {
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: FutureBuilder<List<ClosedPrenotation>>(
-                        future: Provider.of<CurrentDonorState>(context)
-                            .getDonorDonations(),
+                        future:
+                            _donationService.getDonationsByDonor(this._email),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return Center(
@@ -275,10 +290,8 @@ class _DonorViewState extends State<DonorView> {
           color: Colors.white,
         ),
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            '/donor/candonate',
-          );
+          Navigator.pushNamed(context, '/donor/candonate',
+              arguments: _donorCanDonate);
         },
         label: 'Possibilità di donare',
         labelBackgroundColor: Colors.redAccent,
@@ -307,11 +320,16 @@ class _DonorViewState extends State<DonorView> {
               '/donor/officerequest',
             );
           } else {
-            Provider.of<AppState>(context).showFlushbar(
+            ConfirmationFlushbar(
+              "Operazione non consentita",
+              "Al momento non puoi richiedere di prenotare una donazione, prova tra un pò di giorni.",
+              false,
+            ).show(context);
+            /* Provider.of<AppState>(context).showFlushbar(
                 "Operazione non consentita",
                 "Al momento non puoi richiedere di prenotare una donazione, prova tra un pò di giorni.",
                 false,
-                context);
+                context);*/
           }
         },
       ),

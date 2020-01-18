@@ -1,6 +1,5 @@
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
-import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
 import 'package:anavis/views/donor_pendingprenotations_view.dart';
 import 'package:anavis/views/donor_prenotations_view.dart';
@@ -88,11 +87,10 @@ class RouteGenerator {
         return _errorRoute();
 
       case '/office/prenotations/timeview':
-        if (args is OfficePrenotationTimeViewArgs) {
+        if (args is String) {
           return MaterialPageRoute(
               builder: (_) => OfficePrenotationTimeView(
-                    officeName: args.getOfficeName(),
-                    donor: args.getDonor(),
+                    donor: args,
                   ),
               settings: RouteSettings(
                 name: 'OfficePrenotationTimeView',
@@ -130,11 +128,16 @@ class RouteGenerator {
         }
         return _errorRoute();
       case '/donor/candonate':
-        return MaterialPageRoute(
-            builder: (_) => DonorCanDonateView(),
-            settings: RouteSettings(
-              name: 'DonorCanDonateView',
-            ));
+        if (args is bool) {
+          return MaterialPageRoute(
+              builder: (_) => DonorCanDonateView(
+                    canDonate: args,
+                  ),
+              settings: RouteSettings(
+                name: 'DonorCanDonateView',
+              ));
+        }
+        return _errorRoute();
 
       case "/donor/prenotationsview":
         return MaterialPageRoute(

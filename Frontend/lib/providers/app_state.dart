@@ -7,101 +7,31 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 
-class AppState extends ChangeNotifier {
-  Map<String, String> _officeMailsAndNames = new Map<String, String>();
+class AppState {
   String _ipReference;
-  Set<String> _availableDonorsMailsByOffice = new Set<String>();
+  String _userMail;
 
-  AppState(String ip) {
-    _ipReference = ip;
-    setOfficeMailsAndNames();
+  String getIp() {
+    return _ipReference;
   }
 
-  void setOfficeMailsAndNames() async {
-    var request = await http.get("http://${_ipReference}:8080/api/office");
-    var parsedJson = json.decode(request.body);
-    for (var office in parsedJson) {
-      _officeMailsAndNames.putIfAbsent(office['mail'], () => office['place']);
-    }
-    notifyListeners();
+  void setIpReference(String ip) {
+    this._ipReference = ip;
   }
 
-  Future<void> setAvailableDonorsMailsByOffice(String officeMail) async {
-    var request = await http.get(
-        "http://${_ipReference}:8080/api/donor/office/$officeMail/available");
-    var parsedJson = json.decode(request.body);
-    for (var office in parsedJson) {
-      _availableDonorsMailsByOffice.add(office['mail']);
-    }
-    notifyListeners();
+  void setUserMail(String mail) {
+    this._userMail = mail;
   }
 
-  Map<String, String> getOfficeMailsAndNames() {
-    return _officeMailsAndNames;
+  String getUserMail() {
+    return this._userMail;
   }
 
-  Set<String> getAvailableDonorsMailsByOffice() {
-    return _availableDonorsMailsByOffice;
+  static final AppState _singleton = AppState._internal();
+
+  factory AppState() {
+    return _singleton;
   }
 
-  Future<Donor> getDonorByMail(String donorMail) async {
-    var request =
-        await http.get("http://${_ipReference}:8080/api/donor/$donorMail");
-    var parsedJson = json.decode(request.body);
-    var donorJson = parsedJson[0];
-    Donor donor = new Donor.complete(
-        donorJson['mail'],
-        donorJson['officeMail'],
-        donorJson['category'],
-        donorJson['name'],
-        donorJson['surname'],
-        donorJson['birthday'],
-        donorJson['birthPlace'],
-        donorJson['canDonate'],
-        donorJson['lastDonation'],
-        donorJson['leftDonationsInYear'],
-        donorJson['firstDonationInYear']);
-    return donor;
-  }
-
-  Future<Office> getOfficeByMail(String officeMail) async {
-    var request =
-        await http.get("http://${_ipReference}:8080/api/office/$officeMail");
-    var parsedJson = json.decode(request.body);
-    var officeJson = parsedJson[0];
-    Set<TimeSlot> timeTable = new Set<TimeSlot>();
-    for (var time in officeJson['donationTimeTable']) {
-      timeTable.add(TimeSlot(time['dateTime'], time['donorSlots']));
-    }
-    Office office =
-        new Office.complete(officeJson['mail'], officeJson['place'], timeTable);
-    return office;
-  }
-
-  void showFlushbar(
-      String title, String message, bool isGood, BuildContext context) {
-    Flushbar(
-      margin: EdgeInsets.all(8),
-      borderRadius: 26,
-      shouldIconPulse: true,
-      title: title,
-      icon: isGood
-          ? Icon(
-              Icons.check,
-              size: 28.0,
-              color: Colors.green[600],
-            )
-          : Icon(
-              Icons.info_outline,
-              size: 28.0,
-              color: Colors.red[600],
-            ),
-      message: message,
-      duration: Duration(
-        seconds: 6,
-      ),
-      isDismissible: true,
-      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-    ).show(context);
-  }
+  AppState._internal();
 }

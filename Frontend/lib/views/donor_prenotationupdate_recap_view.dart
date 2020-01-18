@@ -1,5 +1,7 @@
 import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +32,7 @@ class DonorPrenotationUpdateRecap extends StatefulWidget {
 
 class _DonorPrenotationUpdateRecapState
     extends State<DonorPrenotationUpdateRecap> {
+  PrenotationService _prenotationService;
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -37,12 +40,13 @@ class _DonorPrenotationUpdateRecapState
       RegExp(r"Data: ?.+? ?\| ?Orario: ?(\d\d:\d\d)").firstMatch(hour).group(1);
 
   String dayValue, hourValue;
-  Flushbar confirm, decline, err;
+  //Flushbar confirm, decline, err;
 
   @override
   void initState() {
     super.initState();
     setNicerTime();
+    _prenotationService = new PrenotationService(context);
   }
 
   void setNicerTime() {
@@ -52,17 +56,7 @@ class _DonorPrenotationUpdateRecapState
     });
   }
 
-  Future<void> acceptChange() async {
-    await Provider.of<CurrentDonorState>(context)
-        .acceptPrenotationChange(widget.prenotationId);
-  }
-
-  Future<void> denyChange() async {
-    await Provider.of<CurrentDonorState>(context)
-        .denyPrenotationChange(widget.prenotationId);
-  }
-
-  Future showFlushbar(Flushbar instance) {
+  /*Future showFlushbar(Flushbar instance) {
     final _route = route.showFlushbar(
       context: context,
       flushbar: instance,
@@ -74,7 +68,7 @@ class _DonorPrenotationUpdateRecapState
     ).pushReplacement(
       _route,
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -222,11 +216,17 @@ class _DonorPrenotationUpdateRecapState
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        this.denyChange().then((_) {
-                                          if (Provider.of<CurrentDonorState>(
-                                                  context)
-                                              .getStatusBody()) {
-                                            confirm = new Flushbar(
+                                        _prenotationService
+                                            .denyPrenotationChange(
+                                                widget.prenotationId)
+                                            .then((status) {
+                                          if (status) {
+                                            new ConfirmationFlushbar(
+                                                    "Conferma annullata",
+                                                    "La nuova prenotazione è stata annullata con successo",
+                                                    true)
+                                                .show(context);
+                                            /*confirm = new Flushbar(
                                               margin: EdgeInsets.all(8),
                                               shouldIconPulse: true,
                                               borderRadius: 26,
@@ -246,9 +246,14 @@ class _DonorPrenotationUpdateRecapState
                                                   FlushbarDismissDirection
                                                       .HORIZONTAL,
                                             );
-                                            this.showFlushbar(this.confirm);
+                                            this.showFlushbar(this.confirm);*/
                                           } else {
-                                            err = new Flushbar(
+                                            new ConfirmationFlushbar(
+                                                    "Impossibile confermare",
+                                                    "Non è stato possibile effettuare la conferma, riprova più tardi",
+                                                    false)
+                                                .show(context);
+                                            /*err = new Flushbar(
                                               margin: EdgeInsets.all(8),
                                               shouldIconPulse: true,
                                               borderRadius: 26,
@@ -268,7 +273,7 @@ class _DonorPrenotationUpdateRecapState
                                                   FlushbarDismissDirection
                                                       .HORIZONTAL,
                                             );
-                                            this.showFlushbar(this.err);
+                                            this.showFlushbar(this.err);*/
                                           }
                                         });
                                       },
@@ -295,11 +300,17 @@ class _DonorPrenotationUpdateRecapState
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        this.acceptChange().then((_) {
-                                          if (Provider.of<CurrentDonorState>(
-                                                  context)
-                                              .getStatusBody()) {
-                                            confirm = new Flushbar(
+                                        _prenotationService
+                                            .acceptPrenotationChange(
+                                                widget.prenotationId)
+                                            .then((status) {
+                                          if (status) {
+                                            new ConfirmationFlushbar(
+                                                    "Conferma effettuata",
+                                                    "La conferma della nuova prenotazione è stata effettuata con successo!",
+                                                    true)
+                                                .show(context);
+                                            /*confirm = new Flushbar(
                                               margin: EdgeInsets.all(8),
                                               shouldIconPulse: true,
                                               borderRadius: 26,
@@ -319,9 +330,14 @@ class _DonorPrenotationUpdateRecapState
                                                   FlushbarDismissDirection
                                                       .HORIZONTAL,
                                             );
-                                            this.showFlushbar(this.confirm);
+                                            this.showFlushbar(this.confirm);*/
                                           } else {
-                                            err = new Flushbar(
+                                            new ConfirmationFlushbar(
+                                                    "Impossibile confermare",
+                                                    "Non è stato possibile effettuare la conferma, riprova più tardi",
+                                                    false)
+                                                .show(context);
+                                            /* err = new Flushbar(
                                               margin: EdgeInsets.all(8),
                                               shouldIconPulse: true,
                                               borderRadius: 26,
@@ -341,7 +357,7 @@ class _DonorPrenotationUpdateRecapState
                                                   FlushbarDismissDirection
                                                       .HORIZONTAL,
                                             );
-                                            this.showFlushbar(this.err);
+                                            this.showFlushbar(this.err);*/
                                           }
                                         });
                                       },

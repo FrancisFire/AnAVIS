@@ -4,15 +4,14 @@ import 'dart:typed_data';
 
 import 'package:anavis/models/closedprenotation.dart';
 import 'package:anavis/models/donationreport.dart';
-import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/widgets/value_blood_info.dart';
+import 'package:anavis/services/donation_service.dart';
+import 'package:anavis/views/widgets/value_blood_info.dart';
 import 'package:date_format/date_format.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 
 class MainCardDonorRecapDonation extends StatefulWidget {
   final ClosedPrenotation closedPrenotation;
@@ -29,7 +28,7 @@ class MainCardDonorRecapDonation extends StatefulWidget {
 class _MainCardDonorRecapDonationState
     extends State<MainCardDonorRecapDonation> {
   final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-
+  DonationService _donationService;
   List<int> selectedSpots = [];
   int touchedIndex;
   int lastPanStartOnIndex = -1;
@@ -42,6 +41,13 @@ class _MainCardDonorRecapDonationState
     File file = File('$dir/$filename.pdf');
     await file.writeAsBytes(bytes);
     return file;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._donationService = new DonationService(context);
   }
 
   @override
@@ -86,8 +92,7 @@ class _MainCardDonorRecapDonationState
                       String dir =
                           (await getApplicationDocumentsDirectory()).path;
                       DonationReport donationReport =
-                          await Provider.of<CurrentDonorState>(context)
-                              .getReportByDonationID(
+                          await _donationService.getDonationReport(
                         widget.closedPrenotation.getId(),
                       );
                       await _createFileFromString(

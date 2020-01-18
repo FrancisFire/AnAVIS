@@ -1,9 +1,15 @@
+import 'package:anavis/apicontrollers/prenotation_controller.dart';
 import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/models/donor.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/widgets/button_fab_homepage.dart';
-import 'package:anavis/widgets/clip_path.dart';
-import 'package:anavis/widgets/login_form.dart';
+import 'package:anavis/services/donor_service.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/services/request_service.dart';
+import 'package:anavis/views/widgets/button_fab_homepage.dart';
+import 'package:anavis/views/widgets/clip_path.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/login_form.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,13 +29,21 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   List _selectedEvents;
   AnimationController _animationController;
   CalendarController _calendarController;
+  PrenotationService _prenotationService;
+  RequestService _requestService;
+  DonorService _donorService;
+  String _mail;
+  List<Donor> _availableDonors = new List<Donor>();
 
   bool state = false;
 
   @override
   void initState() {
     super.initState();
-
+    _prenotationService = new PrenotationService(context);
+    _requestService = new RequestService(context);
+    _mail = AppState().getUserMail();
+    _donorService = new DonorService(context);
     _calendarController = CalendarController();
 
     _animationController = AnimationController(
@@ -53,13 +67,19 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> getAvailableDonors() async {
+    _availableDonors =
+        await _donorService.getAvailableDonorsByOfficeId(this._mail);
+    return;
+  }
+
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {}
 
   Future<Map<DateTime, List>> _fetchEvents() async {
     Map<DateTime, List> nicerEvents = new Map<DateTime, List>();
     List<ActivePrenotation> prenotations =
-        await Provider.of<CurrentOfficeState>(context).getOfficePrenotations();
+        await _prenotationService.getPrenotationsByOffice(this._mail);
     for (var activePrenotation in prenotations) {
       if (activePrenotation.isConfirmed()) {
         nicerEvents.putIfAbsent(DateTime.parse(activePrenotation.getHour()),
@@ -69,12 +89,10 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
     return nicerEvents;
   }
 
-  String _officeMail;
-
   int prenotationCount = 0;
 
   int getPrenotationCount() {
-    Provider.of<CurrentOfficeState>(context).getOfficePrenotations().then(
+    _prenotationService.getPrenotationsByOffice(this._mail).then(
       (onValue) {
         setState(() {
           prenotationCount = onValue.length;
@@ -87,7 +105,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   int requestCount = 0;
 
   int getRequestCount() {
-    Provider.of<CurrentOfficeState>(context).getOfficeRequests().then(
+    _requestService.getRequestsByOffice(this._mail).then(
       (onValue) {
         setState(() {
           requestCount = onValue.length;
@@ -99,7 +117,6 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _officeMail = Provider.of<CurrentOfficeState>(context).getOfficeMail();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -151,7 +168,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
                 ),
                 Flexible(
                   child: AutoSizeText(
-                    _officeMail,
+                    this._mail,
                     style: TextStyle(
                       fontSize: 52,
                       color: Colors.white,
@@ -380,7 +397,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
           Navigator.pushNamed(
             context,
             '/office/requests',
-            arguments: _officeMail,
+            arguments: this._mail,
           );
         },
       ),
@@ -397,22 +414,24 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
           color: Colors.white,
         ),
         onTap: () async {
-          await Provider.of<AppState>(context)
-              .setAvailableDonorsMailsByOffice(_officeMail);
-          if (Provider.of<AppState>(context)
-              .getAvailableDonorsMailsByOffice()
-              .isEmpty) {
-            Provider.of<AppState>(context).showFlushbar(
+          await this.getAvailableDonors();
+          if (this._availableDonors.isEmpty) {
+            ConfirmationFlushbar(
+              'Nessun donatore',
+              'Al momento non ci sono donatori disponibili',
+              false,
+            ).show(context);
+            /* Provider.of<AppState>(context).showFlushbar(
               'Nessun donatore',
               'Al momento non ci sono donatori disponibili',
               false,
               context,
-            );
+            );*/
           } else {
             Navigator.pushNamed(
               context,
               '/office/prenotations',
-              arguments: _officeMail,
+              arguments: this._mail,
             );
           }
         },

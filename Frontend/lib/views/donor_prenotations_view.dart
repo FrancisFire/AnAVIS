@@ -1,10 +1,13 @@
+import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/models/prenotation.dart';
-import 'package:anavis/widgets/button_card_bottom.dart';
-import 'package:anavis/widgets/card_prenotation_request.dart';
-import 'package:anavis/widgets/delete_dialog.dart';
-import 'package:anavis/widgets/loading_circluar.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/views/widgets/button_card_bottom.dart';
+import 'package:anavis/views/widgets/card_prenotation_request.dart';
+import 'package:anavis/views/widgets/delete_dialog.dart';
+import 'package:anavis/views/widgets/loading_circular.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -15,13 +18,30 @@ class DonorPrenotationView extends StatefulWidget {
 }
 
 class _DonorPrenotationViewState extends State<DonorPrenotationView> {
+  List<ActivePrenotation> _donorPrenotations;
+  PrenotationService _prenotationService;
+  String _mail;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
 
   void _onRefresh() async {
-    await Provider.of<CurrentDonorState>(context).getDonorActivePrenotations();
+    await this.getPrenotations();
     _refreshController.refreshCompleted();
+  }
+
+  Future<List<ActivePrenotation>> getPrenotations() async {
+    _donorPrenotations =
+        await _prenotationService.getPrenotationsByDonor(this._mail);
+    return _donorPrenotations;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _mail = AppState().getUserMail();
+    _prenotationService = new PrenotationService(context);
   }
 
   @override
@@ -47,8 +67,7 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
         ),
         child: Center(
           child: FutureBuilder<List<Prenotation>>(
-            future: Provider.of<CurrentDonorState>(context)
-                .getDonorActivePrenotations(),
+            future: this.getPrenotations(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:

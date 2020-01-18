@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:anavis/models/activeprenotation.dart';
-import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/providers/current_office_state.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CustomDialogUploadFile extends StatefulWidget {
   final ActivePrenotation prenotation;
@@ -21,6 +19,15 @@ class CustomDialogUploadFile extends StatefulWidget {
 }
 
 class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
+  PrenotationService _prenotationService;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._prenotationService = new PrenotationService(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -75,24 +82,33 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
                   borderRadius: BorderRadius.circular(26),
                 ),
                 onPressed: () async {
-                  _closePrenotation(widget.prenotation.getId()).then((_) {
-                    if (Provider.of<CurrentOfficeState>(context)
-                        .getStatusBody()) {
+                  _closePrenotation(widget.prenotation.getId()).then((status) {
+                    if (status) {
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      Provider.of<AppState>(context).showFlushbar(
+                      ConfirmationFlushbar(
+                        "Operazione confermata",
+                        "L'operazione di upload è stata effettuata con successo e la chiusura della prenotazione chiusa",
+                        true,
+                      ).show(context);
+                      /*Provider.of<AppState>(context).showFlushbar(
                         "Operazione confermata",
                         "L'operazione di upload è stata effettuata con successo e la chiusura della prenotazione chiusa",
                         true,
                         context,
-                      );
+                      );*/
                     } else {
-                      Provider.of<AppState>(context).showFlushbar(
+                      ConfirmationFlushbar(
+                        "Operazione non riuscita",
+                        "L'operazione di upload è stata annullata e di consegunza la chiusura della prenotazione non è riuscita",
+                        false,
+                      ).show(context);
+                      /* Provider.of<AppState>(context).showFlushbar(
                         "Operazione non riuscita",
                         "L'operazione di upload è stata annullata e di consegunza la chiusura della prenotazione non è riuscita",
                         false,
                         context,
-                      );
+                      );*/
                     }
                   });
                 },
@@ -131,9 +147,10 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
     );
   }
 
-  Future<void> _closePrenotation(String id) async {
+  Future<bool> _closePrenotation(String id) async {
     File file = await FilePicker.getFile(type: FileType.ANY);
-    await Provider.of<CurrentOfficeState>(context).closePrenotation(id, file);
+    bool confirmation = await _prenotationService.closePrenotation(id, file);
+    return confirmation;
   }
 }
 

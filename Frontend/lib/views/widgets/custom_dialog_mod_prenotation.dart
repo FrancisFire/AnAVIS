@@ -1,8 +1,11 @@
+import 'package:anavis/models/timeslot.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
+import 'package:anavis/services/office_service.dart';
 import 'package:anavis/viewargs/office_prenotationupdate_recap_args.dart';
-import 'package:anavis/widgets/button_card_bottom.dart';
-import 'package:anavis/widgets/form_field_general.dart';
+import 'package:anavis/views/widgets/button_card_bottom.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/form_field_general.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +13,7 @@ import 'package:provider/provider.dart';
 class DialogModificationPrenotation extends StatefulWidget {
   final String donor;
   final String prenotationId;
+
   DialogModificationPrenotation({
     @required this.donor,
     @required this.prenotationId,
@@ -21,9 +25,19 @@ class DialogModificationPrenotation extends StatefulWidget {
 class _DialogModificationPrenotationState
     extends State<DialogModificationPrenotation> {
   String _newOffice, _newHour;
-  List<DropdownMenuItem> _offices, listOfficeItem, listTimeItem;
+  Map<String, String> _officeMailsAndNames;
+  List<DropdownMenuItem> _offices, _listOfficeItem, _listTimeItem;
+  OfficeService _officeService;
+  List<TimeSlot> _timeTables;
+  List<TimeSlot> _availableTimeTables;
 
   bool activeOffice = true, activeHour = true;
+
+  Future<void> setOfficeTimeTablesByOffice(String officeMail) async {
+    _timeTables = await _officeService.getDonationsTimeTable(officeMail);
+    _availableTimeTables =
+        await _officeService.getAvailableTimeTablesByOffice(officeMail);
+  }
 
   @override
   void initState() {
@@ -51,12 +65,11 @@ class _DialogModificationPrenotationState
         ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
   }
 
-  void createOfficeNames(BuildContext context) {
-    listOfficeItem = new List<DropdownMenuItem>();
-    Provider.of<AppState>(context)
-        .getOfficeMailsAndNames()
-        .forEach((key, value) {
-      listOfficeItem.add(new DropdownMenuItem(
+  void createOfficeNames(BuildContext context) async {
+    _officeMailsAndNames = await _officeService.getOfficeMailsAndNames();
+    _listOfficeItem = new List<DropdownMenuItem>();
+    this._officeMailsAndNames.forEach((key, value) {
+      _listOfficeItem.add(new DropdownMenuItem(
         value: key,
         child: Container(
           child: Text(
@@ -70,16 +83,15 @@ class _DialogModificationPrenotationState
     });
 
     setState(() {
-      _offices = listOfficeItem;
+      _offices = _listOfficeItem;
     });
   }
 
   List<DropdownMenuItem> createHourItem(BuildContext context) {
-    listTimeItem = new List<DropdownMenuItem>();
-    for (var slot in Provider.of<CurrentOfficeState>(context)
-        .getOfficeAvailableTimeTablesByOffice()) {
+    _listTimeItem = new List<DropdownMenuItem>();
+    for (var slot in this._availableTimeTables) {
       String _timeFormatted = nicerTime(slot.getDateTime());
-      listTimeItem.add(new DropdownMenuItem(
+      _listTimeItem.add(new DropdownMenuItem(
         value: slot.getDateTime(),
         child: Container(
           child: Text(
@@ -91,7 +103,7 @@ class _DialogModificationPrenotationState
         ),
       ));
     }
-    return listTimeItem;
+    return _listTimeItem;
   }
 
   dialogContent(BuildContext context) {
@@ -148,8 +160,7 @@ class _DialogModificationPrenotationState
                   valueSelected: _newOffice,
                   disabled: activeOffice,
                   onChanged: (newValue) async {
-                    await Provider.of<CurrentOfficeState>(context)
-                        .setOfficeTimeTablesByOffice(newValue);
+                    await this.setOfficeTimeTablesByOffice(newValue);
                     setState(() {
                       _newOffice = newValue;
                       activeOffice = false;
@@ -184,12 +195,17 @@ class _DialogModificationPrenotationState
                     color: Colors.red,
                     onTap: () {
                       Navigator.pop(context);
-                      Provider.of<AppState>(context).showFlushbar(
+                      ConfirmationFlushbar(
+                              "Operazione annullata",
+                              "L'operazione di modifica è stata annullata",
+                              false)
+                          .show(context);
+                      /*Provider.of<AppState>(context).showFlushbar(
                         "Operazione annullata",
                         "L'operazione di modifica è stata annullata",
                         false,
                         context,
-                      );
+                      );*/
                     },
                     title: 'Annulla',
                   ),

@@ -1,10 +1,6 @@
-import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/providers/current_office_state.dart';
 import 'package:flutter/material.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 import 'package:progress_indicator_button/progress_button.dart';
-import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
   final Function onTap;
@@ -18,18 +14,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  void setDonorEmail(BuildContext context, String mail) async {
-    await Provider.of<CurrentDonorState>(context).setEmail(mail);
-  }
-
-  void setOfficeMail(BuildContext context, String mail) async {
-    await Provider.of<CurrentOfficeState>(context).setOfficeMail(mail);
-  }
-
   @override
   Widget build(BuildContext context) {
-    this.setDonorEmail(context, 'stelluti@donor.com');
-    this.setOfficeMail(context, 'osimo@office.com');
     return ScrollConfiguration(
       behavior: RemoveGlow(),
       child: SingleChildScrollView(
@@ -70,14 +56,8 @@ class _LoginFormState extends State<LoginForm> {
                   placeholder: "Email",
                   maxLines: 1,
                   onTap: () {},
-                  onChanged: (t) {
-                    this.setDonorEmail(context, t);
-                    this.setOfficeMail(context, t);
-                  },
-                  onSubmitted: (d) {
-                    this.setDonorEmail(context, d);
-                    this.setOfficeMail(context, d);
-                  },
+                  onChanged: (t) {},
+                  onSubmitted: (d) {},
                 ),
                 SizedBox(
                   height: 12,

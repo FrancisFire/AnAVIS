@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-const String ip = "192.168.43.253";
+const String ip = "192.168.1.92";
 
 void main() {
   initializeDateFormatting().then((_) => runApp(AnAvis()));
@@ -16,30 +16,18 @@ class AnAvis extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AppState>(
-          builder: (_) => AppState(ip),
+    AppState().setIpReference(ip);
+    return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Rubik',
+        accentIconTheme: IconThemeData(
+          color: Colors.white,
         ),
-        ChangeNotifierProvider<CurrentDonorState>(
-          builder: (_) => CurrentDonorState(ip),
-        ),
-        ChangeNotifierProvider<CurrentOfficeState>(
-          builder: (_) => CurrentOfficeState(ip),
-        ),
-      ],
-      child: MaterialApp(
-        theme: ThemeData(
-          fontFamily: 'Rubik',
-          accentIconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-          accentColor: Colors.orangeAccent[400],
-          accentColorBrightness: Brightness.light,
-        ),
-        onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: '/',
+        accentColor: Colors.orangeAccent[400],
+        accentColorBrightness: Brightness.light,
       ),
+      onGenerateRoute: RouteGenerator.generateRoute,
+      initialRoute: '/',
     );
   }
 }

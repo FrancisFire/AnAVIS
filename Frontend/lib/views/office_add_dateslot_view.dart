@@ -1,6 +1,8 @@
 import 'package:anavis/models/timeslot.dart';
+import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/services/office_service.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flushbar/flushbar.dart';
@@ -62,30 +64,41 @@ class BottomCardWidget extends StatefulWidget {
 
 class _BottomCardWidgetState extends State<BottomCardWidget> {
   final format = DateFormat("yyyy-MM-dd HH:mm");
+  OfficeService _officeService;
+  String _mail;
+  @override
+  void initState() {
+    super.initState();
+
+    this._officeService = new OfficeService(context);
+    _mail = AppState().getUserMail();
+  }
 
   int numberValue;
   DateTime dateValue;
 
-  Future<void> addTimeTableSlot() async {
-    await Provider.of<CurrentOfficeState>(context)
-        .addTimeTableSlot(new TimeSlot(
-      formatDate(dateValue, [
-        '20',
-        yy,
-        '-',
-        mm,
-        '-',
-        dd,
-        'T',
-        HH,
-        ':',
-        nn,
-        ':',
-        ss,
-        '.000+0000',
-      ]),
-      numberValue,
-    ));
+  Future<bool> addTimeTableSlot() async {
+    bool confirmation = await _officeService.addTimeSlot(
+        this._mail,
+        new TimeSlot(
+          formatDate(dateValue, [
+            '20',
+            yy,
+            '-',
+            mm,
+            '-',
+            dd,
+            'T',
+            HH,
+            ':',
+            nn,
+            ':',
+            ss,
+            '.000+0000',
+          ]),
+          numberValue,
+        ));
+    return confirmation;
   }
 
   Flushbar confirm, err, nullValues;
@@ -244,9 +257,8 @@ class _BottomCardWidgetState extends State<BottomCardWidget> {
                   );
                   this.showFlushbar(this.nullValues);
                 }
-                this.addTimeTableSlot().then((_) {
-                  if (Provider.of<CurrentOfficeState>(context)
-                      .getStatusBody()) {
+                this.addTimeTableSlot().then((status) {
+                  if (status) {
                     confirm = new Flushbar(
                       margin: EdgeInsets.all(8),
                       shouldIconPulse: true,

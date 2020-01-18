@@ -1,7 +1,10 @@
+import 'package:anavis/models/timeslot.dart';
+import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
+import 'package:anavis/services/office_service.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
-import 'package:anavis/widgets/donor_request_widget.dart';
-import 'package:anavis/widgets/fab_button.dart';
+import 'package:anavis/views/widgets/donor_request_widget.dart';
+import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:date_format/date_format.dart';
@@ -9,11 +12,9 @@ import 'package:date_format/date_format.dart';
 // /office/prenotations/timeview
 
 class OfficePrenotationTimeView extends StatefulWidget {
-  final String officeName;
   final String donor;
 
   OfficePrenotationTimeView({
-    @required this.officeName,
     @required this.donor,
   });
 
@@ -25,16 +26,21 @@ class OfficePrenotationTimeView extends StatefulWidget {
 class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
   String _timeSelected;
   String _timeFormatted;
+  List<TimeSlot> _timeTables;
+  List<TimeSlot> _availableTimeTables;
+  OfficeService _officeService;
+  String _mail;
 
   void fetchTimeFromOffice() async {
-    await Provider.of<CurrentOfficeState>(context).setOfficeTimeTables();
+    _timeTables = await _officeService.getDonationsTimeTable(this._mail);
+    _availableTimeTables =
+        await _officeService.getAvailableTimeTablesByOffice(this._mail);
   }
 
   List<DropdownMenuItem> createListItem() {
     this.fetchTimeFromOffice();
     List<DropdownMenuItem> listTimeItem = new List<DropdownMenuItem>();
-    for (var slot
-        in Provider.of<CurrentOfficeState>(context).getAvailableTimeTables()) {
+    for (var slot in this._availableTimeTables) {
       String restrictFractionalSeconds(String dateTime) =>
           dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
       _timeFormatted = formatDate(
@@ -54,6 +60,14 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
       ));
     }
     return listTimeItem;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _officeService = new OfficeService(context);
+    _mail = AppState().getUserMail();
   }
 
   @override

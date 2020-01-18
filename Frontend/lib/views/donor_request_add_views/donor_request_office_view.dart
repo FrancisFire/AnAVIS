@@ -1,8 +1,7 @@
-import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/widgets/donor_request_widget.dart';
-import 'package:anavis/widgets/fab_button.dart';
+import 'package:anavis/services/office_service.dart';
+import 'package:anavis/views/widgets/donor_request_widget.dart';
+import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DonorRequestOfficeView extends StatefulWidget {
   @override
@@ -11,12 +10,11 @@ class DonorRequestOfficeView extends StatefulWidget {
 
 class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
   String _officeSelected;
-
+  Map<String, String> _officeMailsAndNames = new Map<String, String>();
+  OfficeService _officeService;
   List<DropdownMenuItem> createListItem() {
     List<DropdownMenuItem> listOfficeItem = new List<DropdownMenuItem>();
-    Provider.of<AppState>(context)
-        .getOfficeMailsAndNames()
-        .forEach((key, value) {
+    _officeMailsAndNames.forEach((key, value) {
       listOfficeItem.add(new DropdownMenuItem(
         value: key,
         child: Container(
@@ -32,8 +30,20 @@ class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
     return listOfficeItem;
   }
 
+  void setOfficeMailsAndNames() async {
+    _officeMailsAndNames = await _officeService.getOfficeMailsAndNames();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _officeService = new OfficeService(context);
+  }
+
   @override
   Widget build(BuildContext context) {
+    this.setOfficeMailsAndNames();
     return Scaffold(
       floatingActionButton: _officeSelected != null
           ? FABRightArrow(

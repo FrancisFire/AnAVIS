@@ -1,6 +1,9 @@
+import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/models/requestprenotation.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/services/request_service.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +31,7 @@ class DonorRequestRecap extends StatefulWidget {
 }
 
 class _DonorRequestRecapState extends State<DonorRequestRecap> {
+  RequestService _requestService;
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -43,12 +47,13 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
   }
 
   String dayValue, hourValue;
-  Flushbar confirm, decline, err;
+  //Flushbar confirm, decline, err;
 
   @override
   void initState() {
     super.initState();
     setNicerTime();
+    _requestService = new RequestService(context);
   }
 
   void setNicerTime() {
@@ -58,17 +63,18 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
     });
   }
 
-  Future<void> postRequest() async {
-    await Provider.of<CurrentDonorState>(context).sendRequest(
+  Future<bool> postRequest() async {
+    bool confirmation = await _requestService.createRequest(
       RequestPrenotation(
-          "${Provider.of<CurrentDonorState>(context).getDonorMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
+          "${Provider.of<AppState>(context).getUserMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
           widget.office,
-          Provider.of<CurrentDonorState>(context).getDonorMail(),
+          Provider.of<AppState>(context).getUserMail(),
           widget.time),
     );
+    return confirmation;
   }
 
-  Future showFlushbar(Flushbar instance) {
+  /* Future showFlushbar(Flushbar instance) {
     final _route = route.showFlushbar(
       context: context,
       flushbar: instance,
@@ -80,7 +86,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
     ).pushReplacement(
       _route,
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +234,12 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        decline = new Flushbar(
+                                        new ConfirmationFlushbar(
+                                                "Richiesta annullata",
+                                                "La richiesta è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
+                                                false)
+                                            .show(context);
+                                        /*decline = new Flushbar(
                                           margin: EdgeInsets.all(8),
                                           borderRadius: 26,
                                           shouldIconPulse: true,
@@ -248,7 +259,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                               FlushbarDismissDirection
                                                   .HORIZONTAL,
                                         );
-                                        this.showFlushbar(this.decline);
+                                        this.showFlushbar(this.decline);*/
                                       },
                                     ),
                                   ),
@@ -273,11 +284,14 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        this.postRequest().then((_) {
-                                          if (Provider.of<CurrentDonorState>(
-                                                  context)
-                                              .getStatusBody()) {
-                                            confirm = new Flushbar(
+                                        this.postRequest().then((status) {
+                                          if (status) {
+                                            new ConfirmationFlushbar(
+                                                    "Richiesta effettuata",
+                                                    "La richiesta è stata effettuata con successo, ci vedremo presto!",
+                                                    true)
+                                                .show(context);
+                                            /* confirm = new Flushbar(
                                               margin: EdgeInsets.all(8),
                                               shouldIconPulse: true,
                                               borderRadius: 26,
@@ -297,9 +311,14 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                                   FlushbarDismissDirection
                                                       .HORIZONTAL,
                                             );
-                                            this.showFlushbar(this.confirm);
+                                            this.showFlushbar(this.confirm);*/
                                           } else {
-                                            err = new Flushbar(
+                                            new ConfirmationFlushbar(
+                                                    "Impossibile prenotare",
+                                                    "Non è stato possibile effettuare la prenotazione, riprova più tardi",
+                                                    false)
+                                                .show(context);
+                                            /* err = new Flushbar(
                                               margin: EdgeInsets.all(8),
                                               shouldIconPulse: true,
                                               borderRadius: 26,
@@ -319,7 +338,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                                   FlushbarDismissDirection
                                                       .HORIZONTAL,
                                             );
-                                            this.showFlushbar(this.err);
+                                            this.showFlushbar(this.err);*/
                                           }
                                         });
                                       },
