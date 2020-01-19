@@ -187,14 +187,18 @@ class CardLogin extends StatelessWidget {
                                       onTap: () {
                                         AppState().setUserMail(donorMail);
                                         Navigator.pushReplacementNamed(
-                                            context, '/donor');
+                                          context,
+                                          '/donor',
+                                        );
                                       },
                                     ),
                                     LoginForm(
                                       onTap: () {
                                         AppState().setUserMail(officeMail);
                                         Navigator.pushReplacementNamed(
-                                            context, '/office');
+                                          context,
+                                          '/office',
+                                        );
                                       },
                                     ),
                                   ],

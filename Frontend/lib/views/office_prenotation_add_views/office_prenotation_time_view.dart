@@ -1,15 +1,11 @@
 import 'package:anavis/models/timeslot.dart';
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/services/office_service.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/views/widgets/donor_request_widget.dart';
 import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:date_format/date_format.dart';
-
-// /office/prenotations/timeview
 
 class OfficePrenotationTimeView extends StatefulWidget {
   final String donor;

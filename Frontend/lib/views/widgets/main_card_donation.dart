@@ -43,12 +43,6 @@ class _MainCardDonorRecapDonationState
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
@@ -135,7 +129,7 @@ class _MainCardDonorRecapDonationState
                         ),
                       ),
                       label: Text(
-                        widget.closedPrenotation.getId(),
+                        widget.closedPrenotation.getId().substring(0, 5) + "..",
                         style: TextStyle(
                           color: Colors.white,
                         ),

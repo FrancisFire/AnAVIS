@@ -1,12 +1,9 @@
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/route_generator.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-const String ip = "192.168.1.92";
+const String ip = "10.0.15.228";
 
 void main() {
   initializeDateFormatting().then((_) => runApp(AnAvis()));

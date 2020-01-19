@@ -4,7 +4,6 @@ import 'package:dio/dio.dart' as dio;
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class PrenotationController {

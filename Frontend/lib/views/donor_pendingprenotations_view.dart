@@ -1,6 +1,5 @@
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/models/prenotation.dart';
@@ -10,7 +9,6 @@ import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DonorPendingPrenotationView extends StatefulWidget {

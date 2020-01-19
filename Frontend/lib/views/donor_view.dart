@@ -1,10 +1,8 @@
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/models/closedprenotation.dart';
-import 'package:anavis/models/donationreport.dart';
 import 'package:anavis/models/donor.dart';
 import 'package:anavis/models/requestprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/services/donation_service.dart';
 import 'package:anavis/services/donor_service.dart';
 import 'package:anavis/services/prenotation_service.dart';
@@ -15,12 +13,10 @@ import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/main_card_donation.dart';
 import 'package:badges/badges.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class DonorView extends StatefulWidget {
@@ -82,11 +78,6 @@ class _DonorViewState extends State<DonorView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -107,7 +98,7 @@ class _DonorViewState extends State<DonorView> {
           case ConnectionState.waiting:
             return new RequestCircularLoading();
           case ConnectionState.done:
-            // if (snapshot.hasError) return new RequestCircularLoading();
+            if (snapshot.hasError) return new RequestCircularLoading();
             return Scaffold(
               body: Stack(
                 children: <Widget>[
@@ -131,8 +122,11 @@ class _DonorViewState extends State<DonorView> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(top: 46, left: 16, right: 16),
+                    padding: const EdgeInsets.only(
+                      top: 46,
+                      left: 16,
+                      right: 16,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -151,7 +145,7 @@ class _DonorViewState extends State<DonorView> {
                         ),
                         Flexible(
                           child: AutoSizeText(
-                            ("${this._donor.getSurname()} ${this._donor.getName()}"),
+                            this._donor.getMail(),
                             style: TextStyle(
                               fontSize: 52,
                               color: Colors.white,
@@ -215,7 +209,7 @@ class _DonorViewState extends State<DonorView> {
                       ],
                     ),
                   ),
-                  /* Container(
+                  Container(
                     child: Center(
                       child: Stack(
                         children: <Widget>[
@@ -223,21 +217,20 @@ class _DonorViewState extends State<DonorView> {
                             top: (MediaQuery.of(context).size.height / 4),
                             child: Align(
                               alignment: Alignment.bottomCenter,
-                              child: FutureBuilder<List<ClosedPrenotation>>(
-                                future: _donationService
-                                    .getDonationsByDonor(this._email),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return Center(
+                              child: this._donations.length == 0
+                                  ? Center(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 32),
+                                          horizontal: 32,
+                                        ),
                                         child: Card(
                                           elevation: 8,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 const BorderRadius.all(
-                                              Radius.circular(26.0),
+                                              Radius.circular(
+                                                26.0,
+                                              ),
                                             ),
                                           ),
                                           child: ListTile(
@@ -248,55 +241,52 @@ class _DonorViewState extends State<DonorView> {
                                           ),
                                         ),
                                       ),
-                                    );
-                                  }
-
-                                  if (snapshot.data.length == 1) {
-                                    return Center(
-                                      child: Container(
-                                        width: 330,
-                                        height: (MediaQuery.of(context)
-                                                .size
-                                                .height /
-                                            1.7),
-                                        child: MainCardDonorRecapDonation(
-                                          closedPrenotation: snapshot.data[0],
+                                    )
+                                  : this._donations.length == 1
+                                      ? Center(
+                                          child: Container(
+                                            width: 330,
+                                            height: (MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                1.7),
+                                            child: MainCardDonorRecapDonation(
+                                              closedPrenotation:
+                                                  this._donations[0],
+                                            ),
+                                          ),
+                                        )
+                                      : Swiper(
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return MainCardDonorRecapDonation(
+                                              closedPrenotation:
+                                                  this._donations[index],
+                                            );
+                                          },
+                                          itemCount: this._donations.length,
+                                          itemWidth: 330.0,
+                                          index: 0,
+                                          itemHeight: (MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              1.7),
+                                          layout: SwiperLayout.STACK,
                                         ),
-                                      ),
-                                    );
-                                  }
-
-                                  return Swiper(
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return MainCardDonorRecapDonation(
-                                        closedPrenotation: snapshot.data[index],
-                                      );
-                                    },
-                                    itemCount: snapshot.data.length,
-                                    itemWidth: 330.0,
-                                    index: 0,
-                                    itemHeight:
-                                        (MediaQuery.of(context).size.height /
-                                            1.7),
-                                    layout: SwiperLayout.STACK,
-                                  );
-                                },
-                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),*/
+                  ),
                 ],
               ),
               floatingActionButton: ButtonFABHomePage(
                 iconFab: iconFAB(),
               ),
             );
-            return null;
         }
+        return null;
       },
     );
   }

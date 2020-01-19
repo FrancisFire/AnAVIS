@@ -1,20 +1,14 @@
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/painter.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
-import 'package:flushbar/flushbar_route.dart' as route;
 
 class OfficePrenotationRecap extends StatefulWidget {
   final String donor;
