@@ -22,7 +22,6 @@ class DonorPendingPrenotationView extends StatefulWidget {
 class _DonorPendingPrenotationViewState
     extends State<DonorPendingPrenotationView> {
   List<ActivePrenotation> _donorPendingPrenotations;
-  PrenotationService _prenotationService;
   String _mail;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -34,8 +33,8 @@ class _DonorPendingPrenotationViewState
   }
 
   Future<List<ActivePrenotation>> getPrenotations() async {
-    _donorPendingPrenotations =
-        await _prenotationService.getDonorNotConfirmedPrenotations(this._mail);
+    _donorPendingPrenotations = await PrenotationService(context)
+        .getDonorNotConfirmedPrenotations(this._mail);
     return _donorPendingPrenotations;
   }
 
@@ -50,7 +49,6 @@ class _DonorPendingPrenotationViewState
   void initState() {
     super.initState();
     _mail = AppState().getUserMail();
-    _prenotationService = new PrenotationService(context);
   }
 
   @override

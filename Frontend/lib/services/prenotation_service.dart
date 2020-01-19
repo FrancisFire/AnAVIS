@@ -8,9 +8,6 @@ import 'package:flutter/cupertino.dart';
 
 class PrenotationService {
   PrenotationController _prenotationController;
-  PrenotationService(BuildContext context) {
-    _prenotationController = new PrenotationController(context);
-  }
 
   Future<bool> createPrenotation(ActivePrenotation prenotation) async {
     String controllerJson =
@@ -102,4 +99,17 @@ class PrenotationService {
     }
     return notConfirmed;
   }
+
+  void _setController(BuildContext context) {
+    _prenotationController = new PrenotationController(context);
+  }
+
+  static final PrenotationService _singleton = PrenotationService._internal();
+
+  factory PrenotationService(BuildContext context) {
+    _singleton._setController(context);
+    return _singleton;
+  }
+
+  PrenotationService._internal();
 }

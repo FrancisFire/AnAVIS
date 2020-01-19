@@ -1,17 +1,12 @@
-import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/painter.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
-import 'package:flushbar/flushbar_route.dart' as route;
 
 class DonorPrenotationUpdateRecap extends StatefulWidget {
   final String office;
@@ -32,7 +27,6 @@ class DonorPrenotationUpdateRecap extends StatefulWidget {
 
 class _DonorPrenotationUpdateRecapState
     extends State<DonorPrenotationUpdateRecap> {
-  PrenotationService _prenotationService;
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -40,13 +34,11 @@ class _DonorPrenotationUpdateRecapState
       RegExp(r"Data: ?.+? ?\| ?Orario: ?(\d\d:\d\d)").firstMatch(hour).group(1);
 
   String dayValue, hourValue;
-  //Flushbar confirm, decline, err;
 
   @override
   void initState() {
     super.initState();
     setNicerTime();
-    _prenotationService = new PrenotationService(context);
   }
 
   void setNicerTime() {
@@ -55,20 +47,6 @@ class _DonorPrenotationUpdateRecapState
       hourValue = this.takeHour(widget.nicerTime);
     });
   }
-
-  /*Future showFlushbar(Flushbar instance) {
-    final _route = route.showFlushbar(
-      context: context,
-      flushbar: instance,
-    );
-
-    return Navigator.of(
-      context,
-      rootNavigator: false,
-    ).pushReplacement(
-      _route,
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -216,64 +194,30 @@ class _DonorPrenotationUpdateRecapState
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        _prenotationService
+                                        PrenotationService(context)
                                             .denyPrenotationChange(
                                                 widget.prenotationId)
                                             .then((status) {
                                           if (status) {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'DonorView'));
                                             new ConfirmationFlushbar(
                                                     "Conferma annullata",
                                                     "La nuova prenotazione è stata annullata con successo",
                                                     true)
                                                 .show(context);
-                                            /*confirm = new Flushbar(
-                                              margin: EdgeInsets.all(8),
-                                              shouldIconPulse: true,
-                                              borderRadius: 26,
-                                              title: "Conferma annullata",
-                                              icon: Icon(
-                                                Icons.check,
-                                                size: 28.0,
-                                                color: Colors.green,
-                                              ),
-                                              message:
-                                                  "La nuova prenotazione è stata annullata con successo",
-                                              duration: Duration(
-                                                seconds: 6,
-                                              ),
-                                              isDismissible: true,
-                                              dismissDirection:
-                                                  FlushbarDismissDirection
-                                                      .HORIZONTAL,
-                                            );
-                                            this.showFlushbar(this.confirm);*/
                                           } else {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'DonorView'));
                                             new ConfirmationFlushbar(
                                                     "Impossibile confermare",
                                                     "Non è stato possibile effettuare la conferma, riprova più tardi",
                                                     false)
                                                 .show(context);
-                                            /*err = new Flushbar(
-                                              margin: EdgeInsets.all(8),
-                                              shouldIconPulse: true,
-                                              borderRadius: 26,
-                                              title: "Impossibile confermare",
-                                              icon: Icon(
-                                                Icons.error,
-                                                size: 28.0,
-                                                color: Colors.red,
-                                              ),
-                                              message:
-                                                  "Non è stato possibile effettuare la conferma, riprova più tardi",
-                                              duration: Duration(
-                                                seconds: 6,
-                                              ),
-                                              isDismissible: true,
-                                              dismissDirection:
-                                                  FlushbarDismissDirection
-                                                      .HORIZONTAL,
-                                            );
-                                            this.showFlushbar(this.err);*/
                                           }
                                         });
                                       },
@@ -300,64 +244,30 @@ class _DonorPrenotationUpdateRecapState
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        _prenotationService
+                                        PrenotationService(context)
                                             .acceptPrenotationChange(
                                                 widget.prenotationId)
                                             .then((status) {
                                           if (status) {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'DonorView'));
                                             new ConfirmationFlushbar(
                                                     "Conferma effettuata",
                                                     "La conferma della nuova prenotazione è stata effettuata con successo!",
                                                     true)
                                                 .show(context);
-                                            /*confirm = new Flushbar(
-                                              margin: EdgeInsets.all(8),
-                                              shouldIconPulse: true,
-                                              borderRadius: 26,
-                                              title: "Conferma effettuata",
-                                              icon: Icon(
-                                                Icons.check,
-                                                size: 28.0,
-                                                color: Colors.green,
-                                              ),
-                                              message:
-                                                  "La conferma della nuova prenotazione è stata effettuata con successo!",
-                                              duration: Duration(
-                                                seconds: 6,
-                                              ),
-                                              isDismissible: true,
-                                              dismissDirection:
-                                                  FlushbarDismissDirection
-                                                      .HORIZONTAL,
-                                            );
-                                            this.showFlushbar(this.confirm);*/
                                           } else {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'DonorView'));
                                             new ConfirmationFlushbar(
                                                     "Impossibile confermare",
                                                     "Non è stato possibile effettuare la conferma, riprova più tardi",
                                                     false)
                                                 .show(context);
-                                            /* err = new Flushbar(
-                                              margin: EdgeInsets.all(8),
-                                              shouldIconPulse: true,
-                                              borderRadius: 26,
-                                              title: "Impossibile confermare",
-                                              icon: Icon(
-                                                Icons.error,
-                                                size: 28.0,
-                                                color: Colors.red,
-                                              ),
-                                              message:
-                                                  "Non è stato possibile effettuare la conferma, riprova più tardi",
-                                              duration: Duration(
-                                                seconds: 6,
-                                              ),
-                                              isDismissible: true,
-                                              dismissDirection:
-                                                  FlushbarDismissDirection
-                                                      .HORIZONTAL,
-                                            );
-                                            this.showFlushbar(this.err);*/
                                           }
                                         });
                                       },

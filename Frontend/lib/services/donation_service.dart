@@ -7,9 +7,6 @@ import 'package:flutter/cupertino.dart';
 
 class DonationService {
   DonationController _donationController;
-  DonationService(BuildContext context) {
-    _donationController = new DonationController(context);
-  }
 
   Future<List<ClosedPrenotation>> getDonationsByDonor(String donorMail) async {
     List<ClosedPrenotation> donations = new List<ClosedPrenotation>();
@@ -41,4 +38,17 @@ class DonationService {
       rep['date'],
     );
   }
+
+  void _setController(BuildContext context) {
+    _donationController = new DonationController(context);
+  }
+
+  static final DonationService _singleton = DonationService._internal();
+
+  factory DonationService(BuildContext context) {
+    _singleton._setController(context);
+    return _singleton;
+  }
+
+  DonationService._internal();
 }

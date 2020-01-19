@@ -6,9 +6,6 @@ import 'package:flutter/cupertino.dart';
 
 class RequestService {
   RequestController _requestController;
-  RequestService(BuildContext context) {
-    _requestController = new RequestController(context);
-  }
 
   Future<bool> createRequest(RequestPrenotation request) async {
     String controllerJson = await _requestController.createRequest(request);
@@ -69,4 +66,17 @@ class RequestService {
     String controllerJson = await _requestController.denyRequest(requestId);
     return controllerJson == 'true';
   }
+
+  void _setController(BuildContext context) {
+    _requestController = new RequestController(context);
+  }
+
+  static final RequestService _singleton = RequestService._internal();
+
+  factory RequestService(BuildContext context) {
+    _singleton._setController(context);
+    return _singleton;
+  }
+
+  RequestService._internal();
 }

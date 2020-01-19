@@ -11,12 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class OfficePrenotationDonorView extends StatefulWidget {
-  final String officeName;
-
-  OfficePrenotationDonorView({
-    @required this.officeName,
-  });
-
   @override
   _OfficePrenotationDonorViewState createState() =>
       _OfficePrenotationDonorViewState();
@@ -26,15 +20,13 @@ class _OfficePrenotationDonorViewState
     extends State<OfficePrenotationDonorView> {
   String _donorSelected;
   List<String> _availableDonors;
-  DonorService _donorService;
-  OfficeService _officeService;
   String _mail;
   List<TimeSlot> _officeTimeTable;
 
   Future<void> fetchDonorByOffice() async {
     _availableDonors.clear();
     List<Donor> donors =
-        await _donorService.getAvailableDonorsByOfficeId(this._mail);
+        await DonorService(context).getAvailableDonorsByOfficeId(this._mail);
     for (var donor in donors) {
       _availableDonors.add(donor.getMail());
     }
@@ -63,15 +55,13 @@ class _OfficePrenotationDonorViewState
 
   Future<void> fetchAvailableTimeTables() async {
     _officeTimeTable =
-        await _officeService.getAvailableTimeTablesByOffice(this._mail);
+        await OfficeService(context).getAvailableTimeTablesByOffice(this._mail);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _donorService = new DonorService(context);
-    _officeService = new OfficeService(context);
     _mail = AppState().getUserMail();
     _availableDonors = new List<String>();
   }
@@ -85,6 +75,8 @@ class _OfficePrenotationDonorViewState
                 await this.fetchAvailableTimeTables();
                 if (this._officeTimeTable.isEmpty) {
                   Navigator.pop(context);
+                  Navigator.popUntil(
+                      context, ModalRoute.withName('OfficeView'));
                   ConfirmationFlushbar(
                     'Date non disponibili',
                     'Non sono presenti date disponibili per il seguente ufficio',

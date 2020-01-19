@@ -6,9 +6,6 @@ import 'package:flutter/cupertino.dart';
 
 class DonorService {
   DonorController _donorController;
-  DonorService(BuildContext context) {
-    _donorController = new DonorController(context);
-  }
   Future<bool> checkDonationPossibility(String donorMail) async {
     String canDonate =
         await _donorController.checkDonationPossibility(donorMail);
@@ -40,19 +37,44 @@ class DonorService {
   Future<Donor> getDonorByMail(String donorMail) async {
     String controllerJson = await _donorController.getDonorByMail(donorMail);
     var parsedJson = json.decode(controllerJson);
-    var donorJson = parsedJson[0];
+    DonorCategory cat;
+    switch (parsedJson['category']) {
+      case "MAN":
+        cat = DonorCategory.MAN;
+        break;
+      case "FERTILEWOMAN":
+        cat = DonorCategory.FERTILEWOMAN;
+        break;
+      case "NONFERTILEWOMAN":
+        cat = DonorCategory.NONFERTILEWOMAN;
+        break;
+    }
+
     Donor donor = new Donor.complete(
-        donorJson['mail'],
-        donorJson['officeMail'],
-        donorJson['category'],
-        donorJson['name'],
-        donorJson['surname'],
-        donorJson['birthday'],
-        donorJson['birthPlace'],
-        donorJson['canDonate'],
-        donorJson['lastDonation'],
-        donorJson['leftDonationsInYear'],
-        donorJson['firstDonationInYear']);
+        parsedJson['mail'],
+        parsedJson['officeMail'],
+        cat,
+        parsedJson['name'],
+        parsedJson['surname'],
+        parsedJson['birthday'],
+        parsedJson['birthPlace'],
+        parsedJson['canDonate'],
+        parsedJson['lastDonation'],
+        parsedJson['leftDonationsInYear'],
+        parsedJson['firstDonationInYear']);
     return donor;
   }
+
+  void _setController(BuildContext context) {
+    _donorController = new DonorController(context);
+  }
+
+  static final DonorService _singleton = DonorService._internal();
+
+  factory DonorService(BuildContext context) {
+    _singleton._setController(context);
+    return _singleton;
+  }
+
+  DonorService._internal();
 }

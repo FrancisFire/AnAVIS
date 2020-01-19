@@ -1,21 +1,24 @@
+import 'package:anavis/models/donor.dart';
+import 'package:anavis/models/office.dart';
 import 'package:anavis/models/timeslot.dart';
-import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_office_state.dart';
+import 'package:anavis/services/donor_service.dart';
 import 'package:anavis/services/office_service.dart';
 import 'package:anavis/viewargs/office_prenotationupdate_recap_args.dart';
 import 'package:anavis/views/widgets/button_card_bottom.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/form_field_general.dart';
+import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DialogModificationPrenotation extends StatefulWidget {
-  final String donor;
+  final Office office;
+  final String donorMail;
   final String prenotationId;
 
   DialogModificationPrenotation({
-    @required this.donor,
+    @required this.office,
+    @required this.donorMail,
     @required this.prenotationId,
   });
   _DialogModificationPrenotationState createState() =>
@@ -24,36 +27,43 @@ class DialogModificationPrenotation extends StatefulWidget {
 
 class _DialogModificationPrenotationState
     extends State<DialogModificationPrenotation> {
-  String _newOffice, _newHour;
+  Donor _donor;
+  String _newHour;
   Map<String, String> _officeMailsAndNames;
-  List<DropdownMenuItem> _offices, _listOfficeItem, _listTimeItem;
-  OfficeService _officeService;
-  List<TimeSlot> _timeTables;
+  List<DropdownMenuItem> _listOfficeItem, _listTimeItem;
   List<TimeSlot> _availableTimeTables;
 
-  bool activeOffice = true, activeHour = true;
-
   Future<void> setOfficeTimeTablesByOffice(String officeMail) async {
-    _timeTables = await _officeService.getDonationsTimeTable(officeMail);
     _availableTimeTables =
-        await _officeService.getAvailableTimeTablesByOffice(officeMail);
+        await OfficeService(context).getAvailableTimeTablesByOffice(officeMail);
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      this.createOfficeNames(context);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(26),
-      ),
-      child: dialogContent(context),
+    return FutureBuilder(
+      future: this.initFuture(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return new RequestCircularLoading();
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            return new RequestCircularLoading();
+          case ConnectionState.done:
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(26),
+              ),
+              child: dialogContent(context),
+            );
+        }
+        return null;
+      },
     );
   }
 
@@ -65,26 +75,15 @@ class _DialogModificationPrenotationState
         ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
   }
 
-  void createOfficeNames(BuildContext context) async {
-    _officeMailsAndNames = await _officeService.getOfficeMailsAndNames();
-    _listOfficeItem = new List<DropdownMenuItem>();
-    this._officeMailsAndNames.forEach((key, value) {
-      _listOfficeItem.add(new DropdownMenuItem(
-        value: key,
-        child: Container(
-          child: Text(
-            value,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ));
-    });
+  Future<void> initFuture() async {
+    await Future.wait([
+      this.setDonor(),
+      this.setOfficeTimeTablesByOffice(widget.office.getMail()),
+    ]);
+  }
 
-    setState(() {
-      _offices = _listOfficeItem;
-    });
+  Future<void> setDonor() async {
+    this._donor = await DonorService(context).getDonorByMail(widget.donorMail);
   }
 
   List<DropdownMenuItem> createHourItem(BuildContext context) {
@@ -140,7 +139,8 @@ class _DialogModificationPrenotationState
                       "Mediante la seguente form si modificherà la prenotazione dell'utente ",
                   children: <TextSpan>[
                     TextSpan(
-                      text: widget.donor,
+                      text:
+                          "${this._donor.getSurname()} ${this._donor.getName()}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -150,36 +150,16 @@ class _DialogModificationPrenotationState
               ),
               SizedBox(height: 24.0),
               FormFieldGeneral(
-                  fetchItems: _offices,
-                  icon: Icon(
-                    Icons.home,
-                    color: Colors.red,
-                  ),
-                  labelDropDown:
-                      activeOffice ? "Seleziona l'ufficio" : _newOffice,
-                  valueSelected: _newOffice,
-                  disabled: activeOffice,
-                  onChanged: (newValue) async {
-                    await this.setOfficeTimeTablesByOffice(newValue);
-                    setState(() {
-                      _newOffice = newValue;
-                      activeOffice = false;
-                    });
-                  }),
-              SizedBox(height: 24.0),
-              FormFieldGeneral(
                 fetchItems: createHourItem(context),
                 icon: Icon(
                   Icons.access_time,
                   color: Colors.red,
                 ),
-                labelDropDown: activeHour ? "Seleziona l'orario" : _newHour,
-                disabled: activeHour,
+                labelDropDown: "Seleziona l'orario",
                 valueSelected: _newHour,
                 onChanged: (newValue) {
                   setState(() {
                     _newHour = newValue;
-                    activeHour = false;
                   });
                 },
               ),
@@ -194,18 +174,13 @@ class _DialogModificationPrenotationState
                     ),
                     color: Colors.red,
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('OfficeView'));
                       ConfirmationFlushbar(
                               "Operazione annullata",
                               "L'operazione di modifica è stata annullata",
                               false)
                           .show(context);
-                      /*Provider.of<AppState>(context).showFlushbar(
-                        "Operazione annullata",
-                        "L'operazione di modifica è stata annullata",
-                        false,
-                        context,
-                      );*/
                     },
                     title: 'Annulla',
                   ),
@@ -224,11 +199,11 @@ class _DialogModificationPrenotationState
                               context,
                               '/office/prenotationupdate/recap',
                               arguments: new OfficePrenotationUpdateRecapArgs(
-                                this.widget.donor,
+                                this._donor,
                                 this._newHour,
                                 nicerTime(this._newHour),
                                 widget.prenotationId,
-                                _newOffice,
+                                widget.office,
                               ),
                             );
                           },
@@ -251,7 +226,12 @@ class _DialogModificationPrenotationState
               foregroundColor: Colors.white,
               radius: Consts.avatarRadius,
               child: Text(
-                widget.donor.toString().substring(0, 2).toUpperCase(),
+                this
+                    ._donor
+                    .getSurname()
+                    .toString()
+                    .substring(0, 2)
+                    .toUpperCase(),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,

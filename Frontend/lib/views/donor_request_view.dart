@@ -1,25 +1,24 @@
+import 'package:anavis/models/donor.dart';
 import 'package:anavis/models/requestprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_donor_state.dart';
 import 'package:anavis/services/request_service.dart';
 import 'package:anavis/views/widgets/button_card_bottom.dart';
 import 'package:anavis/views/widgets/card_prenotation_request.dart';
-import 'package:anavis/views/widgets/delete_dialog.dart';
+import 'package:anavis/views/widgets/donor_delete_dialog.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DonorRequestView extends StatefulWidget {
+  final Donor donor;
+  DonorRequestView({@required this.donor});
   @override
   _DonorRequestViewState createState() => _DonorRequestViewState();
 }
 
 class _DonorRequestViewState extends State<DonorRequestView> {
   List<RequestPrenotation> _requests;
-  String _mail;
-  RequestService _requestService;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
@@ -30,16 +29,14 @@ class _DonorRequestViewState extends State<DonorRequestView> {
   }
 
   Future<List<RequestPrenotation>> getRequests() async {
-    _requests = await _requestService.getRequestsByDonor(this._mail);
+    _requests = await RequestService(context)
+        .getRequestsByDonor(widget.donor.getMail());
     return _requests;
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _requestService = new RequestService(context);
-    _mail = Provider.of<AppState>(context).getUserMail();
   }
 
   @override
@@ -131,7 +128,7 @@ class _DonorRequestViewState extends State<DonorRequestView> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) =>
-                                        DeleteDialog(
+                                        DonorDeleteDialog(
                                       id: snapshot.data[index].getId(),
                                       isPrenotation: false,
                                       title: "Elimina richiesta",

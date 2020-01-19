@@ -5,7 +5,6 @@ import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:provider/provider.dart';
 
 const donorMail = "stelluti@donor.com";
 const officeMail = "osimo@office.com";
@@ -103,6 +102,7 @@ class CardLogin extends StatelessWidget {
                                 "Ogni goccia di sangue fa la differenza",
                                 "Dona oggi per ricevere un domani",
                                 "Condividi il meglio di te agli altri",
+                                "\"This is the way\"",
                               ],
                               textStyle: TextStyle(
                                 fontSize: 17,

@@ -28,7 +28,6 @@ class MainCardDonorRecapDonation extends StatefulWidget {
 class _MainCardDonorRecapDonationState
     extends State<MainCardDonorRecapDonation> {
   final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-  DonationService _donationService;
   List<int> selectedSpots = [];
   int touchedIndex;
   int lastPanStartOnIndex = -1;
@@ -47,7 +46,6 @@ class _MainCardDonorRecapDonationState
   void initState() {
     // TODO: implement initState
     super.initState();
-    this._donationService = new DonationService(context);
   }
 
   @override
@@ -92,7 +90,7 @@ class _MainCardDonorRecapDonationState
                       String dir =
                           (await getApplicationDocumentsDirectory()).path;
                       DonationReport donationReport =
-                          await _donationService.getDonationReport(
+                          await DonationService(context).getDonationReport(
                         widget.closedPrenotation.getId(),
                       );
                       await _createFileFromString(

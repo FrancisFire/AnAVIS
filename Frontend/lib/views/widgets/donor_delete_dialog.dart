@@ -2,19 +2,16 @@ import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/services/request_service.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 import 'button_card_bottom.dart';
-import 'package:flushbar/flushbar_route.dart' as route;
 
-class DeleteDialog extends StatefulWidget {
+class DonorDeleteDialog extends StatefulWidget {
   final String id;
   final String title;
   final String subtitle;
   final bool isPrenotation;
-
-  DeleteDialog({
+  DonorDeleteDialog({
     @required this.id,
     @required this.title,
     @required this.subtitle,
@@ -22,140 +19,49 @@ class DeleteDialog extends StatefulWidget {
   });
 
   @override
-  _DeleteDialogState createState() => _DeleteDialogState();
+  _DonorDeleteDialogState createState() => _DonorDeleteDialogState();
 }
 
-class _DeleteDialogState extends State<DeleteDialog> {
-  PrenotationService _prenotationService;
-  RequestService _requestService;
-
-  Future showFlushbar(Flushbar instance, BuildContext context) {
-    final _route = route.showFlushbar(
-      context: context,
-      flushbar: instance,
-    );
-
-    return Navigator.of(
-      context,
-      rootNavigator: false,
-    ).pushReplacement(
-      _route,
-    );
-  }
-
+class _DonorDeleteDialogState extends State<DonorDeleteDialog> {
   Function removePrenotationFunction(BuildContext context) {
-    _prenotationService.removePrenotation(widget.id).then((status) {
+    PrenotationService(context).removePrenotation(widget.id).then((status) {
       if (status) {
+        Navigator.popUntil(context, ModalRoute.withName('DonorView'));
         new ConfirmationFlushbar("Prenotazione eliminata",
                 "La prenotazione è stata annullata con successo!", true)
             .show(context);
-        /*var confirm = new Flushbar(
-          margin: EdgeInsets.all(8),
-          shouldIconPulse: true,
-          borderRadius: 26,
-          title: "Prenotazione eliminata",
-          icon: Icon(
-            Icons.check,
-            size: 28.0,
-            color: Colors.green,
-          ),
-          message: "La prenotazione è stata annullata con successo!",
-          duration: Duration(
-            seconds: 6,
-          ),
-          isDismissible: true,
-          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-        );
-        this.showFlushbar(confirm, context);*/
       } else {
+        Navigator.popUntil(context, ModalRoute.withName('DonorView'));
         new ConfirmationFlushbar(
                 "Impossibile annullare",
                 "Non è stato possibile annullare la prenotazione, riprova più tardi",
                 true)
             .show(context);
-        /*var err = new Flushbar(
-          margin: EdgeInsets.all(8),
-          shouldIconPulse: true,
-          borderRadius: 26,
-          title: "Impossibile annullare",
-          icon: Icon(
-            Icons.error,
-            size: 28.0,
-            color: Colors.red,
-          ),
-          message:
-              "Non è stato possibile annullare la prenotazione, riprova più tardi",
-          duration: Duration(
-            seconds: 6,
-          ),
-          isDismissible: true,
-          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-        );
-        this.showFlushbar(err, context);*/
       }
     });
   }
 
   Function removeRequestFunction(BuildContext context) {
-    _requestService.denyRequest(widget.id).then((status) {
+    RequestService(context).denyRequest(widget.id).then((status) {
       if (status) {
+        Navigator.popUntil(context, ModalRoute.withName('DonorView'));
         new ConfirmationFlushbar("Richiesta eliminata",
                 "La richiesta è stata annullata con successo!", true)
             .show(context);
-        /* var confirm = new Flushbar(
-          margin: EdgeInsets.all(8),
-          shouldIconPulse: true,
-          borderRadius: 26,
-          title: "Richiesta eliminata",
-          icon: Icon(
-            Icons.check,
-            size: 28.0,
-            color: Colors.green,
-          ),
-          message: "La richiesta è stata annullata con successo!",
-          duration: Duration(
-            seconds: 6,
-          ),
-          isDismissible: true,
-          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-        );
-        this.showFlushbar(confirm, context);*/
       } else {
+        Navigator.popUntil(context, ModalRoute.withName('DonorView'));
         new ConfirmationFlushbar(
                 "Impossibile annullare",
                 "Non è stato possibile annullare la prenotazione, riprova più tardi",
                 false)
             .show(context);
-
-        /*var err = new Flushbar(
-          margin: EdgeInsets.all(8),
-          shouldIconPulse: true,
-          borderRadius: 26,
-          title: "Impossibile annullare",
-          icon: Icon(
-            Icons.error,
-            size: 28.0,
-            color: Colors.red,
-          ),
-          message:
-              "Non è stato possibile annullare la prenotazione, riprova più tardi",
-          duration: Duration(
-            seconds: 6,
-          ),
-          isDismissible: true,
-          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-        );
-        this.showFlushbar(err, context);*/
       }
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    this._prenotationService = new PrenotationService(context);
-    this._requestService = new RequestService(context);
   }
 
   @override
@@ -205,18 +111,13 @@ class _DeleteDialogState extends State<DeleteDialog> {
                       ),
                       color: Colors.red,
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.popUntil(
+                            context, ModalRoute.withName('DonorView'));
                         ConfirmationFlushbar(
                                 "Operazione annullata",
                                 "L'operazione di rimozione è stata annullata",
                                 false)
                             .show(context);
-                        /*Provider.of<AppState>(context).showFlushbar(
-                          "Operazione annullata",
-                          "L'operazione di rimozione è stata annullata",
-                          false,
-                          context,
-                        );*/
                       },
                       title: 'Annulla',
                     ),

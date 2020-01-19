@@ -22,7 +22,13 @@ class Donor {
       String lastDonation,
       int leftDonationsInYear,
       String firstDonationInYear) {
-    Donor(mail, officeMail, category, name, surname, birthday, birthPlace);
+    this._mail = mail;
+    this._officeMail = officeMail;
+    this._category = category;
+    this._name = name;
+    this._surname = surname;
+    this._birthday = birthday;
+    this._birthPlace = birthPlace;
     this._canDonate = canDonate;
     this._lastDonation = lastDonation;
     this._leftDonationsInYear = leftDonationsInYear;

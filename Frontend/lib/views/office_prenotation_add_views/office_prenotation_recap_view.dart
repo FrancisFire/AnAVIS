@@ -32,7 +32,6 @@ class OfficePrenotationRecap extends StatefulWidget {
 }
 
 class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
-  PrenotationService _prenotationService;
   String _mail;
   Random rng = new Random();
   String takeDay(String day) =>
@@ -47,7 +46,6 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
   void initState() {
     super.initState();
     setNicerTime();
-    _prenotationService = new PrenotationService(context);
     _mail = AppState().getUserMail();
   }
 
@@ -214,6 +212,8 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                       size: 42,
                                     ),
                                     onPressed: () {
+                                      Navigator.popUntil(context,
+                                          ModalRoute.withName('OfficeView'));
                                       new ConfirmationFlushbar(
                                               "Prenotazione annullata",
                                               "La prenotazione è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
@@ -263,7 +263,7 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                       size: 42,
                                     ),
                                     onPressed: () {
-                                      _prenotationService
+                                      PrenotationService(context)
                                           .createPrenotation(new ActivePrenotation(
                                               "${widget.donor}@${this._mail}@${widget.time}-${rng.nextInt(500)}",
                                               this._mail,
@@ -272,6 +272,10 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                               true))
                                           .then((status) {
                                         if (status) {
+                                          Navigator.popUntil(
+                                              context,
+                                              ModalRoute.withName(
+                                                  'OfficeView'));
                                           new ConfirmationFlushbar(
                                                   "Prenotazione effettuata",
                                                   "La prenotazione è stata effettuata con successo",
@@ -299,6 +303,10 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                           );
                                           this.showFlushbar(this.confirm);*/
                                         } else {
+                                          Navigator.popUntil(
+                                              context,
+                                              ModalRoute.withName(
+                                                  'OfficeView'));
                                           new ConfirmationFlushbar(
                                               "Impossibile prenotare",
                                               "Non è stato possibile effettuare la prenotazione, riprova più tardi",

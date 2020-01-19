@@ -6,7 +6,6 @@ class FormFieldGeneral extends StatelessWidget {
   final List<DropdownMenuItem<dynamic>> fetchItems;
   final String valueSelected;
   final Function onChanged;
-  final bool disabled;
 
   FormFieldGeneral({
     @required this.icon,
@@ -14,7 +13,6 @@ class FormFieldGeneral extends StatelessWidget {
     @required this.fetchItems,
     @required this.valueSelected,
     @required this.onChanged,
-    this.disabled,
   });
 
   @override
@@ -25,38 +23,35 @@ class FormFieldGeneral extends StatelessWidget {
       ),
       child: ButtonTheme(
         child: DropdownButtonFormField(
-          isExpanded: true,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.red,
-            icon: icon,
-            enabledBorder: UnderlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  24.0,
+            isExpanded: true,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.red,
+              icon: icon,
+              enabledBorder: UnderlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    24.0,
+                  ),
+                ),
+                borderSide: BorderSide(
+                  color: Colors.white,
                 ),
               ),
-              borderSide: BorderSide(
+            ),
+            hint: Text(
+              labelDropDown,
+              style: TextStyle(
                 color: Colors.white,
               ),
             ),
-          ),
-          hint: Text(
-            labelDropDown,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          iconEnabledColor: Colors.white,
-          elevation: 18,
-          items: fetchItems,
-          value: valueSelected,
-          onChanged: disabled
-              ? (newValue) {
-                  onChanged(newValue);
-                }
-              : (newValue) => {},
-        ),
+            iconEnabledColor: Colors.white,
+            elevation: 18,
+            items: fetchItems,
+            value: valueSelected,
+            onChanged: (newValue) {
+              onChanged(newValue);
+            }),
       ),
     );
   }

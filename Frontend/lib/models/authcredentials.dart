@@ -8,7 +8,8 @@ class AuthCredentials {
     this._password = "";
   }
   AuthCredentials.complete(String mail, String password, Set<Role> roles) {
-    AuthCredentials(mail, roles);
+    this._mail = mail;
+    this._roles = roles;
     this._password = password;
   }
 

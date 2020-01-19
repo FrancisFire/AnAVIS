@@ -1,5 +1,5 @@
+import 'package:anavis/models/office.dart';
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/models/requestprenotation.dart';
 import 'package:anavis/services/request_service.dart';
 import 'package:anavis/views/widgets/button_card_bottom.dart';
@@ -10,19 +10,16 @@ import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:provider/provider.dart';
 
 class OfficeRequestView extends StatefulWidget {
-  final String officeName;
-  OfficeRequestView({@required this.officeName});
+  final Office office;
+  OfficeRequestView({@required this.office});
   @override
   _OfficeRequestViewState createState() => _OfficeRequestViewState();
 }
 
 class _OfficeRequestViewState extends State<OfficeRequestView> {
-  RequestService _requestService;
   List<RequestPrenotation> _requests;
-  String _mail;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
@@ -36,26 +33,15 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
   String restrictFractionalSeconds(String dateTime) =>
       dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
 
-  /* Future<void> _denyRequest(String requestId, BuildContext context) async {
-    return await Provider.of<CurrentOfficeState>(context)
-        .denyRequestByID(requestId);
+  Future<void> getRequests() async {
+    _requests = await RequestService(context)
+        .getRequestsByOffice(widget.office.getMail());
   }
 
-  Future<void> _confirmRequest(String requestId, BuildContext context) async {
-    return await Provider.of<CurrentOfficeState>(context)
-        .approveRequestByID(requestId);
-  }*/
-  Future<List<RequestPrenotation>> getRequests() async {
-    _requests = await _requestService.getRequestsByOffice(this._mail);
-    return _requests;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    this._requestService = new RequestService(context);
-    this._mail = AppState().getUserMail();
+  Future<void> initFuture() async {
+    await Future.wait([
+      this.getRequests(),
+    ]);
   }
 
   @override
@@ -63,7 +49,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Ufficio di ${widget.officeName}",
+          "Ufficio di ${widget.office.getPlace()}",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -79,8 +65,8 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
           second: Colors.orange[200],
           background: Colors.white,
         ),
-        child: FutureBuilder<List<RequestPrenotation>>(
-          future: this.getRequests(),
+        child: FutureBuilder(
+          future: this.initFuture(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
@@ -89,9 +75,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
               case ConnectionState.waiting:
                 return new RequestCircularLoading();
               case ConnectionState.done:
-                if (snapshot.hasError)
-                  return new Text("Errore nel recupero dei dati");
-                if (snapshot.data.isEmpty) {
+                if (_requests.isEmpty) {
                   return new Center(
                     child: Padding(
                       padding: const EdgeInsets.all(
@@ -130,12 +114,12 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                     backgroundColor: Colors.red[900],
                   ),
                   child: ListView.builder(
-                    itemCount: snapshot.data.length,
+                    itemCount: _requests.length,
                     itemBuilder: (context, index) {
                       return CardForPrenotationAndRequest(
-                        id: snapshot.data[index].getId(),
-                        email: snapshot.data[index].getDonorMail(),
-                        hour: snapshot.data[index].getHour(),
+                        id: _requests[index].getId(),
+                        email: _requests[index].getDonorMail(),
+                        hour: _requests[index].getHour(),
                         buttonBar: ButtonBar(
                           children: <Widget>[
                             ButtonForCardBottom(
@@ -157,18 +141,11 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                           "L'operazione è stata annulata correttamente",
                                           false,
                                         ).show(context);
-                                        /*Provider.of<AppState>(context)
-                                            .showFlushbar(
-                                          "Operazione annullata",
-                                          "L'operazione è stata annulata correttamente",
-                                          false,
-                                          context,
-                                        );*/
                                       },
                                       confirmFunction: () {
-                                        _requestService
+                                        RequestService(context)
                                             .denyRequest(
-                                                snapshot.data[index].getId())
+                                                _requests[index].getId())
                                             .then((status) {
                                           if (status) {
                                             Navigator.popUntil(
@@ -180,13 +157,6 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                               "L'operazione è stata effettuata correttamente",
                                               true,
                                             ).show(context);
-                                            /*Provider.of<AppState>(context)
-                                                .showFlushbar(
-                                              "Operazione effettuata",
-                                              "L'operazione è stata effettuata correttamente",
-                                              true,
-                                              context,
-                                            );*/
                                           } else {
                                             Navigator.popUntil(
                                                 context,
@@ -197,13 +167,6 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                               "C'è stato un errore nell'esecuzione dell'operazione",
                                               false,
                                             ).show(context);
-                                            /* Provider.of<AppState>(context)
-                                                .showFlushbar(
-                                              "Operazione non effettuata",
-                                              "C'è stato un errore nell'esecuzione dell'operazione",
-                                              false,
-                                              context,
-                                            );*/
                                           }
                                         });
                                       },
@@ -231,18 +194,11 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                           "L'operazione è stata annulata correttamente",
                                           false,
                                         ).show(context);
-                                        /*Provider.of<AppState>(context)
-                                            .showFlushbar(
-                                          "Operazione annullata",
-                                          "L'operazione è stata annulata correttamente",
-                                          false,
-                                          context,
-                                        );*/
                                       },
                                       confirmFunction: () {
-                                        _requestService
+                                        RequestService(context)
                                             .approveRequest(
-                                                snapshot.data[index].getId())
+                                                _requests[index].getId())
                                             .then((status) {
                                           if (status) {
                                             Navigator.popUntil(
@@ -254,13 +210,6 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                               "L'operazione è stata effettuata correttamente",
                                               true,
                                             ).show(context);
-                                            /*Provider.of<AppState>(context)
-                                                .showFlushbar(
-                                              "Operazione effettuata",
-                                              "L'operazione è stata effettuata correttamente",
-                                              true,
-                                              context,
-                                            );*/
                                           } else {
                                             Navigator.popUntil(
                                                 context,
@@ -271,13 +220,6 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                               "C'è stato un errore nell'esecuzione dell'operazione",
                                               false,
                                             ).show(context);
-                                            /*Provider.of<AppState>(context)
-                                                .showFlushbar(
-                                              "Operazione non effettuata",
-                                              "C'è stato un errore nell'esecuzione dell'operazione",
-                                              false,
-                                              context,
-                                            );*/
                                           }
                                         });
                                       },

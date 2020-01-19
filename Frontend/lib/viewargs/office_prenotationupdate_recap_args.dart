@@ -1,26 +1,29 @@
+import 'package:anavis/models/donor.dart';
+import 'package:anavis/models/office.dart';
+
 class OfficePrenotationUpdateRecapArgs {
-  OfficePrenotationUpdateRecapArgs(String donor, String time, String nicerTime,
-      String id, String officeName) {
+  OfficePrenotationUpdateRecapArgs(
+      Donor donor, String time, String nicerTime, String id, Office office) {
     this._donor = donor;
     this._time = time;
     this._nicerTime = nicerTime;
     this._id = id;
-    this._officeName = officeName;
+    this._office = office;
   }
-  String _donor;
+  Donor _donor;
   String _time;
   String _nicerTime;
   String _id;
-  String _officeName;
-  String getOfficeName() {
-    return _officeName;
+  Office _office;
+  Office getOffice() {
+    return _office;
   }
 
   String getId() {
     return _id;
   }
 
-  String getDonor() {
+  Donor getDonor() {
     return _donor;
   }
 

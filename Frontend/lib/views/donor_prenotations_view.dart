@@ -1,26 +1,24 @@
 import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/models/donor.dart';
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/models/prenotation.dart';
 import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/views/widgets/button_card_bottom.dart';
 import 'package:anavis/views/widgets/card_prenotation_request.dart';
-import 'package:anavis/views/widgets/delete_dialog.dart';
+import 'package:anavis/views/widgets/donor_delete_dialog.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DonorPrenotationView extends StatefulWidget {
+  final Donor donor;
+  DonorPrenotationView({@required this.donor});
   @override
   _DonorPrenotationViewState createState() => _DonorPrenotationViewState();
 }
 
 class _DonorPrenotationViewState extends State<DonorPrenotationView> {
   List<ActivePrenotation> _donorPrenotations;
-  PrenotationService _prenotationService;
-  String _mail;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
@@ -30,18 +28,20 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
     _refreshController.refreshCompleted();
   }
 
-  Future<List<ActivePrenotation>> getPrenotations() async {
-    _donorPrenotations =
-        await _prenotationService.getPrenotationsByDonor(this._mail);
-    return _donorPrenotations;
+  Future<void> initFuture() async {
+    await Future.wait([
+      this.getPrenotations(),
+    ]);
+  }
+
+  Future<void> getPrenotations() async {
+    _donorPrenotations = await PrenotationService(context)
+        .getPrenotationsByDonor(widget.donor.getMail());
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _mail = AppState().getUserMail();
-    _prenotationService = new PrenotationService(context);
   }
 
   @override
@@ -66,8 +66,8 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
           background: Colors.white,
         ),
         child: Center(
-          child: FutureBuilder<List<Prenotation>>(
-            future: this.getPrenotations(),
+          child: FutureBuilder(
+            future: this.initFuture(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -77,7 +77,7 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
                   return new RequestCircularLoading();
                 case ConnectionState.done:
                   if (snapshot.hasError) return new RequestCircularLoading();
-                  if (snapshot.data.isEmpty) {
+                  if (_donorPrenotations.isEmpty) {
                     return new Center(
                       child: Padding(
                         padding: const EdgeInsets.all(
@@ -116,12 +116,12 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
                       backgroundColor: Colors.red[900],
                     ),
                     child: ListView.builder(
-                      itemCount: snapshot.data.length,
+                      itemCount: _donorPrenotations.length,
                       itemBuilder: (context, index) {
                         return CardForPrenotationAndRequest(
-                          email: snapshot.data[index].getOfficeMail(),
-                          hour: snapshot.data[index].getHour(),
-                          id: snapshot.data[index].getId(),
+                          email: _donorPrenotations[index].getOfficeMail(),
+                          hour: _donorPrenotations[index].getHour(),
+                          id: _donorPrenotations[index].getId(),
                           buttonBar: ButtonBar(
                             children: <Widget>[
                               ButtonForCardBottom(
@@ -133,8 +133,8 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) =>
-                                        DeleteDialog(
-                                      id: snapshot.data[index].getId(),
+                                        DonorDeleteDialog(
+                                      id: _donorPrenotations[index].getId(),
                                       isPrenotation: true,
                                       title: "Elimina prenotazione",
                                       subtitle:
@@ -151,7 +151,7 @@ class _DonorPrenotationViewState extends State<DonorPrenotationView> {
                     ),
                   );
               }
-              return null; // unreachable
+              return null;
             },
           ),
         ),

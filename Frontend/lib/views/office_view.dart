@@ -1,14 +1,18 @@
 import 'package:anavis/apicontrollers/prenotation_controller.dart';
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/models/donor.dart';
+import 'package:anavis/models/office.dart';
+import 'package:anavis/models/requestprenotation.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/providers/current_office_state.dart';
 import 'package:anavis/services/donor_service.dart';
+import 'package:anavis/services/office_service.dart';
 import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/services/request_service.dart';
 import 'package:anavis/views/widgets/button_fab_homepage.dart';
 import 'package:anavis/views/widgets/clip_path.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/login_form.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -29,21 +33,29 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   List _selectedEvents;
   AnimationController _animationController;
   CalendarController _calendarController;
-  PrenotationService _prenotationService;
-  RequestService _requestService;
-  DonorService _donorService;
-  String _mail;
+  Office _office;
   List<Donor> _availableDonors = new List<Donor>();
-
+  int prenotationCount = 0;
+  int pendingRequestCount = 0;
   bool state = false;
+  Map<DateTime, List> _nicerEvents;
+  Future<void> setOffice() async {
+    this._office =
+        await OfficeService(context).getOfficeByMail(AppState().getUserMail());
+  }
+
+  Future<void> initFuture() async {
+    await this.setOffice();
+    await Future.wait([
+      this.setPrenotationsCount(),
+      this.setRequestsCount(),
+      this.fetchEvents(),
+    ]);
+  }
 
   @override
   void initState() {
     super.initState();
-    _prenotationService = new PrenotationService(context);
-    _requestService = new RequestService(context);
-    _mail = AppState().getUserMail();
-    _donorService = new DonorService(context);
     _calendarController = CalendarController();
 
     _animationController = AnimationController(
@@ -68,51 +80,37 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   }
 
   Future<void> getAvailableDonors() async {
-    _availableDonors =
-        await _donorService.getAvailableDonorsByOfficeId(this._mail);
+    _availableDonors = await DonorService(context)
+        .getAvailableDonorsByOfficeId(this._office.getMail());
     return;
   }
 
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {}
 
-  Future<Map<DateTime, List>> _fetchEvents() async {
-    Map<DateTime, List> nicerEvents = new Map<DateTime, List>();
-    List<ActivePrenotation> prenotations =
-        await _prenotationService.getPrenotationsByOffice(this._mail);
+  Future<void> fetchEvents() async {
+    _nicerEvents = new Map<DateTime, List>();
+    List<ActivePrenotation> prenotations = await PrenotationService(context)
+        .getPrenotationsByOffice(this._office.getMail());
     for (var activePrenotation in prenotations) {
       if (activePrenotation.isConfirmed()) {
-        nicerEvents.putIfAbsent(DateTime.parse(activePrenotation.getHour()),
+        _nicerEvents.putIfAbsent(DateTime.parse(activePrenotation.getHour()),
             () => [activePrenotation.getDonorMail()]);
       }
     }
-    return nicerEvents;
   }
 
-  int prenotationCount = 0;
-
-  int getPrenotationCount() {
-    _prenotationService.getPrenotationsByOffice(this._mail).then(
-      (onValue) {
-        setState(() {
-          prenotationCount = onValue.length;
-        });
-      },
-    );
-    return prenotationCount;
+  Future<void> setPrenotationsCount() async {
+    List<ActivePrenotation> activePrenotations =
+        await PrenotationService(context)
+            .getPrenotationsByOffice(_office.getMail());
+    prenotationCount = activePrenotations.length;
   }
 
-  int requestCount = 0;
-
-  int getRequestCount() {
-    _requestService.getRequestsByOffice(this._mail).then(
-      (onValue) {
-        setState(() {
-          requestCount = onValue.length;
-        });
-      },
-    );
-    return requestCount;
+  Future<void> setRequestsCount() async {
+    List<RequestPrenotation> requests =
+        await RequestService(context).getRequestsByOffice(_office.getMail());
+    pendingRequestCount = requests.length;
   }
 
   @override
@@ -126,186 +124,191 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
         systemNavigationBarDividerColor: Colors.transparent,
       ),
     );
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          ClipPath(
-            clipper: CustomShapeClipper(),
-            child: Container(
-              height: (MediaQuery.of(context).size.height / 3),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  stops: [0.1, 0.5, 0.7, 0.9],
-                  colors: [
-                    Colors.red[800],
-                    Colors.red[700],
-                    Colors.red[600],
-                    Colors.red[400],
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 46, left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 24,
-                ),
-                Flexible(
-                  child: AutoSizeText(
-                    'Ufficio AVIS di',
-                    style: TextStyle(
-                      fontSize: 26,
-                      color: Colors.white,
-                    ),
-                    maxLines: 1,
-                  ),
-                ),
-                Flexible(
-                  child: AutoSizeText(
-                    this._mail,
-                    style: TextStyle(
-                      fontSize: 52,
-                      color: Colors.white,
-                    ),
-                    maxLines: 1,
-                  ),
-                ),
-                Flexible(
-                  child: Row(
-                    children: <Widget>[
-                      Chip(
-                        backgroundColor: Colors.red[900],
-                        elevation: 14,
-                        avatar: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.web_asset,
-                            color: Colors.red,
-                            size: 18,
-                          ),
-                        ),
-                        label: Text(
-                          'Sito principale',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Chip(
-                        backgroundColor: Colors.red[900],
-                        elevation: 14,
-                        avatar: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.phone_in_talk,
-                            color: Colors.red,
-                            size: 18,
-                          ),
-                        ),
-                        label: Text(
-                          'Numeri utili',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height / 3,
-              bottom: 64,
-              right: 8,
-              left: 8,
-            ),
-            child: Card(
-              color: Colors.white,
-              elevation: 7,
-              shape: RoundedRectangleBorder(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(26.0),
-                ),
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      FutureBuilder(
-                        future: _fetchEvents(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 42.0),
-                              child: CircularProgressIndicator(),
-                            );
-                          }
+    return FutureBuilder(
+      future: this.initFuture(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return new RequestCircularLoading();
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            return new RequestCircularLoading();
+          case ConnectionState.done:
+            if (snapshot.hasError) return new RequestCircularLoading();
 
-                          return TableCalendar(
-                            calendarController: _calendarController,
-                            events: snapshot.data,
-                            locale: 'it_IT',
-                            initialCalendarFormat: CalendarFormat.week,
-                            availableCalendarFormats: const {
-                              CalendarFormat.month: 'Esteso',
-                              CalendarFormat.week: 'Ridotto',
-                            },
-                            startingDayOfWeek: StartingDayOfWeek.monday,
-                            calendarStyle: CalendarStyle(
-                              selectedColor: Colors.red[800],
-                              todayColor: Colors.grey[600],
-                              markersColor: Colors.orangeAccent[400],
-                              outsideDaysVisible: false,
-                            ),
-                            initialSelectedDay: DateTime.now(),
-                            headerStyle: HeaderStyle(
-                              titleTextBuilder: (date, locale) =>
-                                  toBeginningOfSentenceCase(
-                                DateFormat.yMMMM(locale).format(date),
-                              ),
-                              formatButtonTextStyle: TextStyle().copyWith(
-                                color: Colors.white,
-                                fontSize: 12.0,
-                              ),
-                              formatButtonDecoration: BoxDecoration(
-                                color: Colors.grey[400],
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                            ),
-                            onDaySelected: _onDaySelected,
-                            onVisibleDaysChanged: _onVisibleDaysChanged,
-                          );
-                        },
+            return Scaffold(
+              body: Stack(
+                children: <Widget>[
+                  ClipPath(
+                    clipper: CustomShapeClipper(),
+                    child: Container(
+                      height: (MediaQuery.of(context).size.height / 3),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          stops: [0.1, 0.5, 0.7, 0.9],
+                          colors: [
+                            Colors.red[800],
+                            Colors.red[700],
+                            Colors.red[600],
+                            Colors.red[400],
+                          ],
+                        ),
                       ),
-                      Expanded(
-                        child: _buildEventList(),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 46, left: 16, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Flexible(
+                          child: AutoSizeText(
+                            'Ufficio AVIS di',
+                            style: TextStyle(
+                              fontSize: 26,
+                              color: Colors.white,
+                            ),
+                            maxLines: 1,
+                          ),
+                        ),
+                        Flexible(
+                          child: AutoSizeText(
+                            this._office.getPlace(),
+                            style: TextStyle(
+                              fontSize: 52,
+                              color: Colors.white,
+                            ),
+                            maxLines: 1,
+                          ),
+                        ),
+                        Flexible(
+                          child: Row(
+                            children: <Widget>[
+                              Chip(
+                                backgroundColor: Colors.red[900],
+                                elevation: 14,
+                                avatar: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: Icon(
+                                    Icons.web_asset,
+                                    color: Colors.red,
+                                    size: 18,
+                                  ),
+                                ),
+                                label: Text(
+                                  'Sito principale',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Chip(
+                                backgroundColor: Colors.red[900],
+                                elevation: 14,
+                                avatar: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: Icon(
+                                    Icons.phone_in_talk,
+                                    color: Colors.red,
+                                    size: 18,
+                                  ),
+                                ),
+                                label: Text(
+                                  'Numeri utili',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 3,
+                      bottom: 64,
+                      right: 8,
+                      left: 8,
+                    ),
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 7,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(26.0),
+                        ),
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
+                          child: Column(
+                            children: <Widget>[
+                              TableCalendar(
+                                calendarController: _calendarController,
+                                events: snapshot.data,
+                                locale: 'it_IT',
+                                initialCalendarFormat: CalendarFormat.week,
+                                availableCalendarFormats: const {
+                                  CalendarFormat.month: 'Esteso',
+                                  CalendarFormat.week: 'Ridotto',
+                                },
+                                startingDayOfWeek: StartingDayOfWeek.monday,
+                                calendarStyle: CalendarStyle(
+                                  selectedColor: Colors.red[800],
+                                  todayColor: Colors.grey[600],
+                                  markersColor: Colors.orangeAccent[400],
+                                  outsideDaysVisible: false,
+                                ),
+                                initialSelectedDay: DateTime.now(),
+                                headerStyle: HeaderStyle(
+                                  titleTextBuilder: (date, locale) =>
+                                      toBeginningOfSentenceCase(
+                                    DateFormat.yMMMM(locale).format(date),
+                                  ),
+                                  formatButtonTextStyle: TextStyle().copyWith(
+                                    color: Colors.white,
+                                    fontSize: 12.0,
+                                  ),
+                                  formatButtonDecoration: BoxDecoration(
+                                    color: Colors.grey[400],
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                ),
+                                onDaySelected: _onDaySelected,
+                                onVisibleDaysChanged: _onVisibleDaysChanged,
+                              ),
+                              Expanded(
+                                child: _buildEventList(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: ButtonFABHomePage(
-        iconFab: iconFAB(),
-      ),
+              floatingActionButton: ButtonFABHomePage(
+                iconFab: iconFAB(),
+              ),
+            );
+        }
+        return null;
+      },
     );
   }
 
@@ -373,10 +376,10 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
         child: Center(
           child: Badge(
             toAnimate: false,
-            showBadge: getRequestCount() > 0 ? true : false,
+            showBadge: this.pendingRequestCount > 0 ? true : false,
             badgeContent: Padding(
               padding: const EdgeInsets.all(1.4),
-              child: Text(getRequestCount().toString()),
+              child: Text(this.pendingRequestCount.toString()),
             ),
             position: BadgePosition.topRight(top: -9, right: -2),
             badgeColor: Colors.white,
@@ -397,7 +400,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
           Navigator.pushNamed(
             context,
             '/office/requests',
-            arguments: this._mail,
+            arguments: this._office,
           );
         },
       ),
@@ -431,7 +434,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
             Navigator.pushNamed(
               context,
               '/office/prenotations',
-              arguments: this._mail,
+              arguments: this._office.getMail(),
             );
           }
         },
@@ -452,6 +455,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
           Navigator.pushNamed(
             context,
             '/office/insertdateslotview',
+            arguments: this._office,
           );
         },
       ),
@@ -459,10 +463,10 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
         child: Center(
           child: Badge(
             toAnimate: false,
-            showBadge: getPrenotationCount() > 0 ? true : false,
+            showBadge: this.prenotationCount > 0 ? true : false,
             badgeContent: Padding(
               padding: const EdgeInsets.all(1.4),
-              child: Text(getPrenotationCount().toString()),
+              child: Text(this.prenotationCount.toString()),
             ),
             position: BadgePosition.topRight(top: -9, right: -2),
             badgeColor: Colors.white,
@@ -483,6 +487,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
           Navigator.pushNamed(
             context,
             '/office/prenotationsview',
+            arguments: this._office,
           );
         },
       ),

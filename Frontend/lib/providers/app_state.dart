@@ -1,10 +1,3 @@
-import 'package:anavis/models/donor.dart';
-import 'package:anavis/models/office.dart';
-import 'package:anavis/models/timeslot.dart';
-import 'package:flushbar/flushbar.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'dart:core';
 
 class AppState {

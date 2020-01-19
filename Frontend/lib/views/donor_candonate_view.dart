@@ -1,39 +1,28 @@
-import 'package:anavis/providers/current_donor_state.dart';
-import 'package:anavis/services/donor_service.dart';
+import 'package:anavis/models/donor.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DonorCanDonateView extends StatefulWidget {
-  final bool canDonate;
-  DonorCanDonateView({@required this.canDonate});
+  final Donor donor;
+  DonorCanDonateView({@required this.donor});
   @override
   _DonorCanDonateViewState createState() => _DonorCanDonateViewState();
 }
 
 class _DonorCanDonateViewState extends State<DonorCanDonateView> {
-  DonorService _donorService;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _donorService = new DonorService(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BuildPainter(
-        canDonate: widget.canDonate,
+        canDonate: widget.donor.canDonate(),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         hoverElevation: 22,
         child: Icon(
           Icons.keyboard_arrow_down,
-          color: widget.canDonate ? Colors.green : Colors.red,
+          color: widget.donor.canDonate() ? Colors.green : Colors.red,
           size: 42,
         ),
         onPressed: () {

@@ -20,6 +20,8 @@ import 'package:anavis/views/office_request_view.dart';
 import 'package:anavis/views/office_view.dart';
 import 'package:flutter/material.dart';
 
+import 'models/donor.dart';
+import 'models/office.dart';
 import 'viewargs/donor_request_recap_args.dart';
 import 'viewargs/office_prenotationupdate_recap_args.dart';
 
@@ -49,10 +51,10 @@ class RouteGenerator {
             ));
 
       case "/office/requests":
-        if (args is String) {
+        if (args is Office) {
           return MaterialPageRoute(
               builder: (_) => OfficeRequestView(
-                    officeName: args,
+                    office: args,
                   ),
               settings: RouteSettings(
                 name: 'OfficeRequestView',
@@ -61,30 +63,33 @@ class RouteGenerator {
         return _errorRoute();
 
       case "/office/prenotationsview":
-        return MaterialPageRoute(
-            builder: (_) => OfficePrenotationView(),
-            settings: RouteSettings(
-              name: 'OfficePrenotation',
-            ));
-
-      case "/office/insertdateslotview":
-        return MaterialPageRoute(
-            builder: (_) => OfficeAddDateslotView(),
-            settings: RouteSettings(
-              name: 'OfficeAddDateslotView',
-            ));
-
-      case '/office/prenotations':
-        if (args is String) {
+        if (args is Office) {
           return MaterialPageRoute(
-              builder: (_) => OfficePrenotationDonorView(
-                    officeName: args,
+              builder: (_) => OfficePrenotationView(
+                    office: args,
                   ),
               settings: RouteSettings(
                 name: 'OfficePrenotationView',
               ));
         }
         return _errorRoute();
+      case "/office/insertdateslotview":
+        if (args is Office) {
+          return MaterialPageRoute(
+              builder: (_) => OfficeAddDateslotView(
+                    office: args,
+                  ),
+              settings: RouteSettings(
+                name: 'OfficeAddDateslotView',
+              ));
+        }
+        return _errorRoute();
+      case '/office/prenotations':
+        return MaterialPageRoute(
+            builder: (_) => OfficePrenotationDonorView(),
+            settings: RouteSettings(
+              name: 'OfficeNewPrenotation',
+            ));
 
       case '/office/prenotations/timeview':
         if (args is String) {
@@ -120,7 +125,7 @@ class RouteGenerator {
                     time: args.getTime(),
                     nicerTime: args.getNicerTime(),
                     id: args.getId(),
-                    officeName: args.getOfficeName(),
+                    office: args.getOffice(),
                   ),
               settings: RouteSettings(
                 name: 'OfficePrenotationUpdateRecap',
@@ -128,10 +133,10 @@ class RouteGenerator {
         }
         return _errorRoute();
       case '/donor/candonate':
-        if (args is bool) {
+        if (args is Donor) {
           return MaterialPageRoute(
               builder: (_) => DonorCanDonateView(
-                    canDonate: args,
+                    donor: args,
                   ),
               settings: RouteSettings(
                 name: 'DonorCanDonateView',
@@ -140,19 +145,27 @@ class RouteGenerator {
         return _errorRoute();
 
       case "/donor/prenotationsview":
-        return MaterialPageRoute(
-            builder: (_) => DonorPrenotationView(),
-            settings: RouteSettings(
-              name: 'DonorPrenotationView',
-            ));
-
+        if (args is Donor) {
+          return MaterialPageRoute(
+              builder: (_) => DonorPrenotationView(
+                    donor: args,
+                  ),
+              settings: RouteSettings(
+                name: 'DonorPrenotationView',
+              ));
+        }
+        return _errorRoute();
       case "/donor/requestsview":
-        return MaterialPageRoute(
-            builder: (_) => DonorRequestView(),
-            settings: RouteSettings(
-              name: 'DonorRequestView',
-            ));
-
+        if (args is Donor) {
+          return MaterialPageRoute(
+              builder: (_) => DonorRequestView(
+                    donor: args,
+                  ),
+              settings: RouteSettings(
+                name: 'DonorRequestView',
+              ));
+        }
+        return _errorRoute();
       case "/donor/pendingprenotationsview":
         return MaterialPageRoute(
             builder: (_) => DonorPendingPrenotationView(),

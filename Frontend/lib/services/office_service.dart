@@ -7,9 +7,6 @@ import 'package:flutter/cupertino.dart';
 
 class OfficeService {
   OfficeController _officeController;
-  OfficeService(BuildContext context) {
-    _officeController = new OfficeController(context);
-  }
 
   Future<List<Office>> getOffices() async {
     List<Office> offices = new List<Office>();
@@ -67,17 +64,16 @@ class OfficeService {
   Future<Office> getOfficeByMail(String officeMail) async {
     String controllerJson = await _officeController.getOfficeByMail(officeMail);
     var parsedJson = json.decode(controllerJson);
-    var officeJson = parsedJson[0];
     Set<TimeSlot> timeTable = new Set<TimeSlot>();
-    for (var time in officeJson['donationTimeTable']) {
+    for (var time in parsedJson['donationTimeTable']) {
       timeTable.add(TimeSlot(
         time['dateTime'],
         time['donorSlots'],
       ));
     }
     Office office = new Office.complete(
-      officeJson['mail'],
-      officeJson['place'],
+      parsedJson['mail'],
+      parsedJson['place'],
       timeTable,
     );
     return office;
@@ -92,4 +88,17 @@ class OfficeService {
     }
     return officeMailsAndNames;
   }
+
+  void _setController(BuildContext context) {
+    _officeController = new OfficeController(context);
+  }
+
+  static final OfficeService _singleton = OfficeService._internal();
+
+  factory OfficeService(BuildContext context) {
+    _singleton._setController(context);
+    return _singleton;
+  }
+
+  OfficeService._internal();
 }

@@ -6,9 +6,6 @@ import 'package:flutter/cupertino.dart';
 
 class AuthCredentialsService {
   AuthCredentialsController _authCredentialsController;
-  AuthCredentialsService(BuildContext context) {
-    _authCredentialsController = new AuthCredentialsController(context);
-  }
 
   Future<List<Role>> getUserRoles(String mail) async {
     List<Role> roles = new List<Role>();
@@ -31,4 +28,18 @@ class AuthCredentialsService {
   }
 
   //TODO ALTRI METODI PER LE CREDENZIALI
+
+  void _setController(BuildContext context) {
+    _authCredentialsController = new AuthCredentialsController(context);
+  }
+
+  static final AuthCredentialsService _singleton =
+      AuthCredentialsService._internal();
+
+  factory AuthCredentialsService(BuildContext context) {
+    _singleton._setController(context);
+    return _singleton;
+  }
+
+  AuthCredentialsService._internal();
 }

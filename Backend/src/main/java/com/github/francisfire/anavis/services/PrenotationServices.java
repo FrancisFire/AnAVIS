@@ -219,7 +219,7 @@ public class PrenotationServices {
 	 */
 	public boolean closePrenotation(@NonNull String prenotationId, @NonNull String reportId) {
 		ActivePrenotation prenotation = this.getPrenotationInstance(prenotationId);
-		if (this.removePrenotation(prenotationId) && donationServices.addDonation(prenotation, reportId)) {
+		if (prenotation.isConfirmed() && this.removePrenotation(prenotationId) && donationServices.addDonation(prenotation, reportId)) {
 			String donorId = prenotation.getDonorMail();
 			Date date = prenotation.getHour();
 			Donor donor = donorServices.getDonorInstance(donorId);

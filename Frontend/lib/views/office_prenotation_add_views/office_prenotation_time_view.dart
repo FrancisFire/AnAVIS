@@ -28,13 +28,13 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
   String _timeFormatted;
   List<TimeSlot> _timeTables;
   List<TimeSlot> _availableTimeTables;
-  OfficeService _officeService;
   String _mail;
 
   void fetchTimeFromOffice() async {
-    _timeTables = await _officeService.getDonationsTimeTable(this._mail);
+    _timeTables =
+        await OfficeService(context).getDonationsTimeTable(this._mail);
     _availableTimeTables =
-        await _officeService.getAvailableTimeTablesByOffice(this._mail);
+        await OfficeService(context).getAvailableTimeTablesByOffice(this._mail);
   }
 
   List<DropdownMenuItem> createListItem() {
@@ -66,7 +66,6 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _officeService = new OfficeService(context);
     _mail = AppState().getUserMail();
   }
 

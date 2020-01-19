@@ -19,13 +19,9 @@ class CustomDialogUploadFile extends StatefulWidget {
 }
 
 class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
-  PrenotationService _prenotationService;
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    this._prenotationService = new PrenotationService(context);
   }
 
   @override
@@ -84,31 +80,21 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
                 onPressed: () async {
                   _closePrenotation(widget.prenotation.getId()).then((status) {
                     if (status) {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('OfficeView'));
                       ConfirmationFlushbar(
                         "Operazione confermata",
                         "L'operazione di upload è stata effettuata con successo e la chiusura della prenotazione chiusa",
                         true,
                       ).show(context);
-                      /*Provider.of<AppState>(context).showFlushbar(
-                        "Operazione confermata",
-                        "L'operazione di upload è stata effettuata con successo e la chiusura della prenotazione chiusa",
-                        true,
-                        context,
-                      );*/
                     } else {
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('OfficeView'));
                       ConfirmationFlushbar(
                         "Operazione non riuscita",
                         "L'operazione di upload è stata annullata e di consegunza la chiusura della prenotazione non è riuscita",
                         false,
                       ).show(context);
-                      /* Provider.of<AppState>(context).showFlushbar(
-                        "Operazione non riuscita",
-                        "L'operazione di upload è stata annullata e di consegunza la chiusura della prenotazione non è riuscita",
-                        false,
-                        context,
-                      );*/
                     }
                   });
                 },
@@ -149,7 +135,8 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
 
   Future<bool> _closePrenotation(String id) async {
     File file = await FilePicker.getFile(type: FileType.ANY);
-    bool confirmation = await _prenotationService.closePrenotation(id, file);
+    bool confirmation =
+        await PrenotationService(context).closePrenotation(id, file);
     return confirmation;
   }
 }

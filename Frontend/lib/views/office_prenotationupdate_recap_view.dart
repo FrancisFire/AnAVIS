@@ -1,4 +1,6 @@
 import 'package:anavis/models/activeprenotation.dart';
+import 'package:anavis/models/donor.dart';
+import 'package:anavis/models/office.dart';
 import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
@@ -13,16 +15,16 @@ import 'package:flushbar/flushbar_route.dart' as route;
 
 class OfficePrenotationUpdateRecap extends StatefulWidget {
   final String id;
-  final String donor;
+  final Donor donor;
   final String time;
   final String nicerTime;
-  final String officeName;
+  final Office office;
   OfficePrenotationUpdateRecap({
     @required this.donor,
     @required this.time,
     @required this.nicerTime,
     @required this.id,
-    @required this.officeName,
+    @required this.office,
   });
 
   @override
@@ -32,7 +34,6 @@ class OfficePrenotationUpdateRecap extends StatefulWidget {
 
 class _OfficePrenotationUpdateRecapState
     extends State<OfficePrenotationUpdateRecap> {
-  PrenotationService _prenotationService;
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -46,7 +47,6 @@ class _OfficePrenotationUpdateRecapState
   void initState() {
     super.initState();
     setNicerTime();
-    this._prenotationService = new PrenotationService(context);
   }
 
   void setNicerTime() {
@@ -116,7 +116,7 @@ class _OfficePrenotationUpdateRecapState
                           child: Column(
                             children: <Widget>[
                               Text(
-                                'Aggiornamento della prenotazione per l\'ufficio di ${widget.officeName}',
+                                'Aggiornamento della prenotazione per l\'ufficio di ${widget.office.getPlace()}',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 26,
@@ -162,7 +162,8 @@ class _OfficePrenotationUpdateRecapState
                                         text: ' per il donatore ',
                                       ),
                                       TextSpan(
-                                        text: widget.donor,
+                                        text:
+                                            "${widget.donor.getSurname()} ${widget.donor.getName()}",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -261,14 +262,15 @@ class _OfficePrenotationUpdateRecapState
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        _prenotationService
+                                        PrenotationService(context)
                                             .updatePrenotation(
                                                 new ActivePrenotation(
-                                                    widget.id,
-                                                    widget.officeName,
-                                                    widget.donor,
-                                                    widget.time,
-                                                    false))
+                                          widget.id,
+                                          widget.office.getMail(),
+                                          widget.donor.getMail(),
+                                          widget.time,
+                                          false,
+                                        ))
                                             .then((status) {
                                           if (status) {
                                             confirm = new Flushbar(
