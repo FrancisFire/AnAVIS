@@ -1,5 +1,5 @@
+import 'package:anavis/models/office.dart';
 import 'package:anavis/models/timeslot.dart';
-import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/services/office_service.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/views/widgets/donor_request_widget.dart';
@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 
 class OfficePrenotationTimeView extends StatefulWidget {
-  final String donor;
-
+  final String donorMail;
+  final Office office;
   OfficePrenotationTimeView({
-    @required this.donor,
+    @required this.donorMail,
+    @required this.office,
   });
 
   @override
@@ -22,15 +23,11 @@ class OfficePrenotationTimeView extends StatefulWidget {
 class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
   String _timeSelected;
   String _timeFormatted;
-  List<TimeSlot> _timeTables;
   List<TimeSlot> _availableTimeTables;
-  String _mail;
 
   void fetchTimeFromOffice() async {
-    _timeTables =
-        await OfficeService(context).getDonationsTimeTable(this._mail);
-    _availableTimeTables =
-        await OfficeService(context).getAvailableTimeTablesByOffice(this._mail);
+    _availableTimeTables = await OfficeService(context)
+        .getAvailableTimeTablesByOffice(widget.office.getMail());
   }
 
   List<DropdownMenuItem> createListItem() {
@@ -59,13 +56,6 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _mail = AppState().getUserMail();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: _timeSelected != null
@@ -73,12 +63,15 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
               onPressed: () {
                 Navigator.pushReplacementNamed(
                     context, '/office/prenotations/recap',
-                    arguments: new OfficePrenotationRecapArgs(this.widget.donor,
-                        this._timeSelected, this._timeFormatted));
+                    arguments: new OfficePrenotationRecapArgs(
+                        widget.donorMail,
+                        this._timeSelected,
+                        this._timeFormatted,
+                        widget.office));
               },
             )
           : FABLeftArrow(
-              nameOffice: widget.donor
+              nameOffice: widget.donorMail
                   .split('@')
                   .map((String text) => text)
                   .elementAt(0),

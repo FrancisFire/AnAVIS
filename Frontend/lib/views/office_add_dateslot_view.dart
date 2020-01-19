@@ -1,6 +1,5 @@
 import 'package:anavis/models/office.dart';
 import 'package:anavis/models/timeslot.dart';
-import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/services/office_service.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/painter.dart';
@@ -44,7 +43,9 @@ class _OfficeAddDateslotViewState extends State<OfficeAddDateslotView> {
                     bottomCardHeight: MediaQuery.of(context).size.height / 1.8,
                     borderRadius: 16,
                     topCardWidget: TopCardWidget(),
-                    bottomCardWidget: BottomCardWidget(),
+                    bottomCardWidget: BottomCardWidget(
+                      office: widget.office,
+                    ),
                     slimeEnabled: true,
                   ),
                 ],
@@ -58,18 +59,17 @@ class _OfficeAddDateslotViewState extends State<OfficeAddDateslotView> {
 }
 
 class BottomCardWidget extends StatefulWidget {
+  final Office office;
+  BottomCardWidget({@required this.office});
   @override
   _BottomCardWidgetState createState() => _BottomCardWidgetState();
 }
 
 class _BottomCardWidgetState extends State<BottomCardWidget> {
   final format = DateFormat("yyyy-MM-dd HH:mm");
-  String _mail;
   @override
   void initState() {
     super.initState();
-
-    _mail = AppState().getUserMail();
   }
 
   int numberValue;
@@ -77,7 +77,7 @@ class _BottomCardWidgetState extends State<BottomCardWidget> {
 
   Future<bool> addTimeTableSlot() async {
     bool confirmation = await OfficeService(context).addTimeSlot(
-        this._mail,
+        widget.office.getMail(),
         new TimeSlot(
           formatDate(dateValue, [
             '20',

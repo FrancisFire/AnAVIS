@@ -1,5 +1,6 @@
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
+import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
 import 'package:anavis/views/donor_pendingprenotations_view.dart';
 import 'package:anavis/views/donor_prenotations_view.dart';
@@ -85,17 +86,22 @@ class RouteGenerator {
         }
         return _errorRoute();
       case '/office/prenotations':
-        return MaterialPageRoute(
-            builder: (_) => OfficePrenotationDonorView(),
-            settings: RouteSettings(
-              name: 'OfficeNewPrenotation',
-            ));
-
+        if (args is Office) {
+          return MaterialPageRoute(
+              builder: (_) => OfficePrenotationDonorView(
+                    office: args,
+                  ),
+              settings: RouteSettings(
+                name: 'OfficeNewPrenotation',
+              ));
+        }
+        return _errorRoute();
       case '/office/prenotations/timeview':
-        if (args is String) {
+        if (args is OfficePrenotationTimeViewArgs) {
           return MaterialPageRoute(
               builder: (_) => OfficePrenotationTimeView(
-                    donor: args,
+                    donorMail: args.getDonorMail(),
+                    office: args.getOffice(),
                   ),
               settings: RouteSettings(
                 name: 'OfficePrenotationTimeView',
@@ -110,6 +116,7 @@ class RouteGenerator {
                     donor: args.getDonor(),
                     time: args.getTime(),
                     nicerTime: args.getNicerTime(),
+                    office: args.getOffice(),
                   ),
               settings: RouteSettings(
                 name: 'OfficePrenotationRecap',
@@ -167,12 +174,16 @@ class RouteGenerator {
         }
         return _errorRoute();
       case "/donor/pendingprenotationsview":
-        return MaterialPageRoute(
-            builder: (_) => DonorPendingPrenotationView(),
-            settings: RouteSettings(
-              name: 'DonorPendingPrenotationView',
-            ));
-
+        if (args is Donor) {
+          return MaterialPageRoute(
+              builder: (_) => DonorPendingPrenotationView(
+                    donor: args,
+                  ),
+              settings: RouteSettings(
+                name: 'DonorPendingPrenotationView',
+              ));
+        }
+        return _errorRoute();
       case '/donor/officerequest':
         return MaterialPageRoute(
             builder: (_) => DonorRequestOfficeView(),

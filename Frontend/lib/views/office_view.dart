@@ -10,7 +10,6 @@ import 'package:anavis/services/request_service.dart';
 import 'package:anavis/views/widgets/button_fab_homepage.dart';
 import 'package:anavis/views/widgets/clip_path.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
-import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/login_form.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -409,17 +408,11 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
               'Al momento non ci sono donatori disponibili',
               false,
             ).show(context);
-            /* Provider.of<AppState>(context).showFlushbar(
-              'Nessun donatore',
-              'Al momento non ci sono donatori disponibili',
-              false,
-              context,
-            );*/
           } else {
             Navigator.pushNamed(
               context,
               '/office/prenotations',
-              arguments: this._office.getMail(),
+              arguments: this._office,
             );
           }
         },

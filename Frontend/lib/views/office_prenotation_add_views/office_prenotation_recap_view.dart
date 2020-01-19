@@ -1,5 +1,5 @@
 import 'package:anavis/models/activeprenotation.dart';
-import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/models/office.dart';
 import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/painter.dart';
@@ -14,10 +14,11 @@ class OfficePrenotationRecap extends StatefulWidget {
   final String donor;
   final String time;
   final String nicerTime;
-
+  final Office office;
   OfficePrenotationRecap({
     @required this.donor,
     @required this.time,
+    @required this.office,
     this.nicerTime,
   });
 
@@ -26,7 +27,6 @@ class OfficePrenotationRecap extends StatefulWidget {
 }
 
 class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
-  String _mail;
   Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
@@ -34,13 +34,11 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
       RegExp(r"Data: ?.+? ?\| ?Orario: ?(\d\d:\d\d)").firstMatch(hour).group(1);
 
   String dayValue, hourValue;
-  // Flushbar confirm, decline, err;
 
   @override
   void initState() {
     super.initState();
     setNicerTime();
-    _mail = AppState().getUserMail();
   }
 
   void setNicerTime() {
@@ -49,20 +47,6 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
       hourValue = this.takeHour(widget.nicerTime);
     });
   }
-
-/*  Future showFlushbar(Flushbar instance) {
-    final _route = route.showFlushbar(
-      context: context,
-      flushbar: instance,
-    );
-
-    return Navigator.of(
-      context,
-      rootNavigator: false,
-    ).pushReplacement(
-      _route,
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -213,26 +197,6 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                               "La prenotazione è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
                                               false)
                                           .show(context);
-                                      /* decline = new Flushbar(
-                                        margin: EdgeInsets.all(8),
-                                        borderRadius: 26,
-                                        shouldIconPulse: true,
-                                        title: "Prenotazione annullata",
-                                        icon: Icon(
-                                          Icons.clear,
-                                          size: 28.0,
-                                          color: Colors.red,
-                                        ),
-                                        message:
-                                            "La prenotazione è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
-                                        duration: Duration(
-                                          seconds: 6,
-                                        ),
-                                        isDismissible: true,
-                                        dismissDirection:
-                                            FlushbarDismissDirection.HORIZONTAL,
-                                      );
-                                      this.showFlushbar(this.decline);*/
                                     },
                                   ),
                                 ),
@@ -259,8 +223,8 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                     onPressed: () {
                                       PrenotationService(context)
                                           .createPrenotation(new ActivePrenotation(
-                                              "${widget.donor}@${this._mail}@${widget.time}-${rng.nextInt(500)}",
-                                              this._mail,
+                                              "${widget.donor}@${widget.office.getMail()}@${widget.time}-${rng.nextInt(500)}",
+                                              widget.office.getMail(),
                                               widget.donor,
                                               widget.time,
                                               true))
@@ -275,27 +239,6 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                                   "La prenotazione è stata effettuata con successo",
                                                   true)
                                               .show(context);
-                                          /* confirm = new Flushbar(
-                                            margin: EdgeInsets.all(8),
-                                            shouldIconPulse: true,
-                                            borderRadius: 26,
-                                            title: "Prenotazione effettuata",
-                                            icon: Icon(
-                                              Icons.check,
-                                              size: 28.0,
-                                              color: Colors.green,
-                                            ),
-                                            message:
-                                                "La prenotazione è stata effettuata con successo",
-                                            duration: Duration(
-                                              seconds: 6,
-                                            ),
-                                            isDismissible: true,
-                                            dismissDirection:
-                                                FlushbarDismissDirection
-                                                    .HORIZONTAL,
-                                          );
-                                          this.showFlushbar(this.confirm);*/
                                         } else {
                                           Navigator.popUntil(
                                               context,
@@ -305,27 +248,6 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                               "Impossibile prenotare",
                                               "Non è stato possibile effettuare la prenotazione, riprova più tardi",
                                               false);
-                                          /*err = new Flushbar(
-                                            margin: EdgeInsets.all(8),
-                                            shouldIconPulse: true,
-                                            borderRadius: 26,
-                                            title: "Impossibile prenotare",
-                                            icon: Icon(
-                                              Icons.error,
-                                              size: 28.0,
-                                              color: Colors.red,
-                                            ),
-                                            message:
-                                                "Non è stato possibile effettuare la prenotazione, riprova più tardi",
-                                            duration: Duration(
-                                              seconds: 6,
-                                            ),
-                                            isDismissible: true,
-                                            dismissDirection:
-                                                FlushbarDismissDirection
-                                                    .HORIZONTAL,
-                                          );
-                                          this.showFlushbar(this.err);*/
                                         }
                                       });
                                     },

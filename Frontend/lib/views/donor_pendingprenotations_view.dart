@@ -1,5 +1,5 @@
 import 'package:anavis/models/activeprenotation.dart';
-import 'package:anavis/providers/app_state.dart';
+import 'package:anavis/models/donor.dart';
 import 'package:anavis/services/prenotation_service.dart';
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/models/prenotation.dart';
@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DonorPendingPrenotationView extends StatefulWidget {
+  final Donor donor;
+  DonorPendingPrenotationView({@required this.donor});
   @override
   _DonorPendingPrenotationViewState createState() =>
       _DonorPendingPrenotationViewState();
@@ -20,7 +22,6 @@ class DonorPendingPrenotationView extends StatefulWidget {
 class _DonorPendingPrenotationViewState
     extends State<DonorPendingPrenotationView> {
   List<ActivePrenotation> _donorPendingPrenotations;
-  String _mail;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
@@ -32,7 +33,7 @@ class _DonorPendingPrenotationViewState
 
   Future<List<ActivePrenotation>> getPrenotations() async {
     _donorPendingPrenotations = await PrenotationService(context)
-        .getDonorNotConfirmedPrenotations(this._mail);
+        .getDonorNotConfirmedPrenotations(widget.donor.getMail());
     return _donorPendingPrenotations;
   }
 
@@ -46,7 +47,6 @@ class _DonorPendingPrenotationViewState
   @override
   void initState() {
     super.initState();
-    _mail = AppState().getUserMail();
   }
 
   @override
@@ -156,7 +156,7 @@ class _DonorPendingPrenotationViewState
                     ),
                   );
               }
-              return null; // unreachable
+              return null;
             },
           ),
         ),

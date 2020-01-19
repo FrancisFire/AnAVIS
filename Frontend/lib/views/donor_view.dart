@@ -423,6 +423,7 @@ class _DonorViewState extends State<DonorView> {
           Navigator.pushNamed(
             context,
             '/donor/pendingprenotationsview',
+            arguments: this._donor,
           );
         },
       ),
