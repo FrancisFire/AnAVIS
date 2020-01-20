@@ -10,7 +10,9 @@ import 'package:anavis/services/request_service.dart';
 import 'package:anavis/views/widgets/button_fab_homepage.dart';
 import 'package:anavis/views/widgets/clip_path.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/login_form.dart';
+import 'package:anavis/views/widgets/office_table_calendar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,15 +28,14 @@ class OfficeView extends StatefulWidget {
 
 class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   Map<DateTime, List> _events;
-  List _selectedEvents;
-  AnimationController _animationController;
-  CalendarController _calendarController;
+
   Office _office;
   List<Donor> _availableDonors = new List<Donor>();
   int prenotationCount = 0;
   int pendingRequestCount = 0;
   bool state = false;
   Map<DateTime, List> _nicerEvents;
+
   Future<void> setOffice() async {
     this._office =
         await OfficeService(context).getOfficeByMail(AppState().getUserMail());
@@ -42,6 +43,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
 
   Future<void> initFuture() async {
     await this.setOffice();
+    print("Ufficio ${this._office}");
     await Future.wait([
       this.setPrenotationsCount(),
       this.setRequestsCount(),
@@ -52,27 +54,6 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _calendarController = CalendarController();
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _calendarController.dispose();
-    super.dispose();
-  }
-
-  void _onDaySelected(DateTime day, List events) {
-    setState(() {
-      _selectedEvents = events;
-    });
   }
 
   Future<void> getAvailableDonors() async {
@@ -80,9 +61,6 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
         .getAvailableDonorsByOfficeId(this._office.getMail());
     return;
   }
-
-  void _onVisibleDaysChanged(
-      DateTime first, DateTime last, CalendarFormat format) {}
 
   Future<void> fetchEvents() async {
     _nicerEvents = new Map<DateTime, List>();
@@ -123,180 +101,192 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
     return FutureBuilder(
       future: this.initFuture(),
       builder: (context, snapshot) {
-        return Scaffold(
-          body: Stack(
-            children: <Widget>[
-              ClipPath(
-                clipper: CustomShapeClipper(),
-                child: Container(
-                  height: (MediaQuery.of(context).size.height / 3),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      stops: [0.1, 0.5, 0.7, 0.9],
-                      colors: [
-                        Colors.red[800],
-                        Colors.red[700],
-                        Colors.red[600],
-                        Colors.red[400],
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return new RequestCircularLoading();
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            return new RequestCircularLoading();
+          case ConnectionState.done:
+            return Scaffold(
+              body: Stack(
+                children: <Widget>[
+                  ClipPath(
+                    clipper: CustomShapeClipper(),
+                    child: Container(
+                      height: (MediaQuery.of(context).size.height / 3),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          stops: [0.1, 0.5, 0.7, 0.9],
+                          colors: [
+                            Colors.red[800],
+                            Colors.red[700],
+                            Colors.red[600],
+                            Colors.red[400],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 46, left: 16, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Flexible(
+                          child: AutoSizeText(
+                            'Ufficio AVIS di',
+                            style: TextStyle(
+                              fontSize: 26,
+                              color: Colors.white,
+                            ),
+                            maxLines: 1,
+                          ),
+                        ),
+                        Flexible(
+                          child: AutoSizeText(
+                            this._office.getPlace(),
+                            style: TextStyle(
+                              fontSize: 52,
+                              color: Colors.white,
+                            ),
+                            maxLines: 1,
+                          ),
+                        ),
+                        Flexible(
+                          child: Row(
+                            children: <Widget>[
+                              Chip(
+                                backgroundColor: Colors.red[900],
+                                elevation: 14,
+                                avatar: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: Icon(
+                                    Icons.web_asset,
+                                    color: Colors.red,
+                                    size: 18,
+                                  ),
+                                ),
+                                label: Text(
+                                  'Sito principale',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Chip(
+                                backgroundColor: Colors.red[900],
+                                elevation: 14,
+                                avatar: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: Icon(
+                                    Icons.phone_in_talk,
+                                    color: Colors.red,
+                                    size: 18,
+                                  ),
+                                ),
+                                label: Text(
+                                  'Numeri utili',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 46, left: 16, right: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 24,
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 3,
+                      bottom: 64,
+                      right: 8,
+                      left: 8,
                     ),
-                    Flexible(
-                      child: AutoSizeText(
-                        'Ufficio AVIS di',
-                        style: TextStyle(
-                          fontSize: 26,
-                          color: Colors.white,
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 7,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(26.0),
                         ),
-                        maxLines: 1,
                       ),
-                    ),
-                    Flexible(
-                      child: AutoSizeText(
-                        this._office.getPlace(),
-                        style: TextStyle(
-                          fontSize: 52,
-                          color: Colors.white,
-                        ),
-                        maxLines: 1,
-                      ),
-                    ),
-                    Flexible(
-                      child: Row(
-                        children: <Widget>[
-                          Chip(
-                            backgroundColor: Colors.red[900],
-                            elevation: 14,
-                            avatar: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Icon(
-                                Icons.web_asset,
-                                color: Colors.red,
-                                size: 18,
-                              ),
+                      child: Center(
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
                             ),
-                            label: Text(
-                              'Sito principale',
-                              style: TextStyle(
-                                color: Colors.white,
+                            child: OfficeTableCalendar(
+                              events: this._nicerEvents,
+                            ) /*Column(
+                            children: <Widget>[
+                              TableCalendar(
+                                calendarController: _calendarController,
+                                events: _nicerEvents,
+                                locale: 'it_IT',
+                                initialCalendarFormat: CalendarFormat.week,
+                                availableCalendarFormats: const {
+                                  CalendarFormat.month: 'Esteso',
+                                  CalendarFormat.week: 'Ridotto',
+                                },
+                                startingDayOfWeek: StartingDayOfWeek.monday,
+                                calendarStyle: CalendarStyle(
+                                  selectedColor: Colors.red[800],
+                                  todayColor: Colors.grey[600],
+                                  markersColor: Colors.orangeAccent[400],
+                                  outsideDaysVisible: false,
+                                ),
+                                initialSelectedDay: DateTime.now(),
+                                headerStyle: HeaderStyle(
+                                  titleTextBuilder: (date, locale) =>
+                                      toBeginningOfSentenceCase(
+                                    DateFormat.yMMMM(locale).format(date),
+                                  ),
+                                  formatButtonTextStyle: TextStyle().copyWith(
+                                    color: Colors.white,
+                                    fontSize: 12.0,
+                                  ),
+                                  formatButtonDecoration: BoxDecoration(
+                                    color: Colors.grey[400],
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                ),
+                                onDaySelected: _onDaySelected,
+                                onVisibleDaysChanged: _onVisibleDaysChanged,
                               ),
+                              Expanded(
+                                child: _buildEventList(),
+                              ),
+                            ],
+                          ),*/
                             ),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Chip(
-                            backgroundColor: Colors.red[900],
-                            elevation: 14,
-                            avatar: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Icon(
-                                Icons.phone_in_talk,
-                                color: Colors.red,
-                                size: 18,
-                              ),
-                            ),
-                            label: Text(
-                              'Numeri utili',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height / 3,
-                  bottom: 64,
-                  right: 8,
-                  left: 8,
-                ),
-                child: Card(
-                  color: Colors.white,
-                  elevation: 7,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(26.0),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          TableCalendar(
-                            calendarController: _calendarController,
-                            events: snapshot.data,
-                            locale: 'it_IT',
-                            initialCalendarFormat: CalendarFormat.week,
-                            availableCalendarFormats: const {
-                              CalendarFormat.month: 'Esteso',
-                              CalendarFormat.week: 'Ridotto',
-                            },
-                            startingDayOfWeek: StartingDayOfWeek.monday,
-                            calendarStyle: CalendarStyle(
-                              selectedColor: Colors.red[800],
-                              todayColor: Colors.grey[600],
-                              markersColor: Colors.orangeAccent[400],
-                              outsideDaysVisible: false,
-                            ),
-                            initialSelectedDay: DateTime.now(),
-                            headerStyle: HeaderStyle(
-                              titleTextBuilder: (date, locale) =>
-                                  toBeginningOfSentenceCase(
-                                DateFormat.yMMMM(locale).format(date),
-                              ),
-                              formatButtonTextStyle: TextStyle().copyWith(
-                                color: Colors.white,
-                                fontSize: 12.0,
-                              ),
-                              formatButtonDecoration: BoxDecoration(
-                                color: Colors.grey[400],
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                            ),
-                            onDaySelected: _onDaySelected,
-                            onVisibleDaysChanged: _onVisibleDaysChanged,
-                          ),
-                          Expanded(
-                            child: _buildEventList(),
-                          ),
-                        ],
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-          floatingActionButton: ButtonFABHomePage(
-            iconFab: iconFAB(),
-          ),
-        );
+              floatingActionButton: ButtonFABHomePage(
+                iconFab: iconFAB(),
+              ),
+            );
+            return null;
+        }
       },
     );
   }
 
-  Widget _buildEventList() {
+  /*Widget _buildEventList() {
     if (_selectedEvents == null) {
       return Center(
         child: ListTile(
@@ -352,7 +342,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
         ),
       );
     }
-  }
+  }*/
 
   List<SpeedDialChild> iconFAB() {
     return <SpeedDialChild>[

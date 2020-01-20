@@ -38,29 +38,11 @@ class OfficeController {
       },
     );
     return res.body;
-
-    /*return await http.put(
-      Uri.encodeFull(
-          "http://${_ipReference}:8080/api/office/$_officeMail/addTimeSlot"),
-      body: json.encode({
-        "dateTime": timeslot.getDateTime(),
-        "donorSlots": timeslot.getSlots(),
-      }),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
-    ).then((res) {
-      _statusBody = res.body == 'true';
-      notifyListeners();
-    }).catchError((err) {
-      _statusBody = false;
-      notifyListeners();
-    });*/
   }
 
   Future<String> getOfficeByMail(String officeMail) async {
     http.Response res = await http.get("$_baseUrl/$officeMail");
+    print(res.body);
     return res.body;
   }
 }

@@ -29,7 +29,7 @@ class DonationService {
     String controllerJson =
         await _donationController.getDonationReport(donationId);
     var parsedJson = json.decode(controllerJson);
-    var rep = parsedJson[0];
+    var rep = parsedJson;
     return new DonationReport(
       rep['reportId'],
       rep['reportFile'],

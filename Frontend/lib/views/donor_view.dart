@@ -98,7 +98,6 @@ class _DonorViewState extends State<DonorView> {
           case ConnectionState.waiting:
             return new RequestCircularLoading();
           case ConnectionState.done:
-            if (snapshot.hasError) return new RequestCircularLoading();
             return Scaffold(
               body: Stack(
                 children: <Widget>[
