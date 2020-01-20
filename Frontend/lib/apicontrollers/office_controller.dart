@@ -10,18 +10,28 @@ import 'package:http/http.dart' as http;
 class OfficeController {
   String _ip;
   String _baseUrl;
+  Map<String, String> _header;
+
   OfficeController(BuildContext context) {
     _ip = AppState().getIp();
+    _header = AppState().getHttpHeaders();
+
     _baseUrl = "http://$_ip:8080/api/office";
   }
 
   Future<String> getOffices() async {
-    http.Response res = await http.get("$_baseUrl");
+    http.Response res = await http.get(
+      "$_baseUrl",
+      headers: this._header,
+    );
     return res.body;
   }
 
   Future<String> getDonationsTimeTable(String officeMail) async {
-    http.Response res = await http.get("$_baseUrl/$officeMail/timeTable");
+    http.Response res = await http.get(
+      "$_baseUrl/$officeMail/timeTable",
+      headers: this._header,
+    );
     return res.body;
   }
 
@@ -32,16 +42,16 @@ class OfficeController {
         "dateTime": timeSlot.getDateTime(),
         "donorSlots": timeSlot.getSlots(),
       }),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
+      headers: this._header,
     );
     return res.body;
   }
 
   Future<String> getOfficeByMail(String officeMail) async {
-    http.Response res = await http.get("$_baseUrl/$officeMail");
+    http.Response res = await http.get(
+      "$_baseUrl/$officeMail",
+      headers: this._header,
+    );
     print(res.body);
     return res.body;
   }
