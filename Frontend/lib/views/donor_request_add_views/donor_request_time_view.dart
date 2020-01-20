@@ -2,9 +2,11 @@ import 'package:anavis/models/office.dart';
 import 'package:anavis/models/timeslot.dart';
 import 'package:anavis/services/office_service.dart';
 import 'package:anavis/viewargs/donor_request_recap_args.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/donor_request_widget.dart';
 import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
+import 'package:anavis/views/widgets/message_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'donor_request_office_view.dart';
@@ -68,11 +70,6 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: this.initFuture(),
@@ -85,47 +82,62 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
             return new RequestCircularLoading();
           case ConnectionState.done:
             if (snapshot.hasError) return new RequestCircularLoading();
-
-            return Scaffold(
-              floatingActionButton: _timeSelected != null
-                  ? FABRightArrow(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, '/donor/officerequest/recap',
-                            arguments: new DonorRequestRecapArgs(
-                                this.widget.office,
-                                this._timeSelected,
-                                this._timeFormatted));
-                      },
-                    )
-                  : FABLeftArrow(
-                      nameOffice: this._officeName,
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, '/donor/officerequest',
-                            arguments: new DonorRequestOfficeView());
-                      },
-                    ),
-              body: BuildDonorRequestWidget(
-                fetchItems: createListItem(),
-                title: "Orario",
-                subtitle:
-                    "Di seguito potrai selezionare l'orario in cui desideri effettuare la donazione",
-                icon: Icon(
-                  Icons.access_time,
-                  size: 42,
-                  color: Colors.red,
-                ),
-                labelDropDown: "Seleziona l'orario",
-                valueSelected: _timeSelected,
-                onChanged: (newValue) {
-                  setState(() {
-                    _timeSelected = newValue;
-                    print(_timeSelected);
-                  });
+            if (_availableTimeTables.isEmpty) {
+              return MessagePainter(
+                isGood: false,
+                negativeTitle: "Date non disponibili",
+                negativeMsg:
+                    "Non sono disponibili date per donare presso questo ufficio",
+                onPressed: () {
+                  Navigator.popUntil(context, ModalRoute.withName('DonorView'));
+                  ConfirmationFlushbar(
+                    "Date non disponibili",
+                    "Non sono disponibili date per donare presso questo ufficio",
+                    false,
+                  ).show(context);
                 },
-              ),
-            );
+              );
+            } else
+              return Scaffold(
+                floatingActionButton: _timeSelected != null
+                    ? FABRightArrow(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, '/donor/officerequest/recap',
+                              arguments: new DonorRequestRecapArgs(
+                                  this.widget.office,
+                                  this._timeSelected,
+                                  this._timeFormatted));
+                        },
+                      )
+                    : FABLeftArrow(
+                        nameOffice: this._officeName,
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, '/donor/officerequest',
+                              arguments: new DonorRequestOfficeView());
+                        },
+                      ),
+                body: BuildDonorRequestWidget(
+                  fetchItems: createListItem(),
+                  title: "Orario",
+                  subtitle:
+                      "Di seguito potrai selezionare l'orario in cui desideri effettuare la donazione",
+                  icon: Icon(
+                    Icons.access_time,
+                    size: 42,
+                    color: Colors.red,
+                  ),
+                  labelDropDown: "Seleziona l'orario",
+                  valueSelected: _timeSelected,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _timeSelected = newValue;
+                      print(_timeSelected);
+                    });
+                  },
+                ),
+              );
         }
         return null;
       },

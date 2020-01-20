@@ -218,27 +218,6 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                                 "La richiesta è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
                                                 false)
                                             .show(context);
-                                        /*decline = new Flushbar(
-                                          margin: EdgeInsets.all(8),
-                                          borderRadius: 26,
-                                          shouldIconPulse: true,
-                                          title: "Richiesta annullata",
-                                          icon: Icon(
-                                            Icons.clear,
-                                            size: 28.0,
-                                            color: Colors.red,
-                                          ),
-                                          message:
-                                              "La richiesta è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
-                                          duration: Duration(
-                                            seconds: 6,
-                                          ),
-                                          isDismissible: true,
-                                          dismissDirection:
-                                              FlushbarDismissDirection
-                                                  .HORIZONTAL,
-                                        );
-                                        this.showFlushbar(this.decline);*/
                                       },
                                     ),
                                   ),
@@ -274,28 +253,6 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                                     "La richiesta è stata effettuata con successo, ci vedremo presto!",
                                                     true)
                                                 .show(context);
-
-                                            /* confirm = new Flushbar(
-                                              margin: EdgeInsets.all(8),
-                                              shouldIconPulse: true,
-                                              borderRadius: 26,
-                                              title: "Richiesta effettuata",
-                                              icon: Icon(
-                                                Icons.check,
-                                                size: 28.0,
-                                                color: Colors.green,
-                                              ),
-                                              message:
-                                                  "La richiesta è stata effettuata con successo, ci vedremo presto!",
-                                              duration: Duration(
-                                                seconds: 6,
-                                              ),
-                                              isDismissible: true,
-                                              dismissDirection:
-                                                  FlushbarDismissDirection
-                                                      .HORIZONTAL,
-                                            );
-                                            this.showFlushbar(this.confirm);*/
                                           } else {
                                             Navigator.popUntil(
                                                 context,
@@ -306,27 +263,6 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                                     "Non è stato possibile effettuare la prenotazione, riprova più tardi",
                                                     false)
                                                 .show(context);
-                                            /* err = new Flushbar(
-                                              margin: EdgeInsets.all(8),
-                                              shouldIconPulse: true,
-                                              borderRadius: 26,
-                                              title: "Impossibile prenotare",
-                                              icon: Icon(
-                                                Icons.error,
-                                                size: 28.0,
-                                                color: Colors.red,
-                                              ),
-                                              message:
-                                                  "Non è stato possibile effettuare la prenotazione, riprova più tardi",
-                                              duration: Duration(
-                                                seconds: 6,
-                                              ),
-                                              isDismissible: true,
-                                              dismissDirection:
-                                                  FlushbarDismissDirection
-                                                      .HORIZONTAL,
-                                            );
-                                            this.showFlushbar(this.err);*/
                                           }
                                         });
                                       },

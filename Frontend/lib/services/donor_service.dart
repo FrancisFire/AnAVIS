@@ -17,11 +17,24 @@ class DonorService {
     String controllerJson =
         await _donorController.getAvailableDonorsByOfficeId(officeMail);
     var parsedJson = json.decode(controllerJson);
+
     for (var donor in parsedJson) {
+      DonorCategory cat;
+      switch (donor['category']) {
+        case "MAN":
+          cat = DonorCategory.MAN;
+          break;
+        case "FERTILEWOMAN":
+          cat = DonorCategory.FERTILEWOMAN;
+          break;
+        case "NONFERTILEWOMAN":
+          cat = DonorCategory.NONFERTILEWOMAN;
+          break;
+      }
       donors.add(new Donor.complete(
           donor['mail'],
           donor['officeMail'],
-          donor['category'],
+          cat,
           donor['name'],
           donor['surname'],
           donor['birthday'],
