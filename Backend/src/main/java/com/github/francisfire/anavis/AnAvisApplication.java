@@ -87,9 +87,13 @@ public class AnAvisApplication implements CommandLineRunner {
 		prenotationServices.addPrenotation(prenotationOne);
 		prenotationServices.addPrenotation(prenotationTwo);
 		
-		Set<Role> roles = new HashSet<>();
-		roles.add(Role.DONOR);
-		AuthCredentials userOne = new AuthCredentials("stelluti@donor.com", "sasso", roles);
+		Set<Role> rolesOne = new HashSet<>();
+		rolesOne.add(Role.DONOR);
+		AuthCredentials userOne = new AuthCredentials("stelluti@donor.com", "sasso", rolesOne);
 		authCredentialsServices.addCredentials(userOne);
+		Set<Role> rolesTwo = new HashSet<>();
+		rolesTwo.add(Role.OFFICE);
+		AuthCredentials userTwo = new AuthCredentials("osimo@office.com", "sasso", rolesTwo);
+		authCredentialsServices.addCredentials(userTwo);
 	}
 }

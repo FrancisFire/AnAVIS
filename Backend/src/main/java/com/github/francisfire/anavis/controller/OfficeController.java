@@ -43,6 +43,7 @@ public class OfficeController {
 		return officeServices.addTimeslotByOffice(timeSlot, officeMail);
 	}
 
+	@PreAuthorize("permitAll")
 	@GetMapping("/{officeMail}") public Office getOfficeByMail(@PathVariable("officeMail") String officeMail) {
 		return officeServices.getOfficeInstance(officeMail);
 	}

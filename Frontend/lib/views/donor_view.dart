@@ -144,7 +144,7 @@ class _DonorViewState extends State<DonorView> {
                         ),
                         Flexible(
                           child: AutoSizeText(
-                            this._donor.getMail(),
+                            "${this._donor.getSurname()} ${this._donor.getName()} ",
                             style: TextStyle(
                               fontSize: 52,
                               color: Colors.white,

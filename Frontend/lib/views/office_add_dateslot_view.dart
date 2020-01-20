@@ -219,6 +219,8 @@ class _BottomCardWidgetState extends State<BottomCardWidget> {
               ),
               onPressed: () {
                 if (dateValue == null || numberValue == null) {
+                  Navigator.popUntil(
+                      context, ModalRoute.withName('OfficeView'));
                   ConfirmationFlushbar(
                           "Valori nulli",
                           "Non è stata confermata nessuna prenotazione in quanto i valori inseriti erano nulli",
@@ -227,12 +229,16 @@ class _BottomCardWidgetState extends State<BottomCardWidget> {
                 }
                 this.addTimeTableSlot().then((status) {
                   if (status) {
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('OfficeView'));
                     ConfirmationFlushbar(
                             "Inserimento confermato",
                             "La nuova possibilità di prenotazione è stata creata con successo e sarà visualizzabile a breve dai donatori",
                             true)
                         .show(context);
                   } else {
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('OfficeView'));
                     ConfirmationFlushbar(
                             "Impossibile inserire",
                             "Non è stato possibile effettuare l'inserimento, si prega di riprovare più tardi",

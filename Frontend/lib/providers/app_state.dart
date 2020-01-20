@@ -55,7 +55,7 @@ class AppState {
   void logout() {
     this._userMail = null;
     this._pass = null;
-    this._role;
+    this._role = null;
   }
 
   static final AppState _singleton = AppState._internal();

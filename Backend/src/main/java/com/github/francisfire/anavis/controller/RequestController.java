@@ -58,7 +58,7 @@ public class RequestController {
 		return requestServices.approveRequest(requestId);
 	}
 
-	@PreAuthorize("@accessCheckerComponent.isRequestOwnedByOfficeId(principal, #requestId)")
+	@PreAuthorize("@accessCheckerComponent.isRequestOwnedByDonorId(principal, #requestId) or @accessCheckerComponent.isRequestOwnedByOfficeId(principal, #requestId)")
 	@PutMapping("/{requestId}/deny")
 	public boolean denyRequest(@PathVariable("requestId") String requestId) {
 		return requestServices.removeRequest(requestId);

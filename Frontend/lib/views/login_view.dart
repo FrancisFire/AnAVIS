@@ -8,8 +8,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 
 const donorMail = "stelluti@donor.com";
 const officeMail = "osimo@office.com";
-const donorPass = "sas";
-const officePass = "sas";
+const donorPass = "sasso";
+const officePass = "sasso";
 
 class LoginView extends StatefulWidget {
   @override
