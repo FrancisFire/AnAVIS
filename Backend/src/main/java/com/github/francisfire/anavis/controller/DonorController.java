@@ -19,7 +19,7 @@ public class DonorController {
 
 	@Autowired
 	private DonorServices donorServices;
-	
+
 	@SuppressWarnings("unused")
 	@Autowired
 	private AccessCheckerComponent accessCheckerComponent;
@@ -35,9 +35,10 @@ public class DonorController {
 	public Set<Donor> getAvailableDonorsByOfficeId(@PathVariable("officeMail") String officeMail) {
 		return donorServices.getAvailableDonorsByOfficeId(officeMail);
 	}
-	
+
 	@PreAuthorize("hasAnyAuthority('OFFICE', 'ADMIN') or @accessCheckerComponent.sameUserId(principal, #donorMail)")
-	@GetMapping("/{donorMail}") public Donor getDonorByMail(@PathVariable("donorMail") String donorMail) {
+	@GetMapping("/{donorMail}")
+	public Donor getDonorByMail(@PathVariable("donorMail") String donorMail) {
 		return donorServices.getDonorInstance(donorMail);
 	}
 

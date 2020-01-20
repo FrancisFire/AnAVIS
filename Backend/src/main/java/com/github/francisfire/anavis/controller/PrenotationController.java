@@ -34,7 +34,7 @@ public class PrenotationController {
 	@Autowired
 	private AccessCheckerComponent accessCheckerComponent;
 
-	@PreAuthorize("hasAnyAuthority('OFFICE', 'DONOR')")
+	@PreAuthorize("hasAnyAuthority('OFFICE')")
 	@PostMapping("")
 	public boolean createPrenotation(@RequestBody ActivePrenotation prenotation) {
 		return prenotationServices.addPrenotation(prenotation);

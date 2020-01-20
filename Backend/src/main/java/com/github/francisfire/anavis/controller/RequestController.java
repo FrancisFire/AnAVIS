@@ -46,19 +46,19 @@ public class RequestController {
 		return requestServices.getRequestsByOffice(officeMail);
 	}
 
-	@PreAuthorize("@accessCheckerComponent.isPrenotationOwnedByDonorId(principal, #requestId) or @accessCheckerComponent.isPrenotationOwnedByOfficeId(principal, #requestId)")
+	@PreAuthorize("@accessCheckerComponent.isRequestOwnedByDonorId(principal, #requestId) or @accessCheckerComponent.isRequestOwnedByOfficeId(principal, #requestId)")
 	@GetMapping("/{requestId}")
 	public RequestPrenotation getRequestById(@PathVariable("requestId") String requestId) {
 		return requestServices.getRequestInstance(requestId);
 	}
 
-	@PreAuthorize("@accessCheckerComponent.isPrenotationOwnedByOfficeId(principal, #requestId)")
+	@PreAuthorize("@accessCheckerComponent.isRequestOwnedByOfficeId(principal, #requestId)")
 	@PutMapping("/{requestId}/approve")
 	public boolean approveRequest(@PathVariable("requestId") String requestId) {
 		return requestServices.approveRequest(requestId);
 	}
 
-	@PreAuthorize("@accessCheckerComponent.isPrenotationOwnedByOfficeId(principal, #requestId)")
+	@PreAuthorize("@accessCheckerComponent.isRequestOwnedByOfficeId(principal, #requestId)")
 	@PutMapping("/{requestId}/deny")
 	public boolean denyRequest(@PathVariable("requestId") String requestId) {
 		return requestServices.removeRequest(requestId);
