@@ -8,6 +8,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 
 const donorMail = "stelluti@donor.com";
 const officeMail = "osimo@office.com";
+const donorPass = "sas";
+const officePass = "sas";
 
 class LoginView extends StatefulWidget {
   @override
@@ -186,6 +188,7 @@ class CardLogin extends StatelessWidget {
                                     LoginForm(
                                       onTap: () {
                                         AppState().setUserMail(donorMail);
+                                        AppState().setPass(donorPass);
                                         Navigator.pushReplacementNamed(
                                           context,
                                           '/donor',
@@ -195,6 +198,8 @@ class CardLogin extends StatelessWidget {
                                     LoginForm(
                                       onTap: () {
                                         AppState().setUserMail(officeMail);
+                                        AppState().setPass(officePass);
+
                                         Navigator.pushReplacementNamed(
                                           context,
                                           '/office',
