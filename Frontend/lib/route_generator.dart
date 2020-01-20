@@ -1,6 +1,7 @@
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
+import 'package:anavis/views/admin_view.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
 import 'package:anavis/views/donor_pendingprenotations_view.dart';
 import 'package:anavis/views/donor_prenotations_view.dart';
@@ -44,6 +45,13 @@ class RouteGenerator {
               name: 'DonorView',
             ));
 
+      case '/admin':
+        return MaterialPageRoute(
+            builder: (_) => AdminView(),
+            settings: RouteSettings(
+              name: 'Admin',
+            ));
+
       case '/office':
         return MaterialPageRoute(
             builder: (_) => OfficeView(),
@@ -74,6 +82,7 @@ class RouteGenerator {
               ));
         }
         return _errorRoute();
+
       case "/office/insertdateslotview":
         if (args is Office) {
           return MaterialPageRoute(
@@ -85,6 +94,7 @@ class RouteGenerator {
               ));
         }
         return _errorRoute();
+
       case '/office/prenotations':
         if (args is Office) {
           return MaterialPageRoute(
@@ -96,6 +106,7 @@ class RouteGenerator {
               ));
         }
         return _errorRoute();
+
       case '/office/prenotations/timeview':
         if (args is OfficePrenotationTimeViewArgs) {
           return MaterialPageRoute(
@@ -162,6 +173,7 @@ class RouteGenerator {
               ));
         }
         return _errorRoute();
+
       case "/donor/requestsview":
         if (args is Donor) {
           return MaterialPageRoute(
@@ -173,6 +185,7 @@ class RouteGenerator {
               ));
         }
         return _errorRoute();
+
       case "/donor/pendingprenotationsview":
         if (args is Donor) {
           return MaterialPageRoute(
@@ -184,6 +197,7 @@ class RouteGenerator {
               ));
         }
         return _errorRoute();
+
       case '/donor/officerequest':
         return MaterialPageRoute(
             builder: (_) => DonorRequestOfficeView(),

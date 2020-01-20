@@ -438,7 +438,12 @@ class _DonorViewState extends State<DonorView> {
           Icons.account_circle,
           color: Colors.white,
         ),
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            '/admin',
+          );
+        },
       ),
     ];
   }

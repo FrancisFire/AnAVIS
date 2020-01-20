@@ -35,6 +35,8 @@ dependencies:
   flutter_plugin_pdf_viewer: ^1.0.7
   open_file: ^2.1.1
   path_provider: ^1.5.1
+  liquid_swipe: ^1.3.0
+  flutter_svg: ^0.16.1
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +48,8 @@ flutter:
     - assets/images/logo.png
     - assets/images/logo_homepage.png
     - assets/images/divider.png
+    - assets/images/user.svg
+    - assets/images/data.svg
     - assets/general/sad.flr
     - assets/general/upload.flr
 
