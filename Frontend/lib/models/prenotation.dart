@@ -11,7 +11,7 @@ abstract class Prenotation {
     this._hour = hour;
   }
 
-  Prenotation() {}
+  Prenotation();
   String getId() {
     return _id;
   }

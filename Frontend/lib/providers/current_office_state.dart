@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:anavis/models/activeprenotation.dart';
 import 'package:anavis/models/requestprenotation.dart';
@@ -55,7 +55,11 @@ class CurrentOfficeState extends ChangeNotifier {
     var parsedJson = json.decode(request.body);
     for (var req in parsedJson) {
       RequestPrenotation newRequest = new RequestPrenotation(
-          req['id'], req['officeMail'], req['donorMail'], req['hour']);
+        req['id'],
+        req['officeMail'],
+        req['donorMail'],
+        req['hour'],
+      );
       requests.add(newRequest);
     }
     return requests;
@@ -221,3 +225,4 @@ class CurrentOfficeState extends ChangeNotifier {
     return _officeMail;
   }
 }
+*/

@@ -10,7 +10,8 @@ class Office {
   }
 
   Office.complete(String mail, String place, Set<TimeSlot> timeTables) {
-    Office(mail, place);
+    this._mail = mail;
+    this._place = place;
     this._timeTables = timeTables;
   }
 

@@ -1,17 +1,20 @@
+import 'package:anavis/models/donor.dart';
+import 'package:anavis/models/office.dart';
+
 class OfficePrenotationTimeViewArgs {
-  OfficePrenotationTimeViewArgs(String office, String donor) {
-    this._officeName = office;
-    this._donor = donor;
+  OfficePrenotationTimeViewArgs(String donor, Office office) {
+    this._donorMail = donor;
+    this._office = office;
   }
 
-  String _officeName;
-  String _donor;
+  String _donorMail;
+  Office _office;
 
-  String getOfficeName() {
-    return _officeName;
+  String getDonorMail() {
+    return _donorMail;
   }
 
-  String getDonor() {
-    return _donor;
+  Office getOffice() {
+    return _office;
   }
 }

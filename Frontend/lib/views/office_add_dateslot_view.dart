@@ -1,17 +1,18 @@
+import 'package:anavis/models/office.dart';
 import 'package:anavis/models/timeslot.dart';
-import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/services/office_service.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:slimy_card/slimy_card.dart';
 import 'package:intl/intl.dart';
-import 'package:flushbar/flushbar_route.dart' as route;
 
 class OfficeAddDateslotView extends StatefulWidget {
+  final Office office;
+  OfficeAddDateslotView({@required this.office});
   @override
   _OfficeAddDateslotViewState createState() => _OfficeAddDateslotViewState();
 }
@@ -42,7 +43,9 @@ class _OfficeAddDateslotViewState extends State<OfficeAddDateslotView> {
                     bottomCardHeight: MediaQuery.of(context).size.height / 1.8,
                     borderRadius: 16,
                     topCardWidget: TopCardWidget(),
-                    bottomCardWidget: BottomCardWidget(),
+                    bottomCardWidget: BottomCardWidget(
+                      office: widget.office,
+                    ),
                     slimeEnabled: true,
                   ),
                 ],
@@ -56,52 +59,44 @@ class _OfficeAddDateslotViewState extends State<OfficeAddDateslotView> {
 }
 
 class BottomCardWidget extends StatefulWidget {
+  final Office office;
+  BottomCardWidget({@required this.office});
   @override
   _BottomCardWidgetState createState() => _BottomCardWidgetState();
 }
 
 class _BottomCardWidgetState extends State<BottomCardWidget> {
   final format = DateFormat("yyyy-MM-dd HH:mm");
+  @override
+  void initState() {
+    super.initState();
+  }
 
   int numberValue;
   DateTime dateValue;
 
-  Future<void> addTimeTableSlot() async {
-    await Provider.of<CurrentOfficeState>(context)
-        .addTimeTableSlot(new TimeSlot(
-      formatDate(dateValue, [
-        '20',
-        yy,
-        '-',
-        mm,
-        '-',
-        dd,
-        'T',
-        HH,
-        ':',
-        nn,
-        ':',
-        ss,
-        '.000+0000',
-      ]),
-      numberValue,
-    ));
-  }
-
-  Flushbar confirm, err, nullValues;
-
-  Future showFlushbar(Flushbar instance) {
-    final _route = route.showFlushbar(
-      context: context,
-      flushbar: instance,
-    );
-
-    return Navigator.of(
-      context,
-      rootNavigator: false,
-    ).pushReplacement(
-      _route,
-    );
+  Future<bool> addTimeTableSlot() async {
+    bool confirmation = await OfficeService(context).addTimeSlot(
+        widget.office.getMail(),
+        new TimeSlot(
+          formatDate(dateValue, [
+            '20',
+            yy,
+            '-',
+            mm,
+            '-',
+            dd,
+            'T',
+            HH,
+            ':',
+            nn,
+            ':',
+            ss,
+            '.000+0000',
+          ]),
+          numberValue,
+        ));
+    return confirmation;
   }
 
   @override
@@ -224,68 +219,25 @@ class _BottomCardWidgetState extends State<BottomCardWidget> {
               ),
               onPressed: () {
                 if (dateValue == null || numberValue == null) {
-                  nullValues = new Flushbar(
-                    margin: EdgeInsets.all(8),
-                    shouldIconPulse: true,
-                    borderRadius: 26,
-                    title: "Valori nulli",
-                    icon: Icon(
-                      Icons.warning,
-                      size: 28.0,
-                      color: Colors.orangeAccent,
-                    ),
-                    message:
-                        "Non è stata confermata nessuna prenotazione in quanto i valori inseriti erano nulli",
-                    duration: Duration(
-                      seconds: 4,
-                    ),
-                    isDismissible: true,
-                    dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                  );
-                  this.showFlushbar(this.nullValues);
+                  ConfirmationFlushbar(
+                          "Valori nulli",
+                          "Non è stata confermata nessuna prenotazione in quanto i valori inseriti erano nulli",
+                          false)
+                      .show(context);
                 }
-                this.addTimeTableSlot().then((_) {
-                  if (Provider.of<CurrentOfficeState>(context)
-                      .getStatusBody()) {
-                    confirm = new Flushbar(
-                      margin: EdgeInsets.all(8),
-                      shouldIconPulse: true,
-                      borderRadius: 26,
-                      title: "Inserimento confermato",
-                      icon: Icon(
-                        Icons.check,
-                        size: 28.0,
-                        color: Colors.green,
-                      ),
-                      message:
-                          "La nuova possibilità di prenotazione è stata creata con successo e sarà visualizzabile a breve dai donatori",
-                      duration: Duration(
-                        seconds: 5,
-                      ),
-                      isDismissible: true,
-                      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                    );
-                    this.showFlushbar(this.confirm);
+                this.addTimeTableSlot().then((status) {
+                  if (status) {
+                    ConfirmationFlushbar(
+                            "Inserimento confermato",
+                            "La nuova possibilità di prenotazione è stata creata con successo e sarà visualizzabile a breve dai donatori",
+                            true)
+                        .show(context);
                   } else {
-                    err = new Flushbar(
-                      margin: EdgeInsets.all(8),
-                      shouldIconPulse: true,
-                      borderRadius: 26,
-                      title: "Impossibile inserire",
-                      icon: Icon(
-                        Icons.error,
-                        size: 28.0,
-                        color: Colors.red,
-                      ),
-                      message:
-                          "Non è stato possibile effettuare l'inserimento, si prega di riprovare più tardi",
-                      duration: Duration(
-                        seconds: 4,
-                      ),
-                      isDismissible: true,
-                      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                    );
-                    this.showFlushbar(this.err);
+                    ConfirmationFlushbar(
+                            "Impossibile inserire",
+                            "Non è stato possibile effettuare l'inserimento, si prega di riprovare più tardi",
+                            false)
+                        .show(context);
                   }
                 });
               },

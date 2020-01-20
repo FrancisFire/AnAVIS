@@ -31,6 +31,9 @@ public class DonationReportServices {
 	 */
 	public String addReport(@NonNull String prenotationId, @NonNull MultipartFile reportFile) {
 		ActivePrenotation prenotation = prenotationServices.getPrenotationInstance(prenotationId);
+		if(!prenotation.isConfirmed()) {
+			return null;
+		}
 		DonationReport report = new DonationReport(prenotation.getDonorMail(), prenotation.getOfficeMail(),
 				prenotation.getHour());
 		try {

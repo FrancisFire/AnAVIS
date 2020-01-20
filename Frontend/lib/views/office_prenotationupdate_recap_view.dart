@@ -1,9 +1,10 @@
 import 'package:anavis/models/activeprenotation.dart';
-import 'package:anavis/providers/current_office_state.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/models/donor.dart';
+import 'package:anavis/models/office.dart';
+import 'package:anavis/services/prenotation_service.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:avatar_glow/avatar_glow.dart';
@@ -14,16 +15,16 @@ import 'package:flushbar/flushbar_route.dart' as route;
 
 class OfficePrenotationUpdateRecap extends StatefulWidget {
   final String id;
-  final String donor;
+  final Donor donor;
   final String time;
   final String nicerTime;
-  final String officeName;
+  final Office office;
   OfficePrenotationUpdateRecap({
     @required this.donor,
     @required this.time,
     @required this.nicerTime,
     @required this.id,
-    @required this.officeName,
+    @required this.office,
   });
 
   @override
@@ -53,12 +54,6 @@ class _OfficePrenotationUpdateRecapState
       dayValue = this.takeDay(widget.nicerTime);
       hourValue = this.takeHour(widget.nicerTime);
     });
-  }
-
-  Future<void> postRequest() async {
-    await Provider.of<CurrentOfficeState>(context).updatePrenotation(
-        ActivePrenotation(
-            widget.id, widget.officeName, widget.donor, widget.time, false));
   }
 
   Future showFlushbar(Flushbar instance) {
@@ -121,7 +116,7 @@ class _OfficePrenotationUpdateRecapState
                           child: Column(
                             children: <Widget>[
                               Text(
-                                'Aggiornamento della prenotazione per l\'ufficio di ${widget.officeName}',
+                                'Aggiornamento della prenotazione per l\'ufficio di ${widget.office.getPlace()}',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 26,
@@ -167,7 +162,8 @@ class _OfficePrenotationUpdateRecapState
                                         text: ' per il donatore ',
                                       ),
                                       TextSpan(
-                                        text: widget.donor,
+                                        text:
+                                            "${widget.donor.getSurname()} ${widget.donor.getName()}",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -266,10 +262,17 @@ class _OfficePrenotationUpdateRecapState
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        this.postRequest().then((_) {
-                                          if (Provider.of<CurrentOfficeState>(
-                                                  context)
-                                              .getStatusBody()) {
+                                        PrenotationService(context)
+                                            .updatePrenotation(
+                                                new ActivePrenotation(
+                                          widget.id,
+                                          widget.office.getMail(),
+                                          widget.donor.getMail(),
+                                          widget.time,
+                                          false,
+                                        ))
+                                            .then((status) {
+                                          if (status) {
                                             confirm = new Flushbar(
                                               margin: EdgeInsets.all(8),
                                               shouldIconPulse: true,

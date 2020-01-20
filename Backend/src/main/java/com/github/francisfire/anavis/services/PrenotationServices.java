@@ -217,9 +217,16 @@ public class PrenotationServices {
 	 * @return true if prenotation was present and succesfully closed, false
 	 *         otherwise
 	 */
-	public boolean closePrenotation(@NonNull String prenotationId, @NonNull String reportId) {
+	public boolean closePrenotation(@NonNull String prenotationId, String reportId) {
+		if(reportId == null) {
+			return false;
+		}
 		ActivePrenotation prenotation = this.getPrenotationInstance(prenotationId);
-		if (this.removePrenotation(prenotationId) && donationServices.addDonation(prenotation, reportId)) {
+		if(prenotation == null) {
+			return false;
+		}
+		if (prenotation.isConfirmed() 
+				&& this.removePrenotation(prenotationId) && donationServices.addDonation(prenotation, reportId)) {
 			String donorId = prenotation.getDonorMail();
 			Date date = prenotation.getHour();
 			Donor donor = donorServices.getDonorInstance(donorId);

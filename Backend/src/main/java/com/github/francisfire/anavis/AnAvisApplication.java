@@ -51,6 +51,7 @@ public class AnAvisApplication implements CommandLineRunner {
 		Office officeFour = new Office("tolentino@office.com","Tolentino");
 		officeOne.addTimeSlot(new TimeSlot(new Date(260000), 5));
 		officeOne.addTimeSlot(new TimeSlot(new Date(550000), 5));
+		officeOne.addTimeSlot(new TimeSlot(new Date(), 5));
 		officeTwo.addTimeSlot(new TimeSlot(new Date(270000), 5));
 		officeTwo.addTimeSlot(new TimeSlot(new Date(300000), 5));
 		officeServices.addOffice(officeOne);
@@ -58,7 +59,7 @@ public class AnAvisApplication implements CommandLineRunner {
 		officeServices.addOffice(officeThree);
 		officeServices.addOffice(officeFour);
 
-		Donor donorOne = new Donor("stelluti@donor.com", officeOne.getMail(), DonorCategory.MAN);
+		Donor donorOne = new Donor("stelluti@donor.com", officeOne.getMail(), DonorCategory.MAN, "Francesco", "Stelluti", new Date(), "Imperia");
 		Donor donorTwo = new Donor("coppola@donor.com", officeTwo.getMail(), DonorCategory.MAN);
 		Donor donorThree = new Donor("clelio@donor.com", officeTwo.getMail(), DonorCategory.MAN);
 		Donor donorFour = new Donor("zamponi@donor.com", officeThree.getMail(), DonorCategory.MAN);

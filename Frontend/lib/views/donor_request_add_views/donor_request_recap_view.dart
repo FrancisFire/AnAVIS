@@ -1,18 +1,15 @@
-import 'package:anavis/providers/current_donor_state.dart';
+import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/models/requestprenotation.dart';
-import 'package:anavis/widgets/painter.dart';
+import 'package:anavis/services/request_service.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:intl/intl.dart';
-
-import 'package:flushbar/flushbar_route.dart' as route;
 
 class DonorRequestRecap extends StatefulWidget {
   final String office;
@@ -43,7 +40,6 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
   }
 
   String dayValue, hourValue;
-  Flushbar confirm, decline, err;
 
   @override
   void initState() {
@@ -58,28 +54,15 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
     });
   }
 
-  Future<void> postRequest() async {
-    await Provider.of<CurrentDonorState>(context).sendRequest(
+  Future<bool> postRequest() async {
+    bool confirmation = await RequestService(context).createRequest(
       RequestPrenotation(
-          "${Provider.of<CurrentDonorState>(context).getDonorMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
+          "${AppState().getUserMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
           widget.office,
-          Provider.of<CurrentDonorState>(context).getDonorMail(),
+          AppState().getUserMail(),
           widget.time),
     );
-  }
-
-  Future showFlushbar(Flushbar instance) {
-    final _route = route.showFlushbar(
-      context: context,
-      flushbar: instance,
-    );
-
-    return Navigator.of(
-      context,
-      rootNavigator: false,
-    ).pushReplacement(
-      _route,
-    );
+    return confirmation;
   }
 
   @override
@@ -228,27 +211,13 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        decline = new Flushbar(
-                                          margin: EdgeInsets.all(8),
-                                          borderRadius: 26,
-                                          shouldIconPulse: true,
-                                          title: "Richiesta annullata",
-                                          icon: Icon(
-                                            Icons.clear,
-                                            size: 28.0,
-                                            color: Colors.red,
-                                          ),
-                                          message:
-                                              "La richiesta è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
-                                          duration: Duration(
-                                            seconds: 6,
-                                          ),
-                                          isDismissible: true,
-                                          dismissDirection:
-                                              FlushbarDismissDirection
-                                                  .HORIZONTAL,
-                                        );
-                                        this.showFlushbar(this.decline);
+                                        Navigator.popUntil(context,
+                                            ModalRoute.withName('DonorView'));
+                                        new ConfirmationFlushbar(
+                                                "Richiesta annullata",
+                                                "La richiesta è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
+                                                false)
+                                            .show(context);
                                       },
                                     ),
                                   ),
@@ -273,53 +242,27 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        this.postRequest().then((_) {
-                                          if (Provider.of<CurrentDonorState>(
-                                                  context)
-                                              .getStatusBody()) {
-                                            confirm = new Flushbar(
-                                              margin: EdgeInsets.all(8),
-                                              shouldIconPulse: true,
-                                              borderRadius: 26,
-                                              title: "Richiesta effettuata",
-                                              icon: Icon(
-                                                Icons.check,
-                                                size: 28.0,
-                                                color: Colors.green,
-                                              ),
-                                              message:
-                                                  "La richiesta è stata effettuata con successo, ci vedremo presto!",
-                                              duration: Duration(
-                                                seconds: 6,
-                                              ),
-                                              isDismissible: true,
-                                              dismissDirection:
-                                                  FlushbarDismissDirection
-                                                      .HORIZONTAL,
-                                            );
-                                            this.showFlushbar(this.confirm);
+                                        this.postRequest().then((status) {
+                                          if (status) {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'DonorView'));
+                                            new ConfirmationFlushbar(
+                                                    "Richiesta effettuata",
+                                                    "La richiesta è stata effettuata con successo, ci vedremo presto!",
+                                                    true)
+                                                .show(context);
                                           } else {
-                                            err = new Flushbar(
-                                              margin: EdgeInsets.all(8),
-                                              shouldIconPulse: true,
-                                              borderRadius: 26,
-                                              title: "Impossibile prenotare",
-                                              icon: Icon(
-                                                Icons.error,
-                                                size: 28.0,
-                                                color: Colors.red,
-                                              ),
-                                              message:
-                                                  "Non è stato possibile effettuare la prenotazione, riprova più tardi",
-                                              duration: Duration(
-                                                seconds: 6,
-                                              ),
-                                              isDismissible: true,
-                                              dismissDirection:
-                                                  FlushbarDismissDirection
-                                                      .HORIZONTAL,
-                                            );
-                                            this.showFlushbar(this.err);
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'DonorView'));
+                                            new ConfirmationFlushbar(
+                                                    "Impossibile prenotare",
+                                                    "Non è stato possibile effettuare la prenotazione, riprova più tardi",
+                                                    false)
+                                                .show(context);
                                           }
                                         });
                                       },

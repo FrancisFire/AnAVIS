@@ -1,19 +1,17 @@
-import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/providers/current_office_state.dart';
+import 'package:anavis/models/office.dart';
 import 'package:anavis/models/donor.dart';
+import 'package:anavis/services/donor_service.dart';
 import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
-import 'package:anavis/widgets/donor_request_widget.dart';
-import 'package:anavis/widgets/fab_button.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
+import 'package:anavis/views/widgets/donor_request_widget.dart';
+import 'package:anavis/views/widgets/fab_button.dart';
+import 'package:anavis/views/widgets/loading_circular.dart';
+import 'package:anavis/views/widgets/message_painter.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class OfficePrenotationDonorView extends StatefulWidget {
-  final String officeName;
-
-  OfficePrenotationDonorView({
-    @required this.officeName,
-  });
-
+  final Office office;
+  OfficePrenotationDonorView({@required this.office});
   @override
   _OfficePrenotationDonorViewState createState() =>
       _OfficePrenotationDonorViewState();
@@ -22,17 +20,21 @@ class OfficePrenotationDonorView extends StatefulWidget {
 class _OfficePrenotationDonorViewState
     extends State<OfficePrenotationDonorView> {
   String _donorSelected;
+  List<String> _availableDonors;
 
-  void fetchDonorByOffice() async {
-    await Provider.of<AppState>(context)
-        .setAvailableDonorsMailsByOffice(this.widget.officeName);
+  Future<void> fetchDonorByOffice() async {
+    _availableDonors = new List<String>();
+
+    List<Donor> donors = await DonorService(context)
+        .getAvailableDonorsByOfficeId(widget.office.getMail());
+    for (var donor in donors) {
+      _availableDonors.add(donor.getMail());
+    }
   }
 
   List<DropdownMenuItem> createListItem() {
-    this.fetchDonorByOffice();
     List<DropdownMenuItem> listDonorItem = new List<DropdownMenuItem>();
-    for (var donor
-        in Provider.of<AppState>(context).getAvailableDonorsMailsByOffice()) {
+    for (var donor in _availableDonors) {
       listDonorItem.add(
         new DropdownMenuItem(
           value: donor,
@@ -50,55 +52,83 @@ class _OfficePrenotationDonorViewState
     return listDonorItem;
   }
 
+  Future<void> initFuture() async {
+    await Future.wait([
+      this.fetchDonorByOffice(),
+    ]);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: _donorSelected != null
-          ? FABRightArrow(
-              onPressed: () async {
-                await Provider.of<CurrentOfficeState>(context)
-                    .setOfficeTimeTables();
-                if (Provider.of<CurrentOfficeState>(context)
-                    .getAvailableTimeTables()
-                    .isEmpty) {
-                  Navigator.pop(context);
-                  Provider.of<AppState>(context).showFlushbar(
-                      'Date non disponibili',
-                      'Non sono presenti date disponibili per il seguente ufficio',
-                      false,
-                      context);
-                } else {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/office/prenotations/timeview',
-                    arguments: new OfficePrenotationTimeViewArgs(
-                      widget.officeName,
-                      _donorSelected,
-                    ),
-                  );
-                }
-              },
-            )
-          : null,
-      backgroundColor: Colors.white,
-      body: BuildDonorRequestWidget(
-        fetchItems: createListItem(),
-        title: "Donatore",
-        subtitle:
-            "Di seguito potrai selezionare il donatore relativo alla donazione",
-        icon: Icon(
-          Icons.home,
-          size: 42,
-          color: Colors.red,
-        ),
-        labelDropDown: "Seleziona il donatore",
-        valueSelected: _donorSelected,
-        onChanged: (newValue) {
-          setState(() {
-            _donorSelected = newValue;
-          });
-        },
-      ),
+    return FutureBuilder(
+      future: this.initFuture(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return new RequestCircularLoading();
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            return new RequestCircularLoading();
+          case ConnectionState.done:
+            if (snapshot.hasError) return new RequestCircularLoading();
+            if (_availableDonors.isEmpty) {
+              return MessagePainter(
+                isGood: false,
+                negativeTitle: "Donatori non disponibili",
+                negativeMsg:
+                    "Non sono disponibili donatori presso questo ufficio",
+                onPressed: () {
+                  Navigator.popUntil(
+                      context, ModalRoute.withName('OfficeView'));
+                  ConfirmationFlushbar(
+                    "Donatori non disponibili",
+                    "Non sono disponibili donatori presso questo ufficio",
+                    false,
+                  ).show(context);
+                },
+              );
+            } else
+              return Scaffold(
+                floatingActionButton: _donorSelected != null
+                    ? FABRightArrow(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            '/office/prenotations/timeview',
+                            arguments: new OfficePrenotationTimeViewArgs(
+                                _donorSelected, widget.office),
+                          );
+                        },
+                      )
+                    : null,
+                backgroundColor: Colors.white,
+                body: BuildDonorRequestWidget(
+                  fetchItems: createListItem(),
+                  title: "Donatore",
+                  subtitle:
+                      "Di seguito potrai selezionare il donatore relativo alla donazione",
+                  icon: Icon(
+                    Icons.home,
+                    size: 42,
+                    color: Colors.red,
+                  ),
+                  labelDropDown: "Seleziona il donatore",
+                  valueSelected: _donorSelected,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _donorSelected = newValue;
+                    });
+                  },
+                ),
+              );
+        }
+        return null;
+      },
     );
   }
 }
