@@ -35,7 +35,7 @@ public class DonationController {
 		return donationServices.getDonationsByDonor(donorMail);
 	}
 	
-	@PreAuthorize("@accessCheckerComponent.isDonationOwnedById(principal, #donationId)")
+	@PreAuthorize("@accessCheckerComponent.isDonationOwnedByDonorId(principal, #donationId)")
 	@GetMapping("/report/{donationId}")
 	public DonationReport getDonationReport(@PathVariable("donationId") String donationId) {
 		String reportId = donationServices.getDonationInstance(donationId).getReportId();
