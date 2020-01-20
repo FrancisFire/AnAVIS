@@ -42,11 +42,6 @@ public class AuthCredentialsController {
 		return authCredentialsServices.getAuthCredentialsInstance(mail).getRoles();
 	}
 
-	@GetMapping("/")
-	public Set<AuthCredentials> getAuthCredentials() {
-		return authCredentialsServices.getAuthCredentials();
-	}
-
 	@PostMapping("/donor")
 	public boolean addDonorCredentials(@RequestBody UserAndDonor userAndDonor) {
 		donorServices.addDonor(userAndDonor.donor);
