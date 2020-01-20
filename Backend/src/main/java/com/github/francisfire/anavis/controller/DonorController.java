@@ -30,11 +30,13 @@ public class DonorController {
 		return donorServices.checkDonationPossibility(donorMail);
 	}
 
+	@PreAuthorize("@accessCheckerComponent.sameUserId(principal, #officeMail)")
 	@GetMapping("/office/{officeMail}/available")
 	public Set<Donor> getAvailableDonorsByOfficeId(@PathVariable("officeMail") String officeMail) {
 		return donorServices.getAvailableDonorsByOfficeId(officeMail);
 	}
 	
+	@PreAuthorize("hasAnyAuthority('OFFICE', 'ADMIN') or @accessCheckerComponent.sameUserId(principal, #donorMail)")
 	@GetMapping("/{donorMail}") public Donor getDonorByMail(@PathVariable("donorMail") String donorMail) {
 		return donorServices.getDonorInstance(donorMail);
 	}
