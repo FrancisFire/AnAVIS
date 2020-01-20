@@ -13,7 +13,7 @@ import org.springframework.data.annotation.Id;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-abstract class Prenotation {
+public abstract class Prenotation {
 
 	@EqualsAndHashCode.Include
 	@Id
