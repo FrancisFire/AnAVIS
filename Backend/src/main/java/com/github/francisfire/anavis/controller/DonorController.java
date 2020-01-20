@@ -19,11 +19,12 @@ public class DonorController {
 
 	@Autowired
 	private DonorServices donorServices;
+	
 	@SuppressWarnings("unused")
 	@Autowired
 	private AccessCheckerComponent accessCheckerComponent;
 
-	@PreAuthorize("hasAuthority('OFFICE') or @accessCheckerComponent.sameDonorId(principal, #donorMail)")
+	@PreAuthorize("hasAnyAuthority('OFFICE', 'ADMIN') or @accessCheckerComponent.sameUserId(principal, #donorMail)")
 	@GetMapping("/{donorMail}/canDonate")
 	public boolean checkDonationPossibility(@PathVariable("donorMail") String donorMail) {
 		return donorServices.checkDonationPossibility(donorMail);
