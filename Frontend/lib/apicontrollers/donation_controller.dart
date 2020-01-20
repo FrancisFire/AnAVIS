@@ -8,18 +8,28 @@ import 'package:http/http.dart' as http;
 class DonationController {
   String _ip;
   String _baseUrl;
+  Map<String, String> _header;
+
   DonationController(BuildContext context) {
     _ip = AppState().getIp();
+    _header = AppState().getHttpHeaders();
+
     _baseUrl = "http://$_ip:8080/api/donation";
   }
 
   Future<String> getDonationsByDonor(String donorMail) async {
-    http.Response res = await http.get("$_baseUrl/donor/$donorMail");
+    http.Response res = await http.get(
+      "$_baseUrl/donor/$donorMail",
+      headers: this._header,
+    );
     return res.body;
   }
 
   Future<String> getDonationReport(String donationId) async {
-    http.Response res = await http.get("$_baseUrl/office/report/$donationId");
+    http.Response res = await http.get(
+      "$_baseUrl/office/report/$donationId",
+      headers: this._header,
+    );
     return res.body;
   }
 }

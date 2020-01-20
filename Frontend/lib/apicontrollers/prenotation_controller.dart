@@ -9,8 +9,12 @@ import 'package:http/http.dart' as http;
 class PrenotationController {
   String _ip;
   String _baseUrl;
+  Map<String, String> _header;
+
   PrenotationController(BuildContext context) {
     _ip = AppState().getIp();
+    _header = AppState().getHttpHeaders();
+
     _baseUrl = "http://$_ip:8080/api/prenotation";
   }
 
@@ -24,42 +28,24 @@ class PrenotationController {
         "hour": prenotation.getHour(),
         "confirmed": prenotation.isConfirmed(),
       }),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
+      headers: this._header,
     );
     return res.body;
-
-    /*return await http.post(
-      Uri.encodeFull("http://${_ipReference}:8080/api/prenotation"),
-      body: json.encode({
-        "id": prenotation.getId(),
-        "officeMail": prenotation.getOfficeMail(),
-        "donorMail": prenotation.getDonorMail(),
-        "hour": prenotation.getHour(),
-        "confirmed": prenotation.isConfirmed(),
-      }),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
-    ).then((res) {
-      _statusBody = res.body == 'true';
-      notifyListeners();
-    }).catchError((err) {
-      _statusBody = false;
-      notifyListeners();
-    });*/
   }
 
   Future<String> getPrenotationsByOffice(String officeMail) async {
-    http.Response res = await http.get("$_baseUrl/office/$officeMail");
+    http.Response res = await http.get(
+      "$_baseUrl/office/$officeMail",
+      headers: this._header,
+    );
     return res.body;
   }
 
   Future<String> getPrenotationsByDonor(String donorMail) async {
-    http.Response res = await http.get("$_baseUrl/donor/$donorMail");
+    http.Response res = await http.get(
+      "$_baseUrl/donor/$donorMail",
+      headers: this._header,
+    );
     return res.body;
   }
 
@@ -73,54 +59,44 @@ class PrenotationController {
         "hour": prenotation.getHour(),
         "confirmed": prenotation.isConfirmed(),
       }),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
+      headers: this._header,
     );
     return res.body;
-
-    /*return await http.put(
-      Uri.encodeFull("http://${_ipReference}:8080/api/prenotation"),
-      body: json.encode({
-        "id": prenotation.getId(),
-        "officeMail": prenotation.getOfficeMail(),
-        "donorMail": prenotation.getDonorMail(),
-        "hour": prenotation.getHour(),
-        "confirmed": prenotation.isConfirmed(),
-      }),
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-      },
-    ).then((res) {
-      _statusBody = res.body == 'true';
-      notifyListeners();
-    }).catchError((err) {
-      _statusBody = false;
-      notifyListeners();
-    });*/
   }
 
   Future<String> removePrenotation(String prenotationId) async {
-    http.Response res = await http.delete("$_baseUrl/$prenotationId");
+    http.Response res = await http.delete(
+      "$_baseUrl/$prenotationId",
+      headers: this._header,
+    );
     return res.body;
   }
 
   Future<String> acceptPrenotationChange(String prenotationId) async {
-    http.Response res = await http.put("$_baseUrl/$prenotationId/acceptChange");
+    http.Response res = await http.put(
+      "$_baseUrl/$prenotationId/acceptChange",
+      headers: this._header,
+    );
     return res.body;
   }
 
   Future<String> denyPrenotationChange(String prenotationId) async {
-    http.Response res = await http.put("$_baseUrl/$prenotationId/denyChange");
+    http.Response res = await http.put(
+      "$_baseUrl/$prenotationId/denyChange",
+      headers: this._header,
+    );
     return res.body;
   }
 
   Future<String> closePrenotation(
       String prenotationId, dio.FormData formData) async {
-    dio.Response<dynamic> res =
-        await dio.Dio().put("$_baseUrl/$prenotationId/close", data: formData);
+    dio.Response<dynamic> res = await dio.Dio().put(
+      "$_baseUrl/$prenotationId/close",
+      data: formData,
+      options: dio.Options(
+        headers: this._header,
+      ),
+    );
     return res.data.toString();
   }
 }
