@@ -3,7 +3,7 @@ import 'package:anavis/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-const String ip = "192.168.43.253";
+const String ip = "10.0.15.228";
 
 void main() {
   initializeDateFormatting().then((_) => runApp(AnAvis()));
