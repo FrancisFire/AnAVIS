@@ -1,6 +1,8 @@
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
+import 'package:anavis/views/admin_crud/admin_create_users.dart';
+import 'package:anavis/views/admin_crud/admin_manage_user.dart';
 import 'package:anavis/views/admin_view.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
 import 'package:anavis/views/donor_pendingprenotations_view.dart';
@@ -50,6 +52,20 @@ class RouteGenerator {
             builder: (_) => AdminView(),
             settings: RouteSettings(
               name: 'Admin',
+            ));
+
+      case '/admin/createuser':
+        return MaterialPageRoute(
+            builder: (_) => AdminCreateUserView(),
+            settings: RouteSettings(
+              name: 'AdminCreateUser',
+            ));
+
+      case '/admin/users':
+        return MaterialPageRoute(
+            builder: (_) => AdminManageUserView(),
+            settings: RouteSettings(
+              name: 'AdminShowUser',
             ));
 
       case '/office':
