@@ -55,6 +55,7 @@ public class AuthCredentialsController {
 		return authCredentialsServices.getAuthCredentials();
 	}
 
+	@PreAuthorize("permitAll")
 	@PostMapping("/donor")
 	public boolean addDonorCredentials(@RequestBody UserAndDonor userAndDonor) {
 		donorServices.addDonor(userAndDonor.donor);

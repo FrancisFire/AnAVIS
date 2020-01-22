@@ -27,11 +27,13 @@ public class OfficeController {
 	@Autowired
 	private AccessCheckerComponent accessCheckerComponent;
 
+	@PreAuthorize("permitAll")
 	@GetMapping("")
 	public Set<Office> getOffices() {
 		return officeServices.getOffices();
 	}
 
+	@PreAuthorize("permitAll")
 	@GetMapping("/{officeMail}/timeTable")
 	public Set<TimeSlot> getDonationsTimeTable(@PathVariable("officeMail") String officeMail) {
 		return officeServices.getDonationsTimeTable(officeMail);
