@@ -87,6 +87,9 @@ class _MainCardDonorRecapDonationState
                           await DonationService(context).getDonationReport(
                         widget.closedPrenotation.getId(),
                       );
+                      // print(donationReport.getDonorMail());
+                      // DonationReport è null nonostante gli passi il giusto
+                      // riferimento, non capisco il perchè
                       await _createFileFromString(
                           donationReport.getReportFile(),
                           donationReport.getReportId());
