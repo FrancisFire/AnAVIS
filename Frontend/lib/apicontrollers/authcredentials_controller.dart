@@ -33,7 +33,6 @@ class AuthCredentialsController {
         "mail": credentials.getMail(),
         "password": credentials.getPassword(),
       }),
-      headers: this._header,
     );
     return res.body;
   }

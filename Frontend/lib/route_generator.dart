@@ -51,7 +51,7 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => AdminView(),
             settings: RouteSettings(
-              name: 'Admin',
+              name: 'AdminView',
             ));
 
       case '/admin/createuser':

@@ -1,226 +1,58 @@
+import 'package:anavis/models/authcredentials.dart';
 import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/views/widgets/card_painter.dart';
-import 'package:anavis/views/widgets/login_form.dart';
-import 'package:anavis/views/widgets/painter.dart';
+import 'package:anavis/services/authcredentials_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
-
-const donorMail = "stelluti@donor.com";
-const officeMail = "osimo@office.com";
-const donorPass = "sasso";
-const officePass = "sasso";
+import 'package:flutter_login/flutter_login.dart';
 
 class LoginView extends StatefulWidget {
   @override
   _LoginViewState createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView>
-    with SingleTickerProviderStateMixin {
-  TabController _controller;
-  @override
-  void initState() {
-    super.initState();
-    _controller = new TabController(
-      initialIndex: 0,
-      length: 2,
-      vsync: this,
-    );
+class _LoginViewState extends State<LoginView> {
+  Future<String> _authUser(LoginData data) {
+    print(data.name);
+    print(data.password);
+    AuthCredentials auth = new AuthCredentials(data.name);
+    auth.setPassword(data.password);
+    print(auth.getPassword());
+    print(auth.getMail());
+    return AuthCredentialsService(context)
+        .loginWithCredentials(auth)
+        .then((role) {
+      if (role == null) {
+        print(role);
+        return 'Login non valido';
+      } else {
+        AppState().setUserMail(data.name);
+        AppState().setPass(data.password);
+        AppState().setRole(role);
+        print(role);
+        return null;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return CardLogin(controller: _controller);
-  }
-}
-
-class CardLogin extends StatelessWidget {
-  final TabController controller;
-
-  CardLogin({
-    @required this.controller,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarDividerColor: Colors.transparent,
-      ),
-    );
-    return Scaffold(
-      resizeToAvoidBottomPadding: true,
-      body: CustomPaint(
-        painter: Painter(
-          first: Colors.red[100],
-          second: Colors.orange[200],
-          background: Colors.white,
-        ),
-        child: Stack(
-          children: <Widget>[
-            Flex(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.center,
-              verticalDirection: VerticalDirection.down,
-              textDirection: TextDirection.ltr,
-              children: <Widget>[
-                Flexible(
-                  flex: 2,
-                  child: ScrollConfiguration(
-                    behavior: RemoveGlow(),
-                    child: SingleChildScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      reverse: true,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: 80.0,
-                            ),
-                            child: Text(
-                              "AnAVIS",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 64,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                backgroundColor: Colors.red,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 24.0,
-                            ),
-                            child: TypewriterAnimatedTextKit(
-                              text: [
-                                "Il futuro è una questione di sangue",
-                                "Ogni goccia di sangue fa la differenza",
-                                "Dona oggi per ricevere un domani",
-                                "Condividi il meglio di te agli altri",
-                                "\"This is the way\"",
-                              ],
-                              textStyle: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
-                              textAlign: TextAlign.center,
-                              alignment: AlignmentDirectional.center,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 18.0,
-                              bottom: 18.0,
-                            ),
-                            child: Image.asset(
-                              'assets/images/divider.png',
-                              height: 34,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 26,
-                      right: 26,
-                      bottom: 26,
-                    ),
-                    child: Card(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(26.0),
-                        ),
-                      ),
-                      elevation: 7,
-                      child: ClipRRect(
-                        borderRadius: new BorderRadius.circular(26.0),
-                        child: CustomPaint(
-                          painter: CardPainter(),
-                          child: Column(
-                            children: <Widget>[
-                              Theme(
-                                data: ThemeData(
-                                  fontFamily: 'Rubik',
-                                  splashColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                ),
-                                child: TabBar(
-                                  controller: controller,
-                                  labelColor: Colors.red,
-                                  indicatorColor: Colors.redAccent,
-                                  labelPadding: EdgeInsets.all(18.0),
-                                  tabs: <Widget>[
-                                    Text(
-                                      "Donatore AVIS",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Ufficio AVIS",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: TabBarView(
-                                  controller: controller,
-                                  children: [
-                                    LoginForm(
-                                      onTap: () {
-                                        AppState().setUserMail(donorMail);
-                                        AppState().setPass(donorPass);
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          '/donor',
-                                        );
-                                      },
-                                    ),
-                                    LoginForm(
-                                      onTap: () {
-                                        AppState().setUserMail(officeMail);
-                                        AppState().setPass(officePass);
-
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          '/office',
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+    return FlutterLogin(
+      title: 'SASSI',
+      onLogin: _authUser,
+      onSignup: (_) {},
+      onSubmitAnimationCompleted: () {
+        switch (AppState().getRole()) {
+          case Role.DONOR:
+            Navigator.of(context).pushReplacementNamed("/donor");
+            break;
+          case Role.OFFICE:
+            Navigator.of(context).pushReplacementNamed("/office");
+            break;
+          case Role.ADMIN:
+            Navigator.of(context).pushReplacementNamed("/admin");
+            break;
+        }
+      },
+      onRecoverPassword: (_) {},
     );
   }
 }

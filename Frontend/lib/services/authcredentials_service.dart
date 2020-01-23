@@ -31,6 +31,7 @@ class AuthCredentialsService {
     String controllerJson =
         await _authCredentialsController.loginWithCredentials(credentials);
     var parsedJson = json.decode(controllerJson);
+    print(parsedJson);
     switch (parsedJson) {
       case "DONOR":
         return Role.DONOR;
