@@ -427,25 +427,6 @@ class _DonorViewState extends State<DonorView> {
         },
       ),
       SpeedDialChild(
-        label: 'Profilo',
-        labelBackgroundColor: Colors.redAccent,
-        backgroundColor: Colors.redAccent,
-        labelStyle: TextStyle(
-          fontSize: 18.0,
-          color: Colors.white,
-        ),
-        child: Icon(
-          Icons.account_circle,
-          color: Colors.white,
-        ),
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            '/admin',
-          );
-        },
-      ),
-      SpeedDialChild(
         label: 'Logout',
         labelBackgroundColor: Colors.redAccent,
         backgroundColor: Colors.redAccent,
@@ -454,7 +435,7 @@ class _DonorViewState extends State<DonorView> {
           color: Colors.white,
         ),
         child: Icon(
-          Icons.backspace,
+          Icons.exit_to_app,
           color: Colors.white,
         ),
         onTap: () {

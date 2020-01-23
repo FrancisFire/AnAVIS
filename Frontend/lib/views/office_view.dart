@@ -332,20 +332,6 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
         },
       ),
       SpeedDialChild(
-        child: Icon(
-          Icons.location_city,
-          color: Colors.white,
-        ),
-        label: 'Profilo',
-        labelBackgroundColor: Colors.redAccent,
-        backgroundColor: Colors.redAccent,
-        labelStyle: TextStyle(
-          fontSize: 18.0,
-          color: Colors.white,
-        ),
-        onTap: () {},
-      ),
-      SpeedDialChild(
         label: 'Logout',
         labelBackgroundColor: Colors.redAccent,
         backgroundColor: Colors.redAccent,
@@ -354,7 +340,7 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
           color: Colors.white,
         ),
         child: Icon(
-          Icons.backspace,
+          Icons.exit_to_app,
           color: Colors.white,
         ),
         onTap: () {
