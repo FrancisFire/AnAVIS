@@ -11,12 +11,8 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   Future<String> _authUser(LoginData data) {
-    print(data.name);
-    print(data.password);
     AuthCredentials auth = new AuthCredentials(data.name);
     auth.setPassword(data.password);
-    print(auth.getPassword());
-    print(auth.getMail());
     return AuthCredentialsService(context)
         .loginWithCredentials(auth)
         .then((role) {
@@ -36,7 +32,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
-      title: 'SASSI',
+      title: 'AnAVIS',
       onLogin: _authUser,
       onSignup: (_) {},
       onSubmitAnimationCompleted: () {

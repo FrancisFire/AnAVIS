@@ -44,9 +44,13 @@ public class AnAvisApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		Office officeOne = new Office("osimo@office.com", "Osimo");
+		authCredentialsServices.addCredentials(new AuthCredentials("osimo@office.com", "office", Role.OFFICE));
 		Office officeTwo = new Office("fabriano@office.com", "Fabriano");
+		authCredentialsServices.addCredentials(new AuthCredentials("fabriano@office.com", "office", Role.OFFICE));
 		Office officeThree = new Office("casetteverdini@office.com", "Casette Verdini");
-		Office officeFour = new Office("tolentino@office.com","Tolentino");
+		authCredentialsServices.addCredentials(new AuthCredentials("casetteverdini@office.com", "office", Role.OFFICE));
+		Office officeFour = new Office("tolentino@office.com", "Tolentino");
+		authCredentialsServices.addCredentials(new AuthCredentials("tolentino@office.com", "office", Role.OFFICE));
 		officeOne.addTimeSlot(new TimeSlot(new Date(260000), 5));
 		officeOne.addTimeSlot(new TimeSlot(new Date(550000), 5));
 		officeOne.addTimeSlot(new TimeSlot(new Date(), 5));
@@ -57,12 +61,22 @@ public class AnAvisApplication implements CommandLineRunner {
 		officeServices.addOffice(officeThree);
 		officeServices.addOffice(officeFour);
 
-		Donor donorOne = new Donor("stelluti@donor.com", officeOne.getMail(), DonorCategory.MAN, "Francesco", "Stelluti", new Date(), "Imperia");
-		Donor donorTwo = new Donor("coppola@donor.com", officeTwo.getMail(), DonorCategory.MAN);
-		Donor donorThree = new Donor("clelio@donor.com", officeTwo.getMail(), DonorCategory.MAN);
-		Donor donorFour = new Donor("zamponi@donor.com", officeThree.getMail(), DonorCategory.MAN);
+		Donor donorOne = new Donor("stelluti@donor.com", officeOne.getMail(), DonorCategory.MAN, "Francesco Pio",
+				"Stelluti", new Date(), "Imperia");
+		authCredentialsServices.addCredentials(new AuthCredentials("stelluti@donor.com", "donor", Role.DONOR));
+		Donor donorTwo = new Donor("coppola@donor.com", officeTwo.getMail(), DonorCategory.MAN, "Francesco", "Coppola",
+				new Date(), "Fabriano");
+		authCredentialsServices.addCredentials(new AuthCredentials("coppola@donor.com", "donor", Role.DONOR));
+		Donor donorThree = new Donor("clelio@donor.com", officeTwo.getMail(), DonorCategory.MAN, "Cl", "He", new Date(),
+				"Macerata");
+		authCredentialsServices.addCredentials(new AuthCredentials("clelio@donor.com", "donor", Role.DONOR));
+		Donor donorFour = new Donor("zamponi@donor.com", officeThree.getMail(), DonorCategory.MAN, "Marco", "Zamponi",
+				new Date(), "Tolentino");
+		authCredentialsServices.addCredentials(new AuthCredentials("zamponi@donor.com", "donor", Role.DONOR));
 		donorFour.setCanDonate(false);
-		Donor donorFive = new Donor("sasso@donor.com", officeFour.getMail(), DonorCategory.MAN);
+		Donor donorFive = new Donor("sasso@donor.com", officeFour.getMail(), DonorCategory.MAN, "Sasso", "Grosso",
+				new Date(), "Masso");
+		authCredentialsServices.addCredentials(new AuthCredentials("sasso@donor.com", "donor", Role.DONOR));
 		donorFive.setCanDonate(false);
 
 		donorServices.addDonor(donorOne);
@@ -84,9 +98,8 @@ public class AnAvisApplication implements CommandLineRunner {
 				new Date(300000), true);
 		prenotationServices.addPrenotation(prenotationOne);
 		prenotationServices.addPrenotation(prenotationTwo);
+
 		
-		authCredentialsServices.addCredentials(new AuthCredentials("stelluti@donor.com", "donor", Role.DONOR));
-		authCredentialsServices.addCredentials(new AuthCredentials("osimo@office.com", "office", Role.OFFICE));
 		authCredentialsServices.addCredentials(new AuthCredentials("admin@admin.com", "admin", Role.ADMIN));
 	}
 }

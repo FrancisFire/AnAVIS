@@ -27,13 +27,14 @@ class AuthCredentialsController {
   }
 
   Future<String> loginWithCredentials(AuthCredentials credentials) async {
-    http.Response res = await http.post(
-      Uri.encodeFull("$_baseUrl/login"),
-      body: json.encode({
-        "mail": credentials.getMail(),
-        "password": credentials.getPassword(),
-      }),
-    );
+    http.Response res = await http.post(Uri.encodeFull("$_baseUrl/login"),
+        body: json.encode({
+          "mail": credentials.getMail(),
+          "password": credentials.getPassword(),
+        }),
+        headers: {
+          "content-type": "application/json",
+        });
     return res.body;
   }
 

@@ -30,8 +30,10 @@ class AuthCredentialsService {
   Future<Role> loginWithCredentials(AuthCredentials credentials) async {
     String controllerJson =
         await _authCredentialsController.loginWithCredentials(credentials);
+    if (controllerJson == "") {
+      return null;
+    }
     var parsedJson = json.decode(controllerJson);
-    print(parsedJson);
     switch (parsedJson) {
       case "DONOR":
         return Role.DONOR;
@@ -40,7 +42,7 @@ class AuthCredentialsService {
         return Role.OFFICE;
         break;
       case "ADMIN":
-        return Role.OFFICE;
+        return Role.ADMIN;
         break;
       default:
         return null;
