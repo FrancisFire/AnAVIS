@@ -345,6 +345,26 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
         ),
         onTap: () {},
       ),
+      SpeedDialChild(
+        label: 'Logout',
+        labelBackgroundColor: Colors.redAccent,
+        backgroundColor: Colors.redAccent,
+        labelStyle: TextStyle(
+          fontSize: 18.0,
+          color: Colors.white,
+        ),
+        child: Icon(
+          Icons.backspace,
+          color: Colors.white,
+        ),
+        onTap: () {
+          AppState().logout();
+          Navigator.pushReplacementNamed(
+            context,
+            '/',
+          );
+        },
+      ),
     ];
   }
 }
