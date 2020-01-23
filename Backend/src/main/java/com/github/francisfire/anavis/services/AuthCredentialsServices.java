@@ -21,11 +21,11 @@ public class AuthCredentialsServices implements UserDetailsService {
 
 	@Autowired
 	private AuthCredentialsRepository repository;
-	
-	public Set<Role> loginWithCredentials(AuthCredentials authCredentials) {
+
+	public Role loginWithCredentials(AuthCredentials authCredentials) {
 		AuthCredentials serverAuthCredentials = getAuthCredentialsInstance(authCredentials.getMail());
-		if (serverAuthCredentials.getPassword().equals(authCredentials.getPassword())) {
-			return serverAuthCredentials.getRoles();
+		if (new BCryptPasswordEncoder().matches(authCredentials.getPassword(), serverAuthCredentials.getPassword())) {
+			return serverAuthCredentials.getRole();
 		}
 		return null;
 	}
@@ -111,6 +111,5 @@ public class AuthCredentialsServices implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return repository.findById(username).orElse(null);
 	}
-
 
 }

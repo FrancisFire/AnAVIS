@@ -2,8 +2,6 @@ package com.github.francisfire.anavis.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,7 +28,7 @@ public class AuthCredentials implements UserDetails {
 	@Id
 	private String mail;
 	private String password;
-	private Set<Role> roles;
+	private Role role;
 
 	public enum Role {
 		DONOR, OFFICE, ADMIN;
@@ -38,8 +36,9 @@ public class AuthCredentials implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return new ArrayList<GrantedAuthority>(
-				roles.stream().map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList()));
+		ArrayList<GrantedAuthority> auth = new ArrayList<GrantedAuthority>();
+		auth.add(new SimpleGrantedAuthority(role.name()));
+		return auth;
 	}
 
 	@Override

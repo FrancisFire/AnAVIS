@@ -1,15 +1,13 @@
 class AuthCredentials {
   String _mail;
   String _password;
-  Set<Role> _roles;
-  AuthCredentials(String mail, Set<Role> roles) {
+  Role _role;
+  AuthCredentials(String mail) {
     this._mail = mail;
-    this._roles = roles;
-    this._password = "";
   }
-  AuthCredentials.complete(String mail, String password, Set<Role> roles) {
+  AuthCredentials.complete(String mail, String password, Role role) {
     this._mail = mail;
-    this._roles = roles;
+    this._role = role;
     this._password = password;
   }
 
@@ -21,8 +19,16 @@ class AuthCredentials {
     return _password;
   }
 
-  Set<Role> getRoles() {
-    return _roles;
+  void setPassword(String pass) {
+    this._password = pass;
+  }
+
+  void setRole(Role role) {
+    this._role = role;
+  }
+
+  Role getRole() {
+    return _role;
   }
 }
 

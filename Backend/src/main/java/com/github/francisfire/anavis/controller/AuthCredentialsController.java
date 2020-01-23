@@ -43,12 +43,18 @@ public class AuthCredentialsController {
 	@Autowired
 	private AccessCheckerComponent accessCheckerComponent;
 
-	@PreAuthorize("hasAuthority('ADMIN') or @accessCheckerComponent.sameUserId(principal, #mail)")
-	@GetMapping("/roles/{mail}")
-	public Set<Role> getUserRoles(@PathVariable("mail") String mail) {
-		return authCredentialsServices.getAuthCredentialsInstance(mail).getRoles();
+	@PreAuthorize("permitAll")
+	@PostMapping("/login")
+	public Role loginWithCredentials(@RequestBody AuthCredentials credentials) {
+		return authCredentialsServices.loginWithCredentials(credentials);
 	}
 
+	@PreAuthorize("hasAuthority('ADMIN') or @accessCheckerComponent.sameUserId(principal, #mail)")
+	@GetMapping("/role/{mail}")
+	public Role getUserRole(@PathVariable("mail") String mail) {
+		return authCredentialsServices.getAuthCredentialsInstance(mail).getRole();
+	}
+	
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/")
 	public Set<AuthCredentials> getAuthCredentials() {

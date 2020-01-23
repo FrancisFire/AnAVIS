@@ -1,8 +1,6 @@
 package com.github.francisfire.anavis;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -87,13 +85,8 @@ public class AnAvisApplication implements CommandLineRunner {
 		prenotationServices.addPrenotation(prenotationOne);
 		prenotationServices.addPrenotation(prenotationTwo);
 		
-		Set<Role> rolesOne = new HashSet<>();
-		rolesOne.add(Role.DONOR);
-		AuthCredentials userOne = new AuthCredentials("stelluti@donor.com", "sasso", rolesOne);
-		authCredentialsServices.addCredentials(userOne);
-		Set<Role> rolesTwo = new HashSet<>();
-		rolesTwo.add(Role.OFFICE);
-		AuthCredentials userTwo = new AuthCredentials("osimo@office.com", "sasso", rolesTwo);
-		authCredentialsServices.addCredentials(userTwo);
+		authCredentialsServices.addCredentials(new AuthCredentials("stelluti@donor.com", "donor", Role.DONOR));
+		authCredentialsServices.addCredentials(new AuthCredentials("osimo@office.com", "office", Role.OFFICE));
+		authCredentialsServices.addCredentials(new AuthCredentials("admin@admin.com", "admin", Role.ADMIN));
 	}
 }

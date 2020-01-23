@@ -18,9 +18,21 @@ class AuthCredentialsController {
     _baseUrl = "http://$_ip:8080/api/auth";
   }
 
-  Future<String> getUserRoles(String mail) async {
+  Future<String> getUserRole(String mail) async {
     http.Response res = await http.get(
       "$_baseUrl/roles/$mail",
+      headers: this._header,
+    );
+    return res.body;
+  }
+
+  Future<String> loginWithCredentials(AuthCredentials credentials) async {
+    http.Response res = await http.post(
+      Uri.encodeFull("$_baseUrl/login"),
+      body: json.encode({
+        "mail": credentials.getMail(),
+        "password": credentials.getPassword(),
+      }),
       headers: this._header,
     );
     return res.body;
@@ -55,7 +67,7 @@ class AuthCredentialsController {
         "authCredentials": {
           "mail": authCredentials.getMail(),
           "password": authCredentials.getPassword(),
-          "roles": authCredentials.getRoles(),
+          "role": authCredentials.getRole(),
         }
       }),
       headers: this._header,
@@ -76,7 +88,7 @@ class AuthCredentialsController {
         "authCredentials": {
           "mail": authCredentials.getMail(),
           "password": authCredentials.getPassword(),
-          "roles": authCredentials.getRoles(),
+          "role": authCredentials.getRole(),
         }
       }),
       headers: this._header,
@@ -90,7 +102,7 @@ class AuthCredentialsController {
       body: json.encode({
         "mail": authCredentials.getMail(),
         "password": authCredentials.getPassword(),
-        "roles": authCredentials.getRoles(),
+        "role": authCredentials.getRole(),
       }),
       headers: this._header,
     );

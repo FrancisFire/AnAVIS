@@ -9,24 +9,41 @@ import 'package:flutter/cupertino.dart';
 class AuthCredentialsService {
   AuthCredentialsController _authCredentialsController;
 
-  Future<List<Role>> getUserRoles(String mail) async {
-    List<Role> roles = new List<Role>();
-    String controllerJson = await _authCredentialsController.getUserRoles(mail);
+  Future<Role> getUserRole(String mail) async {
+    String controllerJson = await _authCredentialsController.getUserRole(mail);
     var parsedJson = json.decode(controllerJson);
-    for (var role in parsedJson) {
-      switch (role) {
-        case "DONOR":
-          roles.add(Role.DONOR);
-          break;
-        case "OFFICE":
-          roles.add(Role.OFFICE);
-          break;
-        case "ADMIN":
-          roles.add(Role.OFFICE);
-          break;
-      }
+    switch (parsedJson) {
+      case "DONOR":
+        return Role.DONOR;
+        break;
+      case "OFFICE":
+        return Role.OFFICE;
+        break;
+      case "ADMIN":
+        return Role.OFFICE;
+        break;
+      default:
+        return null;
     }
-    return roles;
+  }
+
+  Future<Role> loginWithCredentials(AuthCredentials credentials) async {
+    String controllerJson =
+        await _authCredentialsController.loginWithCredentials(credentials);
+    var parsedJson = json.decode(controllerJson);
+    switch (parsedJson) {
+      case "DONOR":
+        return Role.DONOR;
+        break;
+      case "OFFICE":
+        return Role.OFFICE;
+        break;
+      case "ADMIN":
+        return Role.OFFICE;
+        break;
+      default:
+        return null;
+    }
   }
 
   Future<List<AuthCredentials>> getAuthCredentials() async {
@@ -35,21 +52,21 @@ class AuthCredentialsService {
         await _authCredentialsController.getAuthCredentials();
     var parsedJson = json.decode(controllerJson);
     for (var credential in parsedJson) {
-      Set<Role> roles = new Set<Role>();
-      for (var r in credential['roles']) {
-        switch (r) {
-          case "DONOR":
-            roles.add(Role.DONOR);
-            break;
-          case "ADMIN":
-            roles.add(Role.ADMIN);
-            break;
-          case "OFFICE":
-            roles.add(Role.OFFICE);
-            break;
-        }
+      Role role;
+      switch (credential['role']) {
+        case "DONOR":
+          role = Role.DONOR;
+          break;
+        case "ADMIN":
+          role = Role.ADMIN;
+          break;
+        case "OFFICE":
+          role = Role.OFFICE;
+          break;
       }
-      credentials.add(new AuthCredentials(credential['mail'], roles));
+      AuthCredentials authC = new AuthCredentials(credential['mail']);
+      authC.setRole(role);
+      credentials.add(authC);
     }
     return credentials;
   }
