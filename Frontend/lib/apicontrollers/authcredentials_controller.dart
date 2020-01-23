@@ -28,7 +28,7 @@ class AuthCredentialsController {
 
   Future<String> getAuthCredentials() async {
     http.Response res = await http.get(
-      "$_baseUrl/roles/",
+      "$_baseUrl/",
       headers: this._header,
     );
     return res.body;
