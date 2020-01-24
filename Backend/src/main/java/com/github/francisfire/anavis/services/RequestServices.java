@@ -38,12 +38,11 @@ public class RequestServices {
 				&& officeServices.isDateAvailableByOffice(request.getHour(), request.getOfficeMail())) {
 			if (repository.existsById(request.getId())) {
 				return false;
-			} else {
-				repository.insert(request);
-				return true;
 			}
-		} else
-			return false;
+			repository.insert(request);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -59,9 +58,8 @@ public class RequestServices {
 		if (repository.existsById(requestId)) {
 			repository.delete(getRequestInstance(requestId));
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**

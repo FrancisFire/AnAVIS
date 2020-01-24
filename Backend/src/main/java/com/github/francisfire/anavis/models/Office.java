@@ -58,9 +58,8 @@ public class Office {
 				.findFirst().orElse(null);
 		if (slot == null) {
 			return false;
-		} else {
-			return slot.increaseSlots();
 		}
+		return slot.increaseSlots();
 	}
 
 	/**
@@ -77,9 +76,8 @@ public class Office {
 				.findFirst().orElse(null);
 		if (slot == null) {
 			return false;
-		} else {
-			return slot.decreaseSlots();
 		}
+		return slot.decreaseSlots();
 	}
 
 	/**
@@ -95,9 +93,8 @@ public class Office {
 				.findFirst().orElse(null);
 		if (slot == null) {
 			return false;
-		} else {
-			return slot.isDateAvailable();
 		}
+		return slot.isDateAvailable();
 	}
 
 }

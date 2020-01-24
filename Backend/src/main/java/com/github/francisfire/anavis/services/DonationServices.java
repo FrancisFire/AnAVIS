@@ -67,10 +67,9 @@ public class DonationServices {
 				prenotation.getDonorMail(), prenotation.getHour(), reportId);
 		if (repository.existsById(donation.getId())) {
 			return false;
-		} else {
-			repository.save(donation);
-			return true;
 		}
+		repository.save(donation);
+		return true;
 	}
 
 	/**
@@ -84,9 +83,8 @@ public class DonationServices {
 		if (repository.existsById(donationId)) {
 			repository.delete(getDonationInstance(donationId));
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**

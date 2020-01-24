@@ -2,7 +2,6 @@ package com.github.francisfire.anavis.models;
 
 import java.util.Date;
 
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TimeSlot {
-	
+
 	@EqualsAndHashCode.Include
 	private Date dateTime;
 	private int donorSlots;
@@ -57,9 +56,8 @@ public class TimeSlot {
 	public boolean decreaseSlots() {
 		if (this.donorSlots == 0) {
 			return false;
-		} else {
-			this.donorSlots--;
-			return true;
 		}
+		this.donorSlots--;
+		return true;
 	}
 }

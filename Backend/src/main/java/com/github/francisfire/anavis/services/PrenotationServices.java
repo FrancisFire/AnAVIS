@@ -47,10 +47,9 @@ public class PrenotationServices {
 					request.getDonorMail(), request.getHour(), true);
 			if (repository.existsById(prenotation.getId())) {
 				return false;
-			} else {
-				repository.insert(prenotation);
-				return true;
 			}
+			repository.insert(prenotation);
+			return true;
 		}
 		return false;
 	}
@@ -83,13 +82,11 @@ public class PrenotationServices {
 				&& officeServices.decreaseTimeslotByOffice(date, officeId)) {
 			if (repository.existsById(prenotation.getId())) {
 				return false;
-			} else {
-				repository.insert(prenotation);
-				return true;
 			}
-		} else {
-			return false;
+			repository.insert(prenotation);
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -142,9 +139,8 @@ public class PrenotationServices {
 				&& officeServices.increaseTimeslotByOffice(oldDate, oldOffice)) {
 			repository.save(prenotation);
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -155,7 +151,8 @@ public class PrenotationServices {
 	 * @return collection of prenotations related to the office passed in input
 	 */
 	public Set<ActivePrenotation> getPrenotationsByOffice(@NonNull String officeId) {
-		return repository.findAll().stream().filter(prenotation -> prenotation.getOfficeMail().equalsIgnoreCase(officeId))
+		return repository.findAll().stream()
+				.filter(prenotation -> prenotation.getOfficeMail().equalsIgnoreCase(officeId))
 				.collect(Collectors.toSet());
 	}
 
@@ -218,15 +215,15 @@ public class PrenotationServices {
 	 *         otherwise
 	 */
 	public boolean closePrenotation(@NonNull String prenotationId, String reportId) {
-		if(reportId == null) {
+		if (reportId == null) {
 			return false;
 		}
 		ActivePrenotation prenotation = this.getPrenotationInstance(prenotationId);
-		if(prenotation == null) {
+		if (prenotation == null) {
 			return false;
 		}
-		if (prenotation.isConfirmed() 
-				&& this.removePrenotation(prenotationId) && donationServices.addDonation(prenotation, reportId)) {
+		if (prenotation.isConfirmed() && this.removePrenotation(prenotationId)
+				&& donationServices.addDonation(prenotation, reportId)) {
 			String donorId = prenotation.getDonorMail();
 			Date date = prenotation.getHour();
 			Donor donor = donorServices.getDonorInstance(donorId);
@@ -234,9 +231,8 @@ public class PrenotationServices {
 			donor.setLastDonation(date);
 			donorServices.updateDonor(donor);
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**

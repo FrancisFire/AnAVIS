@@ -21,17 +21,17 @@ public class DonationReportServices {
 	private DonationReportRepository repository;
 
 	/**
-	 * Creates and adds a report to the report collection using the informations from a
-	 * prenotation and a reportFile
+	 * Creates and adds a report to the report collection using the informations
+	 * from a prenotation and a reportFile
 	 * 
 	 * @throws NullPointerException if prenotationId or reportFile is null
 	 * @param prenotationId the id of the prenotation
-	 * @param reportFile the file associated to the report
+	 * @param reportFile    the file associated to the report
 	 * @return the id of the created report, null if file upload failed
 	 */
 	public String addReport(@NonNull String prenotationId, @NonNull MultipartFile reportFile) {
 		ActivePrenotation prenotation = prenotationServices.getPrenotationInstance(prenotationId);
-		if(!prenotation.isConfirmed()) {
+		if (!prenotation.isConfirmed()) {
 			return null;
 		}
 		DonationReport report = new DonationReport(prenotation.getDonorMail(), prenotation.getOfficeMail(),
@@ -56,9 +56,9 @@ public class DonationReportServices {
 		if (repository.existsById(reportId)) {
 			repository.delete(getReportInstance(reportId));
 			return true;
-		} else {
-			return false;
 		}
+		return false;
+
 	}
 
 	/**

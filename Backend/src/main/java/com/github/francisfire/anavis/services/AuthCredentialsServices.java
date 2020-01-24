@@ -22,9 +22,18 @@ public class AuthCredentialsServices implements UserDetailsService {
 	@Autowired
 	private AuthCredentialsRepository repository;
 
-	public Role loginWithCredentials(AuthCredentials authCredentials) {
+	/**
+	 * Returns the role of the user associated with the credentials passed in input
+	 * 
+	 * @throws NullPointerException if credentials are null
+	 * @param authCredentials the credentials which we get the role from
+	 * @return the role associated to the credentials, null if user didn't exist or
+	 *         password didn't correspond
+	 */
+	public Role loginWithCredentials(@NonNull AuthCredentials authCredentials) {
 		AuthCredentials serverAuthCredentials = getAuthCredentialsInstance(authCredentials.getMail());
-		if (new BCryptPasswordEncoder().matches(authCredentials.getPassword(), serverAuthCredentials.getPassword())) {
+		if (serverAuthCredentials != null && new BCryptPasswordEncoder().matches(authCredentials.getPassword(),
+				serverAuthCredentials.getPassword())) {
 			return serverAuthCredentials.getRole();
 		}
 		return null;
@@ -52,10 +61,9 @@ public class AuthCredentialsServices implements UserDetailsService {
 		authCredentials.setPassword(new BCryptPasswordEncoder().encode(authCredentials.getPassword()));
 		if (repository.existsById(authCredentials.getMail())) {
 			return false;
-		} else {
-			repository.insert(authCredentials);
-			return true;
 		}
+		repository.insert(authCredentials);
+		return true;
 	}
 
 	/**
@@ -75,7 +83,7 @@ public class AuthCredentialsServices implements UserDetailsService {
 		}
 		authCredentials.setPassword(new BCryptPasswordEncoder().encode(authCredentials.getPassword()));
 		repository.save(authCredentials);
-		return false;
+		return true;
 	}
 
 	/**
@@ -91,7 +99,7 @@ public class AuthCredentialsServices implements UserDetailsService {
 			return false;
 		}
 		repository.delete(getAuthCredentialsInstance(mail));
-		return false;
+		return true;
 	}
 
 	/**
@@ -109,7 +117,7 @@ public class AuthCredentialsServices implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return repository.findById(username).orElse(null);
+		return getAuthCredentialsInstance(username);
 	}
 
 }
