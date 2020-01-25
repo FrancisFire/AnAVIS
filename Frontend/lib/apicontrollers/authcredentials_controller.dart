@@ -67,7 +67,7 @@ class AuthCredentialsController {
         "authCredentials": {
           "mail": authCredentials.getMail(),
           "password": authCredentials.getPassword(),
-          "role": authCredentials.getRole(),
+          "role": _getRoleName(authCredentials.getRole()),
         }
       }),
       headers: this._header,
@@ -83,12 +83,12 @@ class AuthCredentialsController {
         "office": {
           "mail": office.getMail(),
           "place": office.getPlace(),
-          "donationTimeTable": office.getPlace(),
+          "donationTimeTable": [],
         },
         "authCredentials": {
           "mail": authCredentials.getMail(),
           "password": authCredentials.getPassword(),
-          "role": authCredentials.getRole(),
+          "role": _getRoleName(authCredentials.getRole()),
         }
       }),
       headers: this._header,
@@ -102,7 +102,7 @@ class AuthCredentialsController {
       body: json.encode({
         "mail": authCredentials.getMail(),
         "password": authCredentials.getPassword(),
-        "role": authCredentials.getRole(),
+        "role": _getRoleName(authCredentials.getRole()),
       }),
       headers: this._header,
     );
@@ -115,5 +115,16 @@ class AuthCredentialsController {
       headers: this._header,
     );
     return res.body;
+  }
+
+  String _getRoleName(Role role) {
+    switch (role) {
+      case Role.DONOR:
+        return "DONOR";
+      case Role.ADMIN:
+        return "ADMIN";
+      case Role.OFFICE:
+        return "OFFICE";
+    }
   }
 }

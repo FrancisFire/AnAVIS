@@ -133,7 +133,6 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
                   onChanged: (newValue) {
                     setState(() {
                       _timeSelected = newValue;
-                      print(_timeSelected);
                     });
                   },
                 ),

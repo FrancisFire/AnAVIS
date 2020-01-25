@@ -1,22 +1,24 @@
-import 'package:anavis/viewargs/admin_create_users_recap_args.dart';
+import 'package:anavis/models/authcredentials.dart';
+import 'package:anavis/viewargs/admin_update_users_recap_args.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
 import 'package:anavis/views/widgets/login_form.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-class AdminCreateUserView extends StatefulWidget {
+class AdminUpdateUserView extends StatefulWidget {
+  final String oldMail;
+  final Role role;
+  AdminUpdateUserView({@required this.oldMail, @required this.role});
   @override
-  _AdminCreateUserViewState createState() => _AdminCreateUserViewState();
+  _AdminUpdateUserViewState createState() => _AdminUpdateUserViewState();
 }
 
-class _AdminCreateUserViewState extends State<AdminCreateUserView> {
-  String _city;
-  String _email;
+class _AdminUpdateUserViewState extends State<AdminUpdateUserView> {
   String _password;
 
-  Widget fab(String a, String b, String c) {
-    if (a != null && b != null && c != null) {
+  Widget fab() {
+    if (_password != null) {
       return FloatingActionButton(
         child: Icon(
           Icons.person_add,
@@ -26,9 +28,12 @@ class _AdminCreateUserViewState extends State<AdminCreateUserView> {
         onPressed: () {
           Navigator.pushReplacementNamed(
             context,
-            '/admin/createuser/recap',
-            arguments: new AdminCreateRecapArgs(
-                this._city, this._email, this._password),
+            '/admin/updateuser/recap',
+            arguments: new AdminUpdateRecapArgs(
+              widget.oldMail,
+              this._password,
+              widget.role,
+            ),
           );
         },
       );
@@ -40,7 +45,7 @@ class _AdminCreateUserViewState extends State<AdminCreateUserView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: fab(_city, _email, _password),
+      floatingActionButton: fab(),
       body: CustomPaint(
         painter: Painter(
           first: Colors.red[400],
@@ -116,34 +121,6 @@ class _AdminCreateUserViewState extends State<AdminCreateUserView> {
                         ),
                       ),
                       CreationField(
-                        chipTitle: "Inserisci il nome della città",
-                        hint: "Nome della città",
-                        icon: Icon(
-                          Icons.location_on,
-                          color: Colors.red[600],
-                        ),
-                        onSaved: (newValue) {
-                          setState(() {
-                            this._city = newValue;
-                          });
-                        },
-                        isPass: false,
-                      ),
-                      CreationField(
-                        chipTitle: "Inserisci l'email",
-                        hint: "Email relativa all'ufficio",
-                        icon: Icon(
-                          Icons.contact_mail,
-                          color: Colors.red[600],
-                        ),
-                        onSaved: (newValue) {
-                          setState(() {
-                            this._email = newValue;
-                          });
-                        },
-                        isPass: false,
-                      ),
-                      CreationField(
                         icon: Icon(
                           Icons.lock,
                           color: Colors.red[600],
@@ -171,7 +148,7 @@ class _AdminCreateUserViewState extends State<AdminCreateUserView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     AutoSizeText(
-                      'Crea un nuovo ufficio',
+                      'Modifica le credenziali di accesso',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 32,
@@ -196,7 +173,7 @@ class _AdminCreateUserViewState extends State<AdminCreateUserView> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 6),
                       child: AutoSizeText(
-                        "Registra l'ufficio AVIS in pochi passi, se hai dei problemi non esitare a contattare!",
+                        "Si sta modificando la password di ${widget.oldMail}",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

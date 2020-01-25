@@ -1,8 +1,14 @@
+import 'package:anavis/viewargs/admin_create_users_recap_args.dart';
+import 'package:anavis/viewargs/admin_update_users_args.dart';
+import 'package:anavis/viewargs/admin_update_users_recap_args.dart';
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/admin_crud/admin_create_users.dart';
+import 'package:anavis/views/admin_crud/admin_create_users_recap.dart';
 import 'package:anavis/views/admin_crud/admin_manage_user.dart';
+import 'package:anavis/views/admin_crud/admin_update_users.dart';
+import 'package:anavis/views/admin_crud/admin_update_users_recap.dart';
 import 'package:anavis/views/admin_view.dart';
 import 'package:anavis/views/donor_candonate_view.dart';
 import 'package:anavis/views/donor_pendingprenotations_view.dart';
@@ -60,6 +66,46 @@ class RouteGenerator {
             settings: RouteSettings(
               name: 'AdminCreateUser',
             ));
+
+      case '/admin/updateuser':
+        if (args is AdminUpdateArgs) {
+          return MaterialPageRoute(
+              builder: (_) => AdminUpdateUserView(
+                    oldMail: args.getEmail(),
+                    role: args.getRole(),
+                  ),
+              settings: RouteSettings(
+                name: 'AdminCreateUser',
+              ));
+        }
+        return _errorRoute();
+      case '/admin/createuser/recap':
+        if (args is AdminCreateRecapArgs) {
+          return MaterialPageRoute(
+              builder: (_) => AdminCreateRecap(
+                    city: args.getCity(),
+                    email: args.getEmail(),
+                    password: args.getPassword(),
+                  ),
+              settings: RouteSettings(
+                name: 'AdminCreateUser',
+              ));
+        }
+        return _errorRoute();
+
+      case '/admin/updateuser/recap':
+        if (args is AdminUpdateRecapArgs) {
+          return MaterialPageRoute(
+              builder: (_) => AdminUpdateRecap(
+                    email: args.getEmail(),
+                    password: args.getPassword(),
+                    role: args.getRole(),
+                  ),
+              settings: RouteSettings(
+                name: 'AdminCreateUser',
+              ));
+        }
+        return _errorRoute();
 
       case '/admin/users':
         return MaterialPageRoute(

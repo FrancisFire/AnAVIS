@@ -52,7 +52,6 @@ class OfficeController {
       "$_baseUrl/$officeMail",
       headers: this._header,
     );
-    print(res.body);
     return res.body;
   }
 }

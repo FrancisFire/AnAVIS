@@ -136,7 +136,7 @@ class _OfficePrenotationUpdateRecapState
                                   textAlign: TextAlign.center,
                                   text: TextSpan(
                                     text:
-                                        'La donazione verrà effetuata il giorno ',
+                                        'La donazione verrà effettuata il giorno ',
                                     style: TextStyle(
                                       color: Colors.grey[850],
                                       fontFamily: 'Rubik',

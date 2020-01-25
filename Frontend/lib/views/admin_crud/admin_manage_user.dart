@@ -1,7 +1,10 @@
 import 'package:anavis/models/authcredentials.dart';
 import 'package:anavis/services/authcredentials_service.dart';
+import 'package:anavis/viewargs/admin_update_users_args.dart';
 import 'package:anavis/views/widgets/button_card_bottom.dart';
 import 'package:anavis/views/widgets/card_prenotation_request.dart';
+import 'package:anavis/views/widgets/confirm_alert_dialog.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/login_form.dart';
 import 'package:anavis/views/widgets/painter.dart';
@@ -32,6 +35,17 @@ class _AdminManageUserViewState extends State<AdminManageUserView> {
     await Future.wait([
       this.getAuth(),
     ]);
+  }
+
+  String getRoleName(Role role) {
+    switch (role) {
+      case Role.ADMIN:
+        return "Account amministratore";
+      case Role.OFFICE:
+        return "Account ufficio AVIS";
+      case Role.DONOR:
+        return "Account donatore";
+    }
   }
 
   @override
@@ -107,38 +121,100 @@ class _AdminManageUserViewState extends State<AdminManageUserView> {
                   child: ListView.builder(
                     itemCount: _listAuth.length,
                     itemBuilder: (context, index) {
-                      return CardForPrenotationAndRequest(
-                        email: _listAuth[index].getMail(),
-                        hour: _listAuth[index].getPassword(),
-                        id: "ID",
-                        buttonBar: ButtonBar(
-                          children: <Widget>[
-                            ButtonForCardBottom(
-                              icon: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                              color: Colors.red,
-                              onTap: () {},
-                              title: 'Elimina',
+                      return Card(
+                        child: Column(children: [
+                          ListTile(
+                            leading: Icon(
+                              Icons.verified_user,
+                              color: Colors.green,
+                              size: 42.0,
                             ),
-                          ],
-                        ),
+                            title: Text(_listAuth[index].getMail()),
+                            subtitle: Text(
+                              getRoleName(_listAuth[index].getRole()),
+                            ),
+                          ),
+                          ButtonBar(
+                            children: <Widget>[
+                              ButtonForCardBottom(
+                                title: "Modifica",
+                                color: Colors.orange,
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/admin/updateuser',
+                                    arguments: AdminUpdateArgs(
+                                      _listAuth[index].getMail(),
+                                      _listAuth[index].getRole(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              ButtonForCardBottom(
+                                title: "Elimina",
+                                color: Colors.red,
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    child: ConfirmAlertDialog(
+                                      denyFunction: () {
+                                        Navigator.popUntil(context,
+                                            ModalRoute.withName('AdminView'));
+                                        new ConfirmationFlushbar(
+                                                "Eliminazione annullata",
+                                                "L\'eliminazione è stata annullata con successo",
+                                                false)
+                                            .show(context);
+                                      },
+                                      confirmFunction: () {
+                                        AuthCredentialsService(context)
+                                            .removeCredentials(
+                                                _listAuth[index].getMail())
+                                            .then((status) {
+                                          if (status) {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'AdminView'));
+                                            new ConfirmationFlushbar(
+                                                    "Eliminazione effettuata",
+                                                    "L\'eliminazione è stata effettuata con successo",
+                                                    true)
+                                                .show(context);
+                                          } else {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    'AdminView'));
+                                            new ConfirmationFlushbar(
+                                                    "Impossibile eliminazione",
+                                                    "Non è stato possibile effettuare l\'eliminazione",
+                                                    false)
+                                                .show(context);
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ]),
                       );
                     },
                   ),
                 );
             }
             return null;
-            //         child: ScrollConfiguration(
-            //   behavior: RemoveGlow(),
-            //   child: ListView(
-            //     children: <Widget>[
-            //       Text("data"),
-            //       Text("data"),
-            //     ],
-            //   ),
-            // ),
           },
         ),
       ),

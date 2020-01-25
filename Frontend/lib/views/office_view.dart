@@ -34,7 +34,6 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
 
   Future<void> initFuture() async {
     await this.setOffice();
-    print("Ufficio ${this._office}");
     await Future.wait([
       this.setPrenotationsCount(),
       this.setRequestsCount(),

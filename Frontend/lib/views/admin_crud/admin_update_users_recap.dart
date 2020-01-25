@@ -1,67 +1,33 @@
-import 'package:anavis/providers/app_state.dart';
-import 'package:anavis/models/requestprenotation.dart';
-import 'package:anavis/services/request_service.dart';
+import 'package:anavis/models/authcredentials.dart';
+import 'package:anavis/services/authcredentials_service.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/painter.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/services.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
-class DonorRequestRecap extends StatefulWidget {
-  final String office;
-  final String time;
-
-  DonorRequestRecap({
-    @required this.office,
-    @required this.time,
+class AdminUpdateRecap extends StatefulWidget {
+  final String email;
+  final String password;
+  final Role role;
+  AdminUpdateRecap({
+    @required this.email,
+    @required this.password,
+    @required this.role,
   });
 
   @override
-  _DonorRequestRecapState createState() => _DonorRequestRecapState();
+  _AdminUpdateRecapState createState() => _AdminUpdateRecapState();
 }
 
-class _DonorRequestRecapState extends State<DonorRequestRecap> {
-  Random rng = new Random();
-  String takeDay(String day) =>
-      RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
-  String takeHour(String hour) =>
-      RegExp(r"Data: ?.+? ?\| ?Orario: ?(\d\d:\d\d)").firstMatch(hour).group(1);
-
-  String improveTime(String time) {
-    String restrictFractionalSeconds(String dateTime) =>
-        dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
-
-    return formatDate(DateTime.parse(restrictFractionalSeconds(time)),
-        ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
-  }
-
-  String dayValue, hourValue;
-
-  @override
-  void initState() {
-    super.initState();
-    setNicerTime();
-  }
-
-  void setNicerTime() {
-    setState(() {
-      dayValue = this.takeDay(improveTime(widget.time));
-      hourValue = this.takeHour(improveTime(widget.time));
-    });
-  }
-
+class _AdminUpdateRecapState extends State<AdminUpdateRecap> {
   Future<bool> postRequest() async {
-    bool confirmation = await RequestService(context).createRequest(
-      RequestPrenotation(
-          "${AppState().getUserMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
-          widget.office,
-          AppState().getUserMail(),
-          widget.time),
-    );
+    AuthCredentials auth = new AuthCredentials.complete(
+        widget.email, widget.password, widget.role);
+    bool confirmation =
+        await AuthCredentialsService(context).updateCredentials(auth);
     return confirmation;
   }
 
@@ -111,7 +77,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                           child: Column(
                             children: <Widget>[
                               Text(
-                                'Conferma della richiesta',
+                                'Conferma della modifica',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 42,
@@ -130,8 +96,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                 child: RichText(
                                   textAlign: TextAlign.center,
                                   text: TextSpan(
-                                    text:
-                                        'La donazione verrà effettuata il giorno ',
+                                    text: 'La modifica per la mail ',
                                     style: TextStyle(
                                       color: Colors.grey[850],
                                       fontFamily: 'Rubik',
@@ -139,27 +104,18 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                     ),
                                     children: <TextSpan>[
                                       TextSpan(
-                                        text: dayValue,
+                                        text: widget.email,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       TextSpan(
-                                        text: ' alle ore ',
+                                        text: ' con la password ',
                                       ),
                                       TextSpan(
-                                        text: hourValue,
+                                        text: widget.password,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' nell\'ufficio di ',
-                                      ),
-                                      TextSpan(
-                                        text: widget.office,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic,
                                         ),
                                       ),
                                       TextSpan(
@@ -167,7 +123,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                       ),
                                       TextSpan(
                                         text:
-                                            '\n\nSi desidera proseguire con la richiesta o declinare?',
+                                            '\n\nSi desidera proseguire con la modifica o declinare?',
                                         style: TextStyle(
                                           fontStyle: FontStyle.italic,
                                           color: Colors.grey[700],
@@ -212,9 +168,9 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                       ),
                                       onPressed: () {
                                         Navigator.popUntil(context,
-                                            ModalRoute.withName('DonorView'));
+                                            ModalRoute.withName('AdminView'));
                                         new ConfirmationFlushbar(
-                                                "Richiesta annullata",
+                                                "Modifica annullata",
                                                 "La richiesta è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",
                                                 false)
                                             .show(context);
@@ -247,20 +203,20 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                             Navigator.popUntil(
                                                 context,
                                                 ModalRoute.withName(
-                                                    'DonorView'));
+                                                    'AdminView'));
                                             new ConfirmationFlushbar(
-                                                    "Richiesta effettuata",
-                                                    "La richiesta è stata effettuata con successo, ci vedremo presto!",
+                                                    "Modifica effettuata",
+                                                    "La modifica è stata effettuata con successo",
                                                     true)
                                                 .show(context);
                                           } else {
                                             Navigator.popUntil(
                                                 context,
                                                 ModalRoute.withName(
-                                                    'DonorView'));
+                                                    'AdminView'));
                                             new ConfirmationFlushbar(
-                                                    "Impossibile prenotare",
-                                                    "Non è stato possibile effettuare la prenotazione, riprova più tardi",
+                                                    "Impossibile modificare",
+                                                    "Non è stato possibile effettuare la modifica",
                                                     false)
                                                 .show(context);
                                           }

@@ -87,6 +87,12 @@ class AuthCredentialsService {
     return controllerJson == 'true';
   }
 
+  Future<bool> removeCredentials(String mail) async {
+    String controllerJson =
+        await _authCredentialsController.removeCredentials(mail);
+    return controllerJson == 'true';
+  }
+
   Future<bool> addOfficeCredentials(
       Office office, AuthCredentials authCredentials) async {
     String controllerJson = await _authCredentialsController

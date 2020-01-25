@@ -18,13 +18,11 @@ class _LoginViewState extends State<LoginView> {
         .loginWithCredentials(auth)
         .then((role) {
       if (role == null) {
-        print(role);
         return 'Login non valido';
       } else {
         AppState().setUserMail(data.name);
         AppState().setPass(data.password);
         AppState().setRole(role);
-        print(role);
         return null;
       }
     });
