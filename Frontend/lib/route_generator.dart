@@ -2,6 +2,7 @@ import 'package:anavis/viewargs/admin_create_users_recap_args.dart';
 import 'package:anavis/viewargs/admin_update_users_args.dart';
 import 'package:anavis/viewargs/admin_update_users_recap_args.dart';
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
+import 'package:anavis/viewargs/guest_create_donor_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/admin_crud/admin_create_users.dart';
@@ -19,6 +20,7 @@ import 'package:anavis/views/donor_request_add_views/donor_request_recap_view.da
 import 'package:anavis/views/donor_request_add_views/donor_request_time_view.dart';
 import 'package:anavis/views/donor_request_view.dart';
 import 'package:anavis/views/donor_view.dart';
+import 'package:anavis/views/guest_views/guest_create_donors.dart';
 import 'package:anavis/views/login_view.dart';
 import 'package:anavis/views/office_add_dateslot_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_donor_view.dart';
@@ -66,6 +68,19 @@ class RouteGenerator {
             settings: RouteSettings(
               name: 'AdminCreateUser',
             ));
+
+      case '/guest/createuser':
+        if (args is GuestCreateDonorArgs) {
+          return MaterialPageRoute(
+              builder: (_) => GuestCreateDonorView(
+                    email: args.getEmail(),
+                    password: args.getPassword(),
+                  ),
+              settings: RouteSettings(
+                name: 'AdminCreateUser',
+              ));
+        }
+        return _errorRoute();
 
       case '/admin/updateuser':
         if (args is AdminUpdateArgs) {

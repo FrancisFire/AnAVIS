@@ -50,6 +50,7 @@ flutter:
     - assets/images/logo_homepage.png
     - assets/images/divider.png
     - assets/images/user.svg
+    - assets/images/homepage_login.png
     - assets/images/data.svg
     - assets/general/sad.flr
     - assets/general/upload.flr

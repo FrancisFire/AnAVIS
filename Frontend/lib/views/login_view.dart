@@ -1,6 +1,7 @@
 import 'package:anavis/models/authcredentials.dart';
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/services/authcredentials_service.dart';
+import 'package:anavis/viewargs/guest_create_donor_args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_login/flutter_login.dart';
@@ -32,7 +33,7 @@ class _LoginViewState extends State<LoginView> {
     return LoginMessages(
       usernameHint: 'Email',
       passwordHint: 'Password',
-      confirmPasswordHint: 'Conferma',
+      confirmPasswordHint: 'Conferma la password',
       loginButton: 'LOGIN',
       signupButton: 'REGISTRATI',
       forgotPasswordButton: 'Password dimenticata?',
@@ -69,14 +70,23 @@ class _LoginViewState extends State<LoginView> {
           errorColor: Colors.deepOrange,
           titleStyle: TextStyle(
             fontWeight: FontWeight.w800,
-            fontSize: 68,
+            fontSize: 48,
             color: Colors.white,
             letterSpacing: 2,
           ),
         ),
         title: 'AnAVIS',
         onLogin: _authUser,
-        onSignup: (_) {},
+        logo: 'assets/images/homepage_login.png',
+        onSignup: (LoginData loginData) {
+          Navigator.of(context).pushReplacementNamed(
+            '/guest/createuser',
+            arguments: GuestCreateDonorArgs(
+              loginData.name,
+              loginData.password,
+            ),
+          );
+        },
         emailValidator: (value) {
           return value.isEmpty ? 'Email inserita non valida' : null;
         },
