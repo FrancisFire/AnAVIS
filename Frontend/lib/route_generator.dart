@@ -3,6 +3,7 @@ import 'package:anavis/viewargs/admin_update_users_args.dart';
 import 'package:anavis/viewargs/admin_update_users_recap_args.dart';
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/viewargs/guest_create_donor_args.dart';
+import 'package:anavis/viewargs/guest_create_donor_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/admin_crud/admin_create_users.dart';
@@ -21,6 +22,7 @@ import 'package:anavis/views/donor_request_add_views/donor_request_time_view.dar
 import 'package:anavis/views/donor_request_view.dart';
 import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/views/guest_views/guest_create_donors.dart';
+import 'package:anavis/views/guest_views/guest_create_donors_recap.dart';
 import 'package:anavis/views/login_view.dart';
 import 'package:anavis/views/office_add_dateslot_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_donor_view.dart';
@@ -77,7 +79,21 @@ class RouteGenerator {
                     password: args.getPassword(),
                   ),
               settings: RouteSettings(
-                name: 'AdminCreateUser',
+                name: 'GuestCreateUser',
+              ));
+        }
+        return _errorRoute();
+
+      case '/guest/createuser/recap':
+        if (args is GuestCreateDonorRecapArgs) {
+          return MaterialPageRoute(
+              builder: (_) => GuestCreateDonorRecap(
+                    donor: args.getDonor(),
+                    email: args.getEmail(),
+                    password: args.getPassword(),
+                  ),
+              settings: RouteSettings(
+                name: 'GuestCreateUserRecap',
               ));
         }
         return _errorRoute();

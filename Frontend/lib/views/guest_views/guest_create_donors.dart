@@ -1,5 +1,6 @@
 import 'package:anavis/models/donor.dart';
 import 'package:anavis/viewargs/guest_create_donor_args.dart';
+import 'package:anavis/viewargs/guest_create_donor_recap_args.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
 import 'package:anavis/views/widgets/login_form.dart';
 import 'package:anavis/views/widgets/painter.dart';
@@ -28,10 +29,10 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
   String _birthPlace;
   DonorCategory _gender;
 
-  final format = DateFormat("yyyy-MM-dd");
+  final format = DateFormat("dd-MM-yyyy");
 
-  Widget fab(String a, String b) {
-    if (a != null && b != null) {
+  Widget fab(String a, String b, DateTime c, String d, DonorCategory e) {
+    if (a != null && b != null && c != null && d != null && e != null) {
       return FloatingActionButton(
         child: Icon(
           Icons.person_add,
@@ -41,10 +42,19 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
         onPressed: () {
           Navigator.pushReplacementNamed(
             context,
-            '/admin/createuser/recap',
-            arguments: new GuestCreateDonorArgs(
+            '/guest/createuser/recap',
+            arguments: new GuestCreateDonorRecapArgs(
               widget.email,
               widget.password,
+              new Donor(
+                widget.email,
+                "",
+                this._gender,
+                this._name,
+                this._surname,
+                this._birthday.toString(),
+                this._birthPlace,
+              ),
             ),
           );
         },
@@ -71,8 +81,11 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: fab(
-        widget.email,
-        widget.password,
+        this._name,
+        this._surname,
+        this._birthday,
+        this._birthPlace,
+        this._gender,
       ),
       body: CustomPaint(
         painter: Painter(
@@ -261,6 +274,9 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                       ),
                       DateTimeField(
                         format: format,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                         decoration: InputDecoration(
                           filled: true,
                           labelText: "Inserisci una data",
@@ -294,7 +310,9 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                             lastDate: DateTime.now(),
                           );
                           if (_birthday != null) {
-                            return _birthday;
+                            setState(() {
+                              return _birthday;
+                            });
                           }
                           return currentValue;
                         },
