@@ -169,8 +169,10 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        Navigator.popUntil(context,
-                                            ModalRoute.withName('LoginView'));
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          '/',
+                                        );
                                         new ConfirmationFlushbar(
                                           "Registrazione annullata",
                                           "La richiesta è stata annullata, la preghiamo di contattare i nostri uffici se lo ritiene opportuno",

@@ -32,7 +32,11 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
   final format = DateFormat("dd-MM-yyyy");
 
   Widget fab(String a, String b, DateTime c, String d, DonorCategory e) {
-    if (a != null && b != null && c != null && d != null && e != null) {
+    if (a != null &&
+        b != null &&
+        (c != DateTime.now() && c.toString().isNotEmpty && c != null) &&
+        d != null &&
+        e != null) {
       return FloatingActionButton(
         child: Icon(
           Icons.person_add,
@@ -79,6 +83,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
 
   @override
   Widget build(BuildContext context) {
+    print(_birthday);
     return Scaffold(
       floatingActionButton: fab(
         this._name,
@@ -302,6 +307,11 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                             ),
                           ),
                         ),
+                        onChanged: (DateTime newDate) {
+                          setState(() {
+                            _birthday = newDate;
+                          });
+                        },
                         onShowPicker: (context, currentValue) async {
                           _birthday = await showDatePicker(
                             context: context,
@@ -310,9 +320,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                             lastDate: DateTime.now(),
                           );
                           if (_birthday != null) {
-                            setState(() {
-                              return _birthday;
-                            });
+                            return _birthday;
                           }
                           return currentValue;
                         },
