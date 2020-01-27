@@ -2,6 +2,7 @@ import 'package:anavis/models/donor.dart';
 import 'package:anavis/services/office_service.dart';
 
 import 'package:anavis/viewargs/guest_create_donor_recap_args.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/login_form.dart';
@@ -67,19 +68,19 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
 
   Widget fab(
       String a, String b, DateTime c, String d, String f, DonorCategory e) {
-    if (a != null &&
-        b != null &&
-        (c != DateTime.now() && c.toString().isNotEmpty && c != null) &&
-        d != null &&
-        e != null &&
-        f != null) {
-      return FloatingActionButton(
-        child: Icon(
-          Icons.person_add,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.red[600],
-        onPressed: () {
+    return FloatingActionButton(
+      child: Icon(
+        Icons.person_add,
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.orange,
+      onPressed: () {
+        if (a != null &&
+            b != null &&
+            (c != DateTime.now() && c.toString().isNotEmpty && c != null) &&
+            d != null &&
+            e != null &&
+            f != null) {
           Navigator.pushReplacementNamed(
             context,
             '/guest/createuser/recap',
@@ -97,11 +98,15 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
               ),
             ),
           );
-        },
-      );
-    } else {
-      return SizedBox();
-    }
+        } else {
+          new ConfirmationFlushbar(
+            "Compilare tutti i campi",
+            "Per procedere con la registrazione è fondamentale compilare tutti i campi visualizzati",
+            false,
+          ).show(context);
+        }
+      },
+    );
   }
 
   String donorCategoryToString(DonorCategory don) {
@@ -221,9 +226,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                   color: Colors.red[600],
                                 ),
                                 onSaved: (newValue) {
-                                  setState(() {
-                                    this._name = newValue;
-                                  });
+                                  this._name = newValue;
                                 },
                                 isPass: false,
                               ),
@@ -235,9 +238,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 chipTitle: "Inserisci il tuo cognome",
                                 hint: "Cognome",
                                 onSaved: (newValue) {
-                                  setState(() {
-                                    this._surname = newValue;
-                                  });
+                                  this._surname = newValue;
                                 },
                                 isPass: false,
                               ),
@@ -298,9 +299,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                       );
                                     }).toList(),
                                     onChanged: (newValue) {
-                                      setState(() {
-                                        _gender = newValue;
-                                      });
+                                      _gender = newValue;
                                     },
                                   ),
                                 ),
@@ -348,9 +347,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                     isDense: true,
                                     items: createListItem(),
                                     onChanged: (newValue) {
-                                      setState(() {
-                                        _locationAVIS = newValue;
-                                      });
+                                      _locationAVIS = newValue;
                                     },
                                   ),
                                 ),
@@ -363,9 +360,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 chipTitle: "Inserisci il tuo luogo di nascita",
                                 hint: "Luogo",
                                 onSaved: (newValue) {
-                                  setState(() {
-                                    this._birthPlace = newValue;
-                                  });
+                                  this._birthPlace = newValue;
                                 },
                                 isPass: false,
                               ),
@@ -406,9 +401,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                   ),
                                 ),
                                 onChanged: (DateTime newDate) {
-                                  setState(() {
-                                    _birthday = newDate;
-                                  });
+                                  _birthday = newDate;
                                 },
                                 onShowPicker: (context, currentValue) async {
                                   _birthday = await showDatePicker(
