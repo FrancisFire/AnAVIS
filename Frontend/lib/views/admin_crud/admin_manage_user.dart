@@ -125,9 +125,13 @@ class _AdminManageUserViewState extends State<AdminManageUserView> {
                         child: Column(children: [
                           ListTile(
                             leading: Icon(
+                              Icons.person,
+                              color: Colors.grey,
+                              size: 42.0,
+                            ),
+                            trailing: Icon(
                               Icons.verified_user,
                               color: Colors.green,
-                              size: 42.0,
                             ),
                             title: Text(_listAuth[index].getMail()),
                             subtitle: Text(

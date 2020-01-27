@@ -59,6 +59,8 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
       body: Stack(
         children: [
           FlutterLogin(
