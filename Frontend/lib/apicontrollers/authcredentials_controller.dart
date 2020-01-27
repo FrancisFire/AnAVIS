@@ -32,6 +32,7 @@ class AuthCredentialsController {
           "mail": credentials.getMail(),
           "password": credentials.getPassword(),
         }),
+        //permit all
         headers: {
           "content-type": "application/json",
         });
@@ -70,7 +71,10 @@ class AuthCredentialsController {
           "role": _getRoleName(authCredentials.getRole()),
         }
       }),
-      headers: this._header,
+      //permit all
+      headers: {
+        "content-type": "application/json",
+      },
     );
     return res.body;
   }

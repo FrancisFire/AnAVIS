@@ -22,7 +22,10 @@ class OfficeController {
   Future<String> getOffices() async {
     http.Response res = await http.get(
       "$_baseUrl",
-      headers: this._header,
+      //permit all
+      headers: {
+        "content-type": "application/json",
+      },
     );
     return res.body;
   }
@@ -50,7 +53,10 @@ class OfficeController {
   Future<String> getOfficeByMail(String officeMail) async {
     http.Response res = await http.get(
       "$_baseUrl/$officeMail",
-      headers: this._header,
+      //permit all
+      headers: {
+        "content-type": "application/json",
+      },
     );
     return res.body;
   }
