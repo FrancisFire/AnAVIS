@@ -1,8 +1,8 @@
+import 'package:anavis/models/authcredentials.dart';
 import 'package:anavis/viewargs/admin_create_users_recap_args.dart';
 import 'package:anavis/viewargs/admin_update_users_args.dart';
 import 'package:anavis/viewargs/admin_update_users_recap_args.dart';
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
-import 'package:anavis/viewargs/guest_create_donor_args.dart';
 import 'package:anavis/viewargs/guest_create_donor_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
@@ -72,11 +72,10 @@ class RouteGenerator {
             ));
 
       case '/guest/createuser':
-        if (args is GuestCreateDonorArgs) {
+        if (args is AuthCredentials) {
           return MaterialPageRoute(
               builder: (_) => GuestCreateDonorView(
-                    email: args.getEmail(),
-                    password: args.getPassword(),
+                    credentials: args,
                   ),
               settings: RouteSettings(
                 name: 'GuestCreateUser',
@@ -89,8 +88,7 @@ class RouteGenerator {
           return MaterialPageRoute(
               builder: (_) => GuestCreateDonorRecap(
                     donor: args.getDonor(),
-                    email: args.getEmail(),
-                    password: args.getPassword(),
+                    credentials: args.getCredentials(),
                   ),
               settings: RouteSettings(
                 name: 'GuestCreateUserRecap',

@@ -56,14 +56,11 @@ class AuthCredentialsController {
           "mail": donor.getMail(),
           "officeMail": donor.getOfficeMail(),
           "canDonate": donor.canDonate(),
-          "lastDonation": donor.getLastDonation(),
-          "category": donor.getCategory(),
+          "category": _getCategoryName(donor.getCategory()),
           "name": donor.getName(),
           "surname": donor.getSurname(),
           "birthday": donor.getBirthday(),
           "birthPlace": donor.getBirthPlace(),
-          "leftDonationsInYear": donor.getLeftDonationsInYear(),
-          "firstDonationInYear": donor.getFirstDonationInYear(),
         },
         "authCredentials": {
           "mail": authCredentials.getMail(),
@@ -129,6 +126,17 @@ class AuthCredentialsController {
         return "ADMIN";
       case Role.OFFICE:
         return "OFFICE";
+    }
+  }
+
+  String _getCategoryName(DonorCategory category) {
+    switch (category) {
+      case DonorCategory.MAN:
+        return "MAN";
+      case DonorCategory.FERTILEWOMAN:
+        return "FERTILEWOMAN";
+      case DonorCategory.NONFERTILEWOMAN:
+        return "NONFERTILEWOMAN";
     }
   }
 }

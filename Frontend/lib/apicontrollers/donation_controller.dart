@@ -27,7 +27,7 @@ class DonationController {
 
   Future<String> getDonationReport(String donationId) async {
     http.Response res = await http.get(
-      "$_baseUrl/office/report/$donationId",
+      "$_baseUrl/report/$donationId",
       headers: this._header,
     );
     return res.body;

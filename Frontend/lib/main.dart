@@ -1,16 +1,16 @@
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/route_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-const String ip = "192.168.43.169";
+const String ip = "192.168.43.253";
 
 void main() {
   initializeDateFormatting().then((_) => runApp(AnAvis()));
 }
 
 class AnAvis extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     AppState().setIpReference(ip);

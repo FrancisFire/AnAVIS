@@ -6,7 +6,6 @@ import 'package:anavis/views/widgets/card_prenotation_request.dart';
 import 'package:anavis/views/widgets/confirm_alert_dialog.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
-import 'package:anavis/views/widgets/login_form.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

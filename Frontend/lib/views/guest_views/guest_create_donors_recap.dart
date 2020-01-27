@@ -1,4 +1,6 @@
+import 'package:anavis/models/authcredentials.dart';
 import 'package:anavis/models/donor.dart';
+import 'package:anavis/services/authcredentials_service.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:flutter/services.dart';
@@ -8,12 +10,10 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 
 class GuestCreateDonorRecap extends StatefulWidget {
-  final String email;
-  final String password;
+  final AuthCredentials credentials;
   final Donor donor;
   GuestCreateDonorRecap({
-    @required this.email,
-    @required this.password,
+    @required this.credentials,
     @required this.donor,
   });
 
@@ -22,6 +22,12 @@ class GuestCreateDonorRecap extends StatefulWidget {
 }
 
 class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
+  Future<bool> postRequest() async {
+    bool confirmation = await AuthCredentialsService(context)
+        .addDonorCredentials(widget.donor, widget.credentials);
+    return confirmation;
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -95,7 +101,7 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                                     ),
                                     children: <TextSpan>[
                                       TextSpan(
-                                        text: widget.email,
+                                        text: widget.credentials.getMail(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -104,7 +110,7 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                                         text: ' con la password ',
                                       ),
                                       TextSpan(
-                                        text: widget.password,
+                                        text: widget.credentials.getPassword(),
                                         style: TextStyle(
                                           fontStyle: FontStyle.italic,
                                         ),
@@ -202,29 +208,29 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                                         size: 42,
                                       ),
                                       onPressed: () {
-                                        // this.postRequest().then((status) {
-                                        //   if (status) {
-                                        //     Navigator.popUntil(
-                                        //         context,
-                                        //         ModalRoute.withName(
-                                        //             'AdminView'));
-                                        //     new ConfirmationFlushbar(
-                                        //             "Modifica effettuata",
-                                        //             "La modifica è stata effettuata con successo",
-                                        //             true)
-                                        //         .show(context);
-                                        //   } else {
-                                        //     Navigator.popUntil(
-                                        //         context,
-                                        //         ModalRoute.withName(
-                                        //             'AdminView'));
-                                        //     new ConfirmationFlushbar(
-                                        //             "Impossibile modificare",
-                                        //             "Non è stato possibile effettuare la modifica",
-                                        //             false)
-                                        //         .show(context);
-                                        //   }
-                                        // });
+                                        this.postRequest().then((status) {
+                                          if (status) {
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              '/',
+                                            );
+                                            new ConfirmationFlushbar(
+                                                    "Registrazione effettuata",
+                                                    "L'utente può ora autenticarsi al servizio",
+                                                    true)
+                                                .show(context);
+                                          } else {
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              '/',
+                                            );
+                                            new ConfirmationFlushbar(
+                                                    "Errore nella registrazione",
+                                                    "Non è stato possibile registrare l'utente",
+                                                    false)
+                                                .show(context);
+                                          }
+                                        });
                                       },
                                     ),
                                   ),

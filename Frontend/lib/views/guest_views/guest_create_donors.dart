@@ -1,3 +1,4 @@
+import 'package:anavis/models/authcredentials.dart';
 import 'package:anavis/models/donor.dart';
 import 'package:anavis/services/office_service.dart';
 
@@ -5,20 +6,19 @@ import 'package:anavis/viewargs/guest_create_donor_recap_args.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
-import 'package:anavis/views/widgets/login_form.dart';
 import 'package:anavis/views/widgets/painter.dart';
+import 'package:anavis/views/widgets/remove_glow.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class GuestCreateDonorView extends StatefulWidget {
-  final String email;
-  final String password;
+  final AuthCredentials credentials;
 
   GuestCreateDonorView({
-    @required this.email,
-    @required this.password,
+    @required this.credentials,
   });
 
   @override
@@ -34,24 +34,6 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
   DonorCategory _gender;
 
   Map<String, String> _officeMailsAndNames = new Map<String, String>();
-
-  List<DropdownMenuItem> createListItem() {
-    List<DropdownMenuItem> listOfficeItem = new List<DropdownMenuItem>();
-    _officeMailsAndNames.forEach((key, value) {
-      listOfficeItem.add(new DropdownMenuItem(
-        value: key,
-        child: Container(
-          child: Text(
-            value,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ));
-    });
-    return listOfficeItem;
-  }
 
   Future<void> initFuture() async {
     await Future.wait([
@@ -85,15 +67,28 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
             context,
             '/guest/createuser/recap',
             arguments: new GuestCreateDonorRecapArgs(
-              widget.email,
-              widget.password,
+              widget.credentials,
               new Donor(
-                widget.email,
+                widget.credentials.getMail(),
                 this._locationAVIS,
                 this._gender,
                 this._name,
                 this._surname,
-                this._birthday.toString(),
+                formatDate(this._birthday, [
+                  '20',
+                  yy,
+                  '-',
+                  mm,
+                  '-',
+                  dd,
+                  'T',
+                  HH,
+                  ':',
+                  nn,
+                  ':',
+                  ss,
+                  '.000+0000',
+                ]),
                 this._birthPlace,
               ),
             ),
@@ -107,19 +102,6 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
         }
       },
     );
-  }
-
-  String donorCategoryToString(DonorCategory don) {
-    switch (don) {
-      case DonorCategory.MAN:
-        return "Uomo";
-      case DonorCategory.FERTILEWOMAN:
-        return "Donna fertile";
-      case DonorCategory.NONFERTILEWOMAN:
-        return "Donna non fertile";
-      default:
-        return "Altro";
-    }
   }
 
   @override
@@ -227,6 +209,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 ),
                                 onSaved: (newValue) {
                                   this._name = newValue;
+                                  print("Nome ${this._name}");
                                 },
                                 isPass: false,
                               ),
@@ -239,6 +222,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 hint: "Cognome",
                                 onSaved: (newValue) {
                                   this._surname = newValue;
+                                  print("Cognome ${this._surname}");
                                 },
                                 isPass: false,
                               ),
@@ -253,53 +237,10 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                   canvasColor: Colors.red,
                                 ),
                                 child: ButtonTheme(
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.red,
-                                      icon: Icon(
-                                        Icons.streetview,
-                                        color: Colors.red[600],
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                            24.0,
-                                          ),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    hint: Text(
-                                      "Seleziona il sesso",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    iconEnabledColor: Colors.white,
-                                    elevation: 18,
-                                    value: _gender,
-                                    isDense: true,
-                                    items: <DonorCategory>[
-                                      DonorCategory.MAN,
-                                      DonorCategory.FERTILEWOMAN,
-                                      DonorCategory.NONFERTILEWOMAN
-                                    ].map((DonorCategory value) {
-                                      return new DropdownMenuItem<
-                                          DonorCategory>(
-                                        value: value,
-                                        child: new Text(
-                                          donorCategoryToString(value),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (newValue) {
-                                      _gender = newValue;
+                                  child: CategorySelector(
+                                    setCategory: (cat) {
+                                      this._gender = cat;
+                                      print("Gender ${this._gender}");
                                     },
                                   ),
                                 ),
@@ -316,38 +257,11 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                   canvasColor: Colors.red,
                                 ),
                                 child: ButtonTheme(
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.red,
-                                      icon: Icon(
-                                        Icons.location_city,
-                                        color: Colors.red[600],
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                            24.0,
-                                          ),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    hint: Text(
-                                      "Seleziona l'ufficio AVIS",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    iconEnabledColor: Colors.white,
-                                    elevation: 18,
-                                    value: _locationAVIS,
-                                    isDense: true,
-                                    items: createListItem(),
-                                    onChanged: (newValue) {
-                                      _locationAVIS = newValue;
+                                  child: OfficeSelector(
+                                    officeMailsAndNames: _officeMailsAndNames,
+                                    setOffice: (mail) {
+                                      this._locationAVIS = mail;
+                                      print("Mail: ${this._locationAVIS}");
                                     },
                                   ),
                                 ),
@@ -361,6 +275,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 hint: "Luogo",
                                 onSaved: (newValue) {
                                   this._birthPlace = newValue;
+                                  print("Luogo: ${this._birthPlace}");
                                 },
                                 isPass: false,
                               ),
@@ -401,7 +316,8 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                   ),
                                 ),
                                 onChanged: (DateTime newDate) {
-                                  _birthday = newDate;
+                                  this._birthday = newDate;
+                                  print("Data ${this._birthday}");
                                 },
                                 onShowPicker: (context, currentValue) async {
                                   _birthday = await showDatePicker(
@@ -460,7 +376,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 6),
                               child: AutoSizeText(
-                                widget.email +
+                                widget.credentials.getMail() +
                                     " registrati alla piattaforma come nuovo utente e compila i seguenti campi",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -490,4 +406,166 @@ class Consts {
 
   static const double padding = 16.0;
   static const double avatarRadius = 66.0;
+}
+
+class OfficeSelector extends StatefulWidget {
+  final Map<String, String> officeMailsAndNames;
+  final Function setOffice;
+  OfficeSelector(
+      {@required this.officeMailsAndNames, @required this.setOffice});
+  @override
+  _OfficeSelectorState createState() => _OfficeSelectorState();
+}
+
+class _OfficeSelectorState extends State<OfficeSelector> {
+  String _selectedOfficeName;
+
+  List<DropdownMenuItem> createListItem() {
+    List<DropdownMenuItem> listOfficeItem = new List<DropdownMenuItem>();
+    widget.officeMailsAndNames.forEach((key, value) {
+      listOfficeItem.add(new DropdownMenuItem(
+        value: key,
+        child: Container(
+          child: Text(
+            value,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ));
+    });
+    return listOfficeItem;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedOfficeName = widget.officeMailsAndNames.keys.first;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField(
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.red,
+        icon: Icon(
+          Icons.location_city,
+          color: Colors.red[600],
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(
+              24.0,
+            ),
+          ),
+          borderSide: BorderSide(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      hint: Text(
+        "Seleziona l'ufficio AVIS",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      iconEnabledColor: Colors.white,
+      elevation: 18,
+      value: _selectedOfficeName,
+      isDense: true,
+      items: createListItem(),
+      onChanged: (newValue) {
+        setState(() {
+          widget.setOffice(newValue);
+          _selectedOfficeName = newValue;
+        });
+      },
+    );
+  }
+}
+
+class CategorySelector extends StatefulWidget {
+  final Function setCategory;
+  CategorySelector({@required this.setCategory});
+  @override
+  _CategorySelectorState createState() => _CategorySelectorState();
+}
+
+class _CategorySelectorState extends State<CategorySelector> {
+  DonorCategory _selectedCategory;
+  String donorCategoryToString(DonorCategory don) {
+    switch (don) {
+      case DonorCategory.MAN:
+        return "Uomo";
+      case DonorCategory.FERTILEWOMAN:
+        return "Donna fertile";
+      case DonorCategory.NONFERTILEWOMAN:
+        return "Donna non fertile";
+      default:
+        return "Altro";
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = DonorCategory.MAN;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField(
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.red,
+        icon: Icon(
+          Icons.streetview,
+          color: Colors.red[600],
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(
+              24.0,
+            ),
+          ),
+          borderSide: BorderSide(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      hint: Text(
+        "Seleziona il sesso",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      iconEnabledColor: Colors.white,
+      elevation: 18,
+      value: _selectedCategory,
+      isDense: true,
+      items: <DonorCategory>[
+        DonorCategory.MAN,
+        DonorCategory.FERTILEWOMAN,
+        DonorCategory.NONFERTILEWOMAN
+      ].map((DonorCategory value) {
+        return new DropdownMenuItem<DonorCategory>(
+          value: value,
+          child: new Text(
+            donorCategoryToString(value),
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        );
+      }).toList(),
+      onChanged: (newValue) {
+        setState(() {
+          widget.setCategory(newValue);
+          _selectedCategory = newValue;
+        });
+      },
+    );
+  }
 }

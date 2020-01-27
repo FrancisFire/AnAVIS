@@ -92,8 +92,9 @@ class _MainCardDonorRecapDonationState
                       // riferimento, non capisco il perchè
                       await _createFileFromString(
                           donationReport.getReportFile(),
-                          donationReport.getReportId());
-                      OpenFile.open('$dir/${donationReport.getReportId()}.pdf');
+                          widget.closedPrenotation.getId());
+                      OpenFile.open(
+                          '$dir/${widget.closedPrenotation.getId()}.pdf');
                     },
                     child: CircleAvatar(
                       radius: 16,

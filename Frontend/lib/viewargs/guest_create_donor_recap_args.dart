@@ -1,21 +1,16 @@
+import 'package:anavis/models/authcredentials.dart';
 import 'package:anavis/models/donor.dart';
 
 class GuestCreateDonorRecapArgs {
-  String _email;
-  String _password;
+  AuthCredentials _credentials;
   Donor _donor;
-  GuestCreateDonorRecapArgs(String email, String password, Donor donor) {
-    this._email = email;
-    this._password = password;
+  GuestCreateDonorRecapArgs(AuthCredentials credentials, Donor donor) {
+    this._credentials = credentials;
     this._donor = donor;
   }
 
-  String getEmail() {
-    return _email;
-  }
-
-  String getPassword() {
-    return _password;
+  AuthCredentials getCredentials() {
+    return _credentials;
   }
 
   Donor getDonor() {

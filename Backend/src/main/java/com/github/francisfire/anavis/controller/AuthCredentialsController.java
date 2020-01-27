@@ -38,7 +38,7 @@ public class AuthCredentialsController {
 
 	@Autowired
 	private OfficeServices officeServices;
-	
+
 	@SuppressWarnings("unused")
 	@Autowired
 	private AccessCheckerComponent accessCheckerComponent;
@@ -54,7 +54,7 @@ public class AuthCredentialsController {
 	public Role getUserRole(@PathVariable("mail") String mail) {
 		return authCredentialsServices.getAuthCredentialsInstance(mail).getRole();
 	}
-	
+
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/")
 	public Set<AuthCredentials> getAuthCredentials() {
@@ -64,15 +64,30 @@ public class AuthCredentialsController {
 	@PreAuthorize("permitAll")
 	@PostMapping("/donor")
 	public boolean addDonorCredentials(@RequestBody UserAndDonor userAndDonor) {
-		donorServices.addDonor(userAndDonor.donor);
-		return authCredentialsServices.addCredentials(userAndDonor.authCredentials);
+		int leftDonationsInYear = 4;
+		switch (userAndDonor.donor.getCategory()) {
+		case MAN:
+		case NONFERTILEWOMAN:
+			leftDonationsInYear = 4;
+			break;
+		case FERTILEWOMAN:
+			leftDonationsInYear = 2;
+			break;
+		}
+		userAndDonor.donor.setLeftDonationsInYear(leftDonationsInYear);
+		userAndDonor.donor.setCanDonate(true);
+		return (donorServices.addDonor(userAndDonor.donor))
+				? authCredentialsServices.addCredentials(userAndDonor.authCredentials)
+				: false;
+
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/office")
 	public boolean addOfficeCredentials(@RequestBody UserAndOffice userAndOffice) {
-		officeServices.addOffice(userAndOffice.office);
-		return authCredentialsServices.addCredentials(userAndOffice.authCredentials);
+		return (officeServices.addOffice(userAndOffice.office))
+				? authCredentialsServices.addCredentials(userAndOffice.authCredentials)
+				: false;
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
