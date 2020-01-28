@@ -12,6 +12,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
 class GuestCreateDonorView extends StatefulWidget {
@@ -57,6 +58,13 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
       ),
       backgroundColor: Colors.orange,
       onPressed: () {
+        print("NOME: " + a);
+        print("COGNOME: " + b);
+        print("BIRTHDAT: " + c.toString());
+        print("PLACE: " + d);
+        print("LOCATION AVIS: " + f.toString());
+        print("GENDER:" + e.toString());
+        print("HE");
         if (a != null &&
             b != null &&
             (c != DateTime.now() && c.toString().isNotEmpty && c != null) &&
@@ -323,8 +331,11 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                   _birthday = await showDatePicker(
                                     context: context,
                                     firstDate: DateTime(1900),
-                                    initialDate: currentValue ?? DateTime.now(),
-                                    lastDate: DateTime.now(),
+                                    initialDate: currentValue ??
+                                        DateTime.now()
+                                            .subtract(new Duration(days: 6570)),
+                                    lastDate: DateTime.now()
+                                        .subtract(new Duration(days: 6570)),
                                   );
                                   if (_birthday != null) {
                                     return _birthday;

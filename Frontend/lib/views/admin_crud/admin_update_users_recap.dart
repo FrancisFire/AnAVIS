@@ -70,72 +70,68 @@ class _AdminUpdateRecapState extends State<AdminUpdateRecap> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 20.0,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Conferma della modifica',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 42,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              'Conferma della modifica',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                backgroundColor: Colors.red,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                right: 16.0,
+                                left: 16.0,
+                              ),
+                              child: RichText(
                                 textAlign: TextAlign.center,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 16.0,
-                                  left: 16.0,
-                                ),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    text: 'La modifica per la mail ',
-                                    style: TextStyle(
-                                      color: Colors.grey[850],
-                                      fontFamily: 'Rubik',
-                                      fontSize: 24,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: widget.email,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' con la password ',
-                                      ),
-                                      TextSpan(
-                                        text: widget.password,
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: '.',
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            '\n\nSi desidera proseguire con la modifica o declinare?',
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          color: Colors.grey[700],
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
+                                text: TextSpan(
+                                  text: 'La modifica per la mail ',
+                                  style: TextStyle(
+                                    color: Colors.grey[850],
+                                    fontFamily: 'Rubik',
+                                    fontSize: 24,
                                   ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: widget.email,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' con la password ',
+                                    ),
+                                    TextSpan(
+                                      text: widget.password,
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '.',
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '\n\nSi desidera proseguire con la modifica o declinare?',
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.grey[700],
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         ButtonBarTheme(
                           data: ButtonBarThemeData(
@@ -165,6 +161,7 @@ class _AdminUpdateRecapState extends State<AdminUpdateRecap> {
                                       child: Icon(
                                         Icons.clear,
                                         size: 42,
+                                        color: Colors.white,
                                       ),
                                       onPressed: () {
                                         Navigator.popUntil(context,
@@ -196,6 +193,7 @@ class _AdminUpdateRecapState extends State<AdminUpdateRecap> {
                                       child: Icon(
                                         Icons.check,
                                         size: 42,
+                                        color: Colors.white,
                                       ),
                                       onPressed: () {
                                         this.postRequest().then((status) {

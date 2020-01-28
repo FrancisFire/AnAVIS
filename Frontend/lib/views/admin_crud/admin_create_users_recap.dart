@@ -73,81 +73,77 @@ class _AdminCreateRecapState extends State<AdminCreateRecap> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 20.0,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Conferma della registrazione',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 42,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              'Conferma della registrazione',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                backgroundColor: Colors.red,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                right: 16.0,
+                                left: 16.0,
+                              ),
+                              child: RichText(
                                 textAlign: TextAlign.center,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 16.0,
-                                  left: 16.0,
-                                ),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    text: 'La registrazione per l\'ufficio di ',
-                                    style: TextStyle(
-                                      color: Colors.grey[850],
-                                      fontFamily: 'Rubik',
-                                      fontSize: 24,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: widget.city,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' con la mail ',
-                                      ),
-                                      TextSpan(
-                                        text: widget.email,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' e la password ',
-                                      ),
-                                      TextSpan(
-                                        text: widget.password,
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: '.',
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            '\n\nSi desidera proseguire con la registrazione o declinare?',
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          color: Colors.grey[700],
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
+                                text: TextSpan(
+                                  text: 'La registrazione per l\'ufficio di ',
+                                  style: TextStyle(
+                                    color: Colors.grey[850],
+                                    fontFamily: 'Rubik',
+                                    fontSize: 24,
                                   ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: widget.city,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' con la mail ',
+                                    ),
+                                    TextSpan(
+                                      text: widget.email,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' e la password ',
+                                    ),
+                                    TextSpan(
+                                      text: widget.password,
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '.',
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '\n\nSi desidera proseguire con la registrazione o declinare?',
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.grey[700],
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         ButtonBarTheme(
                           data: ButtonBarThemeData(
@@ -177,6 +173,7 @@ class _AdminCreateRecapState extends State<AdminCreateRecap> {
                                       child: Icon(
                                         Icons.clear,
                                         size: 42,
+                                        color: Colors.white,
                                       ),
                                       onPressed: () {
                                         Navigator.popUntil(context,
@@ -208,6 +205,7 @@ class _AdminCreateRecapState extends State<AdminCreateRecap> {
                                       child: Icon(
                                         Icons.check,
                                         size: 42,
+                                        color: Colors.white,
                                       ),
                                       onPressed: () {
                                         this.postRequest().then((status) {

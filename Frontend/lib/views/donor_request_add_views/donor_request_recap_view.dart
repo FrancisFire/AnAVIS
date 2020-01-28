@@ -104,82 +104,78 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 20.0,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Conferma della richiesta',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 42,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              'Conferma della richiesta',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                backgroundColor: Colors.red,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                right: 16.0,
+                                left: 16.0,
+                              ),
+                              child: RichText(
                                 textAlign: TextAlign.center,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 16.0,
-                                  left: 16.0,
-                                ),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    text:
-                                        'La donazione verrà effettuata il giorno ',
-                                    style: TextStyle(
-                                      color: Colors.grey[850],
-                                      fontFamily: 'Rubik',
-                                      fontSize: 24,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: dayValue,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' alle ore ',
-                                      ),
-                                      TextSpan(
-                                        text: hourValue,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' nell\'ufficio di ',
-                                      ),
-                                      TextSpan(
-                                        text: widget.office,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: '.',
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            '\n\nSi desidera proseguire con la richiesta o declinare?',
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          color: Colors.grey[700],
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
+                                text: TextSpan(
+                                  text:
+                                      'La donazione verrà effettuata il giorno ',
+                                  style: TextStyle(
+                                    color: Colors.grey[850],
+                                    fontFamily: 'Rubik',
+                                    fontSize: 24,
                                   ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: dayValue,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' alle ore ',
+                                    ),
+                                    TextSpan(
+                                      text: hourValue,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' nell\'ufficio di ',
+                                    ),
+                                    TextSpan(
+                                      text: widget.office,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '.',
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '\n\nSi desidera proseguire con la richiesta o declinare?',
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.grey[700],
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         ButtonBarTheme(
                           data: ButtonBarThemeData(
@@ -209,6 +205,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                       child: Icon(
                                         Icons.clear,
                                         size: 42,
+                                        color: Colors.white,
                                       ),
                                       onPressed: () {
                                         Navigator.popUntil(context,
@@ -240,6 +237,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
                                       child: Icon(
                                         Icons.check,
                                         size: 42,
+                                        color: Colors.white,
                                       ),
                                       onPressed: () {
                                         this.postRequest().then((status) {

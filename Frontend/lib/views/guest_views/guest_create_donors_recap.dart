@@ -67,83 +67,79 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 20.0,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Conferma della registrazione',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 42,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              'Conferma della registrazione',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                backgroundColor: Colors.red,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                right: 16.0,
+                                left: 16.0,
+                              ),
+                              child: RichText(
                                 textAlign: TextAlign.center,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 16.0,
-                                  left: 16.0,
-                                ),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    text: 'La registrazione per l\'utente ',
-                                    style: TextStyle(
-                                      color: Colors.grey[850],
-                                      fontFamily: 'Rubik',
-                                      fontSize: 24,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: widget.credentials.getMail(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' con la password ',
-                                      ),
-                                      TextSpan(
-                                        text: widget.credentials.getPassword(),
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' per il donatore ',
-                                      ),
-                                      TextSpan(
-                                        text: widget.donor.getName() +
-                                            " " +
-                                            widget.donor.getSurname(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: '.',
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            '\n\nSi desidera proseguire con la registrazione o annullare?',
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          color: Colors.grey[700],
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
+                                text: TextSpan(
+                                  text: 'La registrazione per l\'utente ',
+                                  style: TextStyle(
+                                    color: Colors.grey[850],
+                                    fontFamily: 'Rubik',
+                                    fontSize: 24,
                                   ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: widget.credentials.getMail(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' con la password ',
+                                    ),
+                                    TextSpan(
+                                      text: widget.credentials.getPassword(),
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' per il donatore ',
+                                    ),
+                                    TextSpan(
+                                      text: widget.donor.getName() +
+                                          " " +
+                                          widget.donor.getSurname(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '.',
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '\n\nSi desidera proseguire con la registrazione o annullare?',
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.grey[700],
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         ButtonBarTheme(
                           data: ButtonBarThemeData(
@@ -173,6 +169,7 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                                       child: Icon(
                                         Icons.clear,
                                         size: 42,
+                                        color: Colors.white,
                                       ),
                                       onPressed: () {
                                         Navigator.pushReplacementNamed(
@@ -205,6 +202,7 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                                       elevation: 22,
                                       child: Icon(
                                         Icons.check,
+                                        color: Colors.white,
                                         size: 42,
                                       ),
                                       onPressed: () {
