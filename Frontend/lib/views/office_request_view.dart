@@ -123,25 +123,19 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                           children: <Widget>[
                             ButtonForCardBottom(
                               icon: Icon(
-                                Icons.thumb_down,
+                                Icons.thumb_up,
                                 color: Colors.white,
                               ),
-                              color: Colors.red,
+                              color: Colors.orange,
                               onTap: () {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
                                     return ConfirmAlertDialog(
+                                      question:
+                                          "Approvare o declinare la richiesta?",
+                                      denyText: "Declina",
                                       denyFunction: () {
-                                        Navigator.popUntil(context,
-                                            ModalRoute.withName('OfficeView'));
-                                        ConfirmationFlushbar(
-                                          "Operazione annullata",
-                                          "L'operazione è stata annulata correttamente",
-                                          false,
-                                        ).show(context);
-                                      },
-                                      confirmFunction: () {
                                         RequestService(context)
                                             .denyRequest(
                                                 _requests[index].getId())
@@ -152,7 +146,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                                 ModalRoute.withName(
                                                     'OfficeView'));
                                             ConfirmationFlushbar(
-                                              "Operazione effettuata",
+                                              "Richiesta declinata",
                                               "L'operazione è stata effettuata correttamente",
                                               true,
                                             ).show(context);
@@ -162,38 +156,14 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                                 ModalRoute.withName(
                                                     'OfficeView'));
                                             ConfirmationFlushbar(
-                                              "Operazione non effettuata",
+                                              "Richiesta non declinata",
                                               "C'è stato un errore nell'esecuzione dell'operazione",
                                               false,
                                             ).show(context);
                                           }
                                         });
                                       },
-                                    );
-                                  },
-                                );
-                              },
-                              title: 'Elimina',
-                            ),
-                            ButtonForCardBottom(
-                              icon: Icon(
-                                Icons.thumb_up,
-                              ),
-                              color: Colors.green,
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return ConfirmAlertDialog(
-                                      denyFunction: () {
-                                        Navigator.popUntil(context,
-                                            ModalRoute.withName('OfficeView'));
-                                        ConfirmationFlushbar(
-                                          "Operazione annullata",
-                                          "L'operazione è stata annulata correttamente",
-                                          false,
-                                        ).show(context);
-                                      },
+                                      confirmText: "Approva",
                                       confirmFunction: () {
                                         RequestService(context)
                                             .approveRequest(
@@ -205,7 +175,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                                 ModalRoute.withName(
                                                     'OfficeView'));
                                             ConfirmationFlushbar(
-                                              "Operazione effettuata",
+                                              "Richiesta approvata",
                                               "L'operazione è stata effettuata correttamente",
                                               true,
                                             ).show(context);
@@ -215,7 +185,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                                 ModalRoute.withName(
                                                     'OfficeView'));
                                             ConfirmationFlushbar(
-                                              "Operazione non effettuata",
+                                              "Richiesta non approvata",
                                               "C'è stato un errore nell'esecuzione dell'operazione",
                                               false,
                                             ).show(context);
@@ -226,7 +196,7 @@ class _OfficeRequestViewState extends State<OfficeRequestView> {
                                   },
                                 );
                               },
-                              title: 'Accetta',
+                              title: 'Gestisci',
                             ),
                           ],
                         ),

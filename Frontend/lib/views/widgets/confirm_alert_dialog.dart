@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 class ConfirmAlertDialog extends StatelessWidget {
   final Function confirmFunction;
   final Function denyFunction;
+  final String confirmText;
+  final String denyText;
+  final String question;
   ConfirmAlertDialog({
     @required this.confirmFunction,
     @required this.denyFunction,
+    @required this.confirmText,
+    @required this.denyText,
+    @required this.question,
   });
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,7 @@ class ConfirmAlertDialog extends StatelessWidget {
           Radius.circular(26.0),
         ),
       ),
-      content: Text("Confermare la scelta?"),
+      content: Text(question),
       actions: <Widget>[
         new FlatButton.icon(
           shape: RoundedRectangleBorder(
@@ -23,7 +29,7 @@ class ConfirmAlertDialog extends StatelessWidget {
               Radius.circular(26.0),
             ),
           ),
-          label: Text("Annulla"),
+          label: Text(denyText),
           icon: Icon(Icons.cancel),
           onPressed: denyFunction,
           color: Colors.red,
@@ -35,7 +41,7 @@ class ConfirmAlertDialog extends StatelessWidget {
             ),
           ),
           icon: Icon(Icons.check),
-          label: Text("Conferma"),
+          label: Text(confirmText),
           onPressed: confirmFunction,
           color: Colors.green,
         ),

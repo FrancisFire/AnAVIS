@@ -4,6 +4,7 @@ import 'package:anavis/viewargs/admin_update_users_args.dart';
 import 'package:anavis/viewargs/admin_update_users_recap_args.dart';
 import 'package:anavis/viewargs/donor_prenotationupdate_recap_args.dart';
 import 'package:anavis/viewargs/guest_create_donor_recap_args.dart';
+import 'package:anavis/viewargs/office_add_dateslot_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
 import 'package:anavis/viewargs/office_prenotation_time_view_args.dart';
 import 'package:anavis/views/admin_crud/admin_create_users.dart';
@@ -24,6 +25,7 @@ import 'package:anavis/views/donor_view.dart';
 import 'package:anavis/views/guest_views/guest_create_donors.dart';
 import 'package:anavis/views/guest_views/guest_create_donors_recap.dart';
 import 'package:anavis/views/login_view.dart';
+import 'package:anavis/views/office_add_dateslot_recap_view.dart';
 import 'package:anavis/views/office_add_dateslot_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_donor_view.dart';
 import 'package:anavis/views/office_prenotation_add_views/office_prenotation_recap_view.dart';
@@ -182,6 +184,21 @@ class RouteGenerator {
                   ),
               settings: RouteSettings(
                 name: 'OfficeAddDateslotView',
+              ));
+        }
+        return _errorRoute();
+
+      case '/office/insertdateslotview/recap':
+        if (args is OfficeAddDateslotRecapArgs) {
+          return MaterialPageRoute(
+              builder: (_) => OfficeAddDateslotRecapView(
+                    dateValue: args.getDateValue(),
+                    nicerTime: args.getNicerTime(),
+                    office: args.getOffice(),
+                    slots: args.getSlots(),
+                  ),
+              settings: RouteSettings(
+                name: 'OfficePrenotationRecap',
               ));
         }
         return _errorRoute();

@@ -220,12 +220,13 @@ class _OfficePrenotationRecapState extends State<OfficePrenotationRecap> {
                                     ),
                                     onPressed: () {
                                       PrenotationService(context)
-                                          .createPrenotation(new ActivePrenotation(
-                                              "${widget.donor}@${widget.office.getMail()}@${widget.time}-${rng.nextInt(500)}",
-                                              widget.office.getMail(),
-                                              widget.donor,
-                                              widget.time,
-                                              true))
+                                          .createPrenotation(
+                                              new ActivePrenotation(
+                                                  "",
+                                                  widget.office.getMail(),
+                                                  widget.donor,
+                                                  widget.time,
+                                                  true))
                                           .then((status) {
                                         if (status) {
                                           Navigator.popUntil(

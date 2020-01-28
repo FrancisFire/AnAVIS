@@ -30,6 +30,7 @@ public class RequestController {
 	@PreAuthorize("hasAuthority('DONOR')")
 	@PostMapping("")
 	public boolean createRequest(@RequestBody RequestPrenotation request) {
+		request.setId(request.getDonorMail() + "-" + request.getOfficeMail() + "-" + request.getHour().toString());
 		return requestServices.addRequest(request);
 	}
 

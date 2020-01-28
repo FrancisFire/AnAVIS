@@ -37,6 +37,8 @@ public class PrenotationController {
 	@PreAuthorize("hasAnyAuthority('OFFICE')")
 	@PostMapping("")
 	public boolean createPrenotation(@RequestBody ActivePrenotation prenotation) {
+		prenotation.setId(prenotation.getDonorMail() + "-" + prenotation.getOfficeMail() + "-"
+				+ prenotation.getHour().toString());
 		return prenotationServices.addPrenotation(prenotation);
 	}
 

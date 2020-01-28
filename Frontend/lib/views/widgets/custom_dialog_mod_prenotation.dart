@@ -29,8 +29,7 @@ class _DialogModificationPrenotationState
     extends State<DialogModificationPrenotation> {
   Donor _donor;
   String _newHour;
-  Map<String, String> _officeMailsAndNames;
-  List<DropdownMenuItem> _listOfficeItem, _listTimeItem;
+  List<DropdownMenuItem> _listTimeItem;
   List<TimeSlot> _availableTimeTables;
 
   Future<void> setOfficeTimeTablesByOffice(String officeMail) async {

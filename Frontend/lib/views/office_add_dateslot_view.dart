@@ -1,6 +1,7 @@
 import 'package:anavis/models/office.dart';
 import 'package:anavis/models/timeslot.dart';
 import 'package:anavis/services/office_service.dart';
+import 'package:anavis/viewargs/office_add_dateslot_recap_args.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:date_format/date_format.dart';
@@ -66,6 +67,14 @@ class BottomCardWidget extends StatefulWidget {
 }
 
 class _BottomCardWidgetState extends State<BottomCardWidget> {
+  static String restrictFractionalSeconds(String dateTime) =>
+      dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
+
+  static String nicerTime(String timeNotNice) {
+    return formatDate(DateTime.parse(restrictFractionalSeconds(timeNotNice)),
+        ["Data: ", dd, '-', mm, '-', yyyy, " | Orario: ", HH, ":", nn]);
+  }
+
   final format = DateFormat("yyyy-MM-dd HH:mm");
   @override
   void initState() {
@@ -74,30 +83,6 @@ class _BottomCardWidgetState extends State<BottomCardWidget> {
 
   int numberValue;
   DateTime dateValue;
-
-  Future<bool> addTimeTableSlot() async {
-    bool confirmation = await OfficeService(context).addTimeSlot(
-        widget.office.getMail(),
-        new TimeSlot(
-          formatDate(dateValue, [
-            '20',
-            yy,
-            '-',
-            mm,
-            '-',
-            dd,
-            'T',
-            HH,
-            ':',
-            nn,
-            ':',
-            ss,
-            '.000+0000',
-          ]),
-          numberValue,
-        ));
-    return confirmation;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,25 +212,16 @@ class _BottomCardWidgetState extends State<BottomCardWidget> {
                           false)
                       .show(context);
                 }
-                this.addTimeTableSlot().then((status) {
-                  if (status) {
-                    Navigator.popUntil(
-                        context, ModalRoute.withName('OfficeView'));
-                    ConfirmationFlushbar(
-                            "Inserimento confermato",
-                            "La nuova possibilità di prenotazione è stata creata con successo e sarà visualizzabile a breve dai donatori",
-                            true)
-                        .show(context);
-                  } else {
-                    Navigator.popUntil(
-                        context, ModalRoute.withName('OfficeView'));
-                    ConfirmationFlushbar(
-                            "Impossibile inserire",
-                            "Non è stato possibile effettuare l'inserimento, si prega di riprovare più tardi",
-                            false)
-                        .show(context);
-                  }
-                });
+                Navigator.pushReplacementNamed(
+                  context,
+                  '/office/insertdateslotview/recap',
+                  arguments: new OfficeAddDateslotRecapArgs(
+                    numberValue,
+                    dateValue,
+                    nicerTime(dateValue.toString()),
+                    widget.office,
+                  ),
+                );
               },
             ),
           )

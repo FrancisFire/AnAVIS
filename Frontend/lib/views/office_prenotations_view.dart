@@ -145,7 +145,7 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                                     ),
                                   );
                                 },
-                                title: 'Chiudi',
+                                title: 'Concludi',
                               ),
                               ButtonForCardBottom(
                                 icon: Icon(
@@ -178,6 +178,9 @@ class _OfficePrenotationViewState extends State<OfficePrenotationView> {
                                     context: context,
                                     builder: (context) {
                                       return ConfirmAlertDialog(
+                                        question: "Confermare eliminazione?",
+                                        confirmText: "Conferma",
+                                        denyText: "Annulla",
                                         denyFunction: () {
                                           Navigator.popUntil(
                                               context,

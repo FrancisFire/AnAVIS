@@ -168,6 +168,9 @@ class _AdminManageUserViewState extends State<AdminManageUserView> {
                                   showDialog(
                                     context: context,
                                     child: ConfirmAlertDialog(
+                                      confirmText: "Elimina",
+                                      denyText: "Annulla",
+                                      question: "Eliminare le credenziali?",
                                       denyFunction: () {
                                         Navigator.popUntil(context,
                                             ModalRoute.withName('AdminView'));

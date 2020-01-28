@@ -9,7 +9,6 @@ import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class DonorRequestRecap extends StatefulWidget {
   final String office;
@@ -25,7 +24,6 @@ class DonorRequestRecap extends StatefulWidget {
 }
 
 class _DonorRequestRecapState extends State<DonorRequestRecap> {
-  Random rng = new Random();
   String takeDay(String day) =>
       RegExp(r"Data: ?(.+?) ?\| ?Orario: ?\d\d:\d\d").firstMatch(day).group(1);
   String takeHour(String hour) =>
@@ -57,10 +55,7 @@ class _DonorRequestRecapState extends State<DonorRequestRecap> {
   Future<bool> postRequest() async {
     bool confirmation = await RequestService(context).createRequest(
       RequestPrenotation(
-          "${AppState().getUserMail()}@${widget.office}@${widget.time}-${rng.nextInt(500)}",
-          widget.office,
-          AppState().getUserMail(),
-          widget.time),
+          "", widget.office, AppState().getUserMail(), widget.time),
     );
     return confirmation;
   }
