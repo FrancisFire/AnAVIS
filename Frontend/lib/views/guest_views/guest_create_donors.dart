@@ -3,6 +3,7 @@ import 'package:anavis/models/donor.dart';
 import 'package:anavis/services/office_service.dart';
 
 import 'package:anavis/viewargs/guest_create_donor_recap_args.dart';
+import 'package:anavis/views/login_view.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
@@ -40,17 +41,28 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
     await Future.wait([
       this.setOfficeMailsAndNames(),
     ]);
+    _gender = DonorCategory.MAN;
   }
 
   Future<void> setOfficeMailsAndNames() async {
     _officeMailsAndNames =
         await OfficeService(context).getOfficeMailsAndNames();
+    _locationAVIS = _officeMailsAndNames.keys.first;
+  }
+
+  String getOfficeByMail(String mail) {
+    String office = "";
+    _officeMailsAndNames.forEach((key, value) {
+      if (key == mail) {
+        office = value;
+      }
+    });
+    return office;
   }
 
   final format = DateFormat("dd-MM-yyyy");
 
-  Widget fab(
-      String a, String b, DateTime c, String d, String f, DonorCategory e) {
+  Widget fab() {
     return FloatingActionButton(
       child: Icon(
         Icons.person_add,
@@ -58,19 +70,14 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
       ),
       backgroundColor: Colors.orange,
       onPressed: () {
-        print("NOME: " + a);
-        print("COGNOME: " + b);
-        print("BIRTHDAT: " + c.toString());
-        print("PLACE: " + d);
-        print("LOCATION AVIS: " + f.toString());
-        print("GENDER:" + e.toString());
-        print("HE");
-        if (a != null &&
-            b != null &&
-            (c != DateTime.now() && c.toString().isNotEmpty && c != null) &&
-            d != null &&
-            e != null &&
-            f != null) {
+        if (this._name != null &&
+            this._surname != null &&
+            (this._birthday != DateTime.now() &&
+                this._birthday.toString().isNotEmpty &&
+                this._birthday != null) &&
+            this._birthPlace != null &&
+            this._gender != null &&
+            this._locationAVIS != null) {
           Navigator.pushReplacementNamed(
             context,
             '/guest/createuser/recap',
@@ -99,6 +106,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                 ]),
                 this._birthPlace,
               ),
+              this.getOfficeByMail(this._locationAVIS),
             ),
           );
         } else {
@@ -126,14 +134,7 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
           case ConnectionState.done:
             if (snapshot.hasError) return new RequestCircularLoading();
             return Scaffold(
-              floatingActionButton: fab(
-                this._name,
-                this._surname,
-                this._birthday,
-                this._birthPlace,
-                this._locationAVIS,
-                this._gender,
-              ),
+              floatingActionButton: fab(),
               body: CustomPaint(
                 painter: Painter(
                   first: Colors.red[400],
@@ -183,28 +184,62 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    leading: Icon(
-                                      Icons.warning,
-                                      color: Colors.white,
-                                      size: 52,
-                                    ),
-                                    subtitle: Text(
-                                      "Una volta completati tutti i campi potrai cliccare sul pulsante in basso a destra per terminare la registrazione",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
+                                  child: Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.warning,
+                                          color: Colors.white,
+                                          size: 52,
+                                        ),
+                                        subtitle: Text(
+                                          "Una volta completati tutti i campi potrai cliccare sul pulsante in basso a destra per terminare la registrazione",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        dense: true,
+                                        title: Text(
+                                          "Attenzione!",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    dense: true,
-                                    title: Text(
-                                      "Attenzione!",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                      ButtonBar(
+                                        children: <Widget>[
+                                          RaisedButton.icon(
+                                              elevation: 4,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(18.0),
+                                                ),
+                                              ),
+                                              color: Colors.orange,
+                                              icon: Icon(
+                                                Icons.home,
+                                                color: Colors.white,
+                                              ),
+                                              label: Text(
+                                                "Torna alla homepage",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  '/',
+                                                  arguments: new LoginView(),
+                                                );
+                                              })
+                                        ],
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -217,7 +252,6 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 ),
                                 onSaved: (newValue) {
                                   this._name = newValue;
-                                  print("Nome ${this._name}");
                                 },
                                 isPass: false,
                               ),
@@ -230,7 +264,6 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 hint: "Cognome",
                                 onSaved: (newValue) {
                                   this._surname = newValue;
-                                  print("Cognome ${this._surname}");
                                 },
                                 isPass: false,
                               ),
@@ -248,7 +281,6 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                   child: CategorySelector(
                                     setCategory: (cat) {
                                       this._gender = cat;
-                                      print("Gender ${this._gender}");
                                     },
                                   ),
                                 ),
@@ -269,7 +301,6 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                     officeMailsAndNames: _officeMailsAndNames,
                                     setOffice: (mail) {
                                       this._locationAVIS = mail;
-                                      print("Mail: ${this._locationAVIS}");
                                     },
                                   ),
                                 ),
@@ -283,7 +314,6 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 hint: "Luogo",
                                 onSaved: (newValue) {
                                   this._birthPlace = newValue;
-                                  print("Luogo: ${this._birthPlace}");
                                 },
                                 isPass: false,
                               ),
@@ -325,7 +355,6 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 ),
                                 onChanged: (DateTime newDate) {
                                   this._birthday = newDate;
-                                  print("Data ${this._birthday}");
                                 },
                                 onShowPicker: (context, currentValue) async {
                                   _birthday = await showDatePicker(

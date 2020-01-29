@@ -68,15 +68,6 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarDividerColor: Colors.transparent,
-      ),
-    );
     return FutureBuilder(
       future: this.initFuture(),
       builder: (context, snapshot) {
@@ -88,131 +79,140 @@ class _OfficeViewState extends State<OfficeView> with TickerProviderStateMixin {
             return new RequestCircularLoading();
           case ConnectionState.done:
             return Scaffold(
-              body: Stack(
-                children: <Widget>[
-                  ClipPath(
-                    clipper: CustomShapeClipper(),
-                    child: Container(
-                      height: (MediaQuery.of(context).size.height / 3),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                          stops: [0.1, 0.5, 0.7, 0.9],
-                          colors: [
-                            Colors.red[800],
-                            Colors.red[700],
-                            Colors.red[600],
-                            Colors.red[400],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 46, left: 16, right: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 24,
-                        ),
-                        Flexible(
-                          child: AutoSizeText(
-                            'Ufficio AVIS di',
-                            style: TextStyle(
-                              fontSize: 26,
-                              color: Colors.white,
-                            ),
-                            maxLines: 1,
-                          ),
-                        ),
-                        Flexible(
-                          child: AutoSizeText(
-                            this._office.getPlace(),
-                            style: TextStyle(
-                              fontSize: 52,
-                              color: Colors.white,
-                            ),
-                            maxLines: 1,
-                          ),
-                        ),
-                        Flexible(
-                          child: Row(
-                            children: <Widget>[
-                              Chip(
-                                backgroundColor: Colors.red[900],
-                                elevation: 14,
-                                avatar: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: Icon(
-                                    Icons.web_asset,
-                                    color: Colors.red,
-                                    size: 18,
-                                  ),
-                                ),
-                                label: Text(
-                                  'Sito principale',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Chip(
-                                backgroundColor: Colors.red[900],
-                                elevation: 14,
-                                avatar: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: Icon(
-                                    Icons.phone_in_talk,
-                                    color: Colors.red,
-                                    size: 18,
-                                  ),
-                                ),
-                                label: Text(
-                                  'Numeri utili',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
+              body: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: Brightness.light,
+                  systemNavigationBarColor: Colors.transparent,
+                  systemNavigationBarIconBrightness: Brightness.dark,
+                  systemNavigationBarDividerColor: Colors.transparent,
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    ClipPath(
+                      clipper: CustomShapeClipper(),
+                      child: Container(
+                        height: (MediaQuery.of(context).size.height / 3),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            stops: [0.1, 0.5, 0.7, 0.9],
+                            colors: [
+                              Colors.red[800],
+                              Colors.red[700],
+                              Colors.red[600],
+                              Colors.red[400],
                             ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height / 3,
-                      bottom: 64,
-                      right: 8,
-                      left: 8,
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 46, left: 16, right: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 24,
+                          ),
+                          Flexible(
+                            child: AutoSizeText(
+                              'Ufficio AVIS di',
+                              style: TextStyle(
+                                fontSize: 26,
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
+                            ),
+                          ),
+                          Flexible(
+                            child: AutoSizeText(
+                              this._office.getPlace(),
+                              style: TextStyle(
+                                fontSize: 52,
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
+                            ),
+                          ),
+                          Flexible(
+                            child: Row(
+                              children: <Widget>[
+                                Chip(
+                                  backgroundColor: Colors.red[900],
+                                  elevation: 14,
+                                  avatar: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: Icon(
+                                      Icons.web_asset,
+                                      color: Colors.red,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  label: Text(
+                                    'Sito principale',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Chip(
+                                  backgroundColor: Colors.red[900],
+                                  elevation: 14,
+                                  avatar: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: Icon(
+                                      Icons.phone_in_talk,
+                                      color: Colors.red,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  label: Text(
+                                    'Numeri utili',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Card(
-                      color: Colors.white,
-                      elevation: 7,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(26.0),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 3,
+                        bottom: 64,
+                        right: 8,
+                        left: 8,
+                      ),
+                      child: Card(
+                        color: Colors.white,
+                        elevation: 7,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(26.0),
+                          ),
+                        ),
+                        child: Center(
+                          child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: OfficeTableCalendar(
+                                events: this._nicerEvents,
+                              )),
                         ),
                       ),
-                      child: Center(
-                        child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                            ),
-                            child: OfficeTableCalendar(
-                              events: this._nicerEvents,
-                            )),
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               floatingActionButton: ButtonFABHomePage(
                 iconFab: iconFAB(),

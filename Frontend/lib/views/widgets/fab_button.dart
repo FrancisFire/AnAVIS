@@ -6,15 +6,25 @@ class FABRightArrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      backgroundColor: Colors.red,
-      child: Icon(
-        Icons.chevron_right,
-        size: 40,
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: RaisedButton(
+        color: Colors.red,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(64.0),
+          ),
+        ),
+        child: Icon(
+          Icons.chevron_right,
+          size: 40,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          onPressed();
+        },
       ),
-      onPressed: () {
-        onPressed();
-      },
     );
   }
 }

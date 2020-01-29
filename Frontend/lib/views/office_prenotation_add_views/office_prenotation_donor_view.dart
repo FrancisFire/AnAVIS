@@ -8,6 +8,7 @@ import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/message_painter.dart';
 import 'package:flutter/material.dart';
+import '../office_view.dart';
 
 class OfficePrenotationDonorView extends StatefulWidget {
   final Office office;
@@ -94,18 +95,32 @@ class _OfficePrenotationDonorViewState
               );
             } else
               return Scaffold(
-                floatingActionButton: _donorSelected != null
-                    ? FABRightArrow(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            '/office/prenotations/timeview',
-                            arguments: new OfficePrenotationTimeViewArgs(
-                                _donorSelected, widget.office),
-                          );
-                        },
-                      )
-                    : null,
+                floatingActionButton: Stack(
+                  children: <Widget>[
+                    _donorSelected != null
+                        ? FABRightArrow(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                '/office/prenotations/timeview',
+                                arguments: new OfficePrenotationTimeViewArgs(
+                                    _donorSelected, widget.office),
+                              );
+                            },
+                          )
+                        : SizedBox(),
+                    FABLeftArrow(
+                      nameOffice: "Homepage",
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/office',
+                          arguments: new OfficeView(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
                 backgroundColor: Colors.white,
                 body: BuildDonorRequestWidget(
                   fetchItems: createListItem(),

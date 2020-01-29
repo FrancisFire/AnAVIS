@@ -1,9 +1,13 @@
 import 'package:anavis/viewargs/admin_create_users_recap_args.dart';
+import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
+import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:anavis/views/widgets/remove_glow.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+
+import '../admin_view.dart';
 
 class AdminCreateUserView extends StatefulWidget {
   @override
@@ -15,32 +19,41 @@ class _AdminCreateUserViewState extends State<AdminCreateUserView> {
   String _email;
   String _password;
 
-  Widget fab(String a, String b, String c) {
-    if (a != null && b != null && c != null) {
-      return FloatingActionButton(
-        child: Icon(
-          Icons.person_add,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.red[600],
-        onPressed: () {
+  Widget fab() {
+    return FloatingActionButton(
+      child: Icon(
+        Icons.person_add,
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.orange,
+      onPressed: () {
+        if (this._city != null &&
+            this._email != null &&
+            this._password != null) {
           Navigator.pushReplacementNamed(
             context,
             '/admin/createuser/recap',
             arguments: new AdminCreateRecapArgs(
-                this._city, this._email, this._password),
+              this._city,
+              this._email,
+              this._password,
+            ),
           );
-        },
-      );
-    } else {
-      return SizedBox();
-    }
+        } else {
+          new ConfirmationFlushbar(
+            "Compilare tutti i campi",
+            "Per procedere con la registrazione è fondamentale compilare tutti i campi visualizzati",
+            false,
+          ).show(context);
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: fab(_city, _email, _password),
+      floatingActionButton: fab(),
       body: CustomPaint(
         painter: Painter(
           first: Colors.red[400],
@@ -90,28 +103,61 @@ class _AdminCreateUserViewState extends State<AdminCreateUserView> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.warning,
-                              color: Colors.white,
-                              size: 52,
-                            ),
-                            subtitle: Text(
-                              "Una volta completati tutti i campi potrai cliccare sul pulsante in basso a destra per terminare la registrazione",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                leading: Icon(
+                                  Icons.warning,
+                                  color: Colors.white,
+                                  size: 52,
+                                ),
+                                subtitle: Text(
+                                  "Una volta completati tutti i campi potrai cliccare sul pulsante in basso a destra per terminare la registrazione",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                dense: true,
+                                title: Text(
+                                  "Attenzione!",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            ),
-                            dense: true,
-                            title: Text(
-                              "Attenzione!",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                              ButtonBar(
+                                children: <Widget>[
+                                  RaisedButton.icon(
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(18.0),
+                                        ),
+                                      ),
+                                      color: Colors.orange,
+                                      icon: Icon(
+                                        Icons.home,
+                                        color: Colors.white,
+                                      ),
+                                      label: Text(
+                                        "Torna alla homepage",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          '/admin',
+                                          arguments: new AdminView(),
+                                        );
+                                      })
+                                ],
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       ),
