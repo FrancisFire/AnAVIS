@@ -91,6 +91,7 @@ class RouteGenerator {
               builder: (_) => GuestCreateDonorRecap(
                     donor: args.getDonor(),
                     credentials: args.getCredentials(),
+                    officeName: args.getOfficeName(),
                   ),
               settings: RouteSettings(
                 name: 'GuestCreateUserRecap',

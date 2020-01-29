@@ -12,9 +12,11 @@ import 'package:flutter/material.dart';
 class GuestCreateDonorRecap extends StatefulWidget {
   final AuthCredentials credentials;
   final Donor donor;
+  final String officeName;
   GuestCreateDonorRecap({
     @required this.credentials,
     @required this.donor,
+    @required this.officeName,
   });
 
   @override
@@ -22,10 +24,22 @@ class GuestCreateDonorRecap extends StatefulWidget {
 }
 
 class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
+  String _officeName;
   Future<bool> postRequest() async {
     bool confirmation = await AuthCredentialsService(context)
         .addDonorCredentials(widget.donor, widget.credentials);
     return confirmation;
+  }
+
+  String getCategoryName(DonorCategory cat) {
+    switch (cat) {
+      case DonorCategory.MAN:
+        return "Uomo";
+      case DonorCategory.FERTILEWOMAN:
+        return "Donna fertile";
+      case DonorCategory.NONFERTILEWOMAN:
+        return "Donna non fertile";
+    }
   }
 
   @override
@@ -90,7 +104,7 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                               child: RichText(
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
-                                  text: 'La registrazione per l\'utente ',
+                                  text: 'Il nuovo utente, ',
                                   style: TextStyle(
                                     color: Colors.grey[850],
                                     fontFamily: 'Rubik',
@@ -98,29 +112,58 @@ class _GuestCreateDonorRecapState extends State<GuestCreateDonorRecap> {
                                   ),
                                   children: <TextSpan>[
                                     TextSpan(
-                                      text: widget.credentials.getMail(),
+                                      text:
+                                          "${widget.donor.getSurname()} ${widget.donor.getName()} (${getCategoryName(widget.donor.getCategory())})",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     TextSpan(
-                                      text: ' con la password ',
+                                      text: ', nato a ',
                                     ),
                                     TextSpan(
-                                      text: widget.credentials.getPassword(),
+                                      text: "${widget.donor.getBirthPlace()}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' il ',
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          "${widget.donor.getBirthday().substring(0, 10)}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          ', desidera iscriversi con la mail ',
+                                    ),
+                                    TextSpan(
+                                      text: "${widget.credentials.getMail()}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' e la password ',
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          "${widget.credentials.getPassword()}",
                                       style: TextStyle(
                                         fontStyle: FontStyle.italic,
                                       ),
                                     ),
                                     TextSpan(
-                                      text: ' per il donatore ',
+                                      text: ' presso l\'ufficio di ',
                                     ),
                                     TextSpan(
-                                      text: widget.donor.getName() +
-                                          " " +
-                                          widget.donor.getSurname(),
+                                      text: "${widget.officeName}",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
                                       ),
                                     ),
                                     TextSpan(
