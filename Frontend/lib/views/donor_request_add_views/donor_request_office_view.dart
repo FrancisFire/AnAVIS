@@ -4,6 +4,8 @@ import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:flutter/material.dart';
 
+import '../donor_view.dart';
+
 class DonorRequestOfficeView extends StatefulWidget {
   @override
   _DonorRequestOfficeViewState createState() => _DonorRequestOfficeViewState();
@@ -61,15 +63,31 @@ class _DonorRequestOfficeViewState extends State<DonorRequestOfficeView> {
           case ConnectionState.done:
             if (snapshot.hasError) return new RequestCircularLoading();
             return Scaffold(
-              floatingActionButton: _officeSelected != null
-                  ? FABRightArrow(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, '/donor/officerequest/timeview',
-                            arguments: _officeSelected);
-                      },
-                    )
-                  : null,
+              floatingActionButton: Stack(
+                children: <Widget>[
+                  _officeSelected != null
+                      ? FABRightArrow(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/donor/officerequest/timeview',
+                              arguments: _officeSelected,
+                            );
+                          },
+                        )
+                      : SizedBox(),
+                  FABLeftArrow(
+                    nameOffice: "Homepage",
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        '/donor',
+                        arguments: new DonorView(),
+                      );
+                    },
+                  ),
+                ],
+              ),
               body: BuildDonorRequestWidget(
                 fetchItems: createListItem(),
                 title: "Ufficio",

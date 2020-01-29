@@ -1,6 +1,8 @@
 import 'package:anavis/models/authcredentials.dart';
 import 'package:anavis/viewargs/admin_update_users_recap_args.dart';
+import 'package:anavis/views/admin_view.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
+import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:anavis/views/widgets/remove_glow.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -18,28 +20,35 @@ class _AdminUpdateUserViewState extends State<AdminUpdateUserView> {
   String _password;
 
   Widget fab() {
-    if (_password != null) {
-      return FloatingActionButton(
-        child: Icon(
-          Icons.person_add,
-          color: Colors.white,
+    return Stack(
+      children: <Widget>[
+        _password != null
+            ? FABRightArrow(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/admin/updateuser/recap',
+                    arguments: new AdminUpdateRecapArgs(
+                      widget.oldMail,
+                      this._password,
+                      widget.role,
+                    ),
+                  );
+                },
+              )
+            : SizedBox(),
+        FABLeftArrow(
+          nameOffice: "Homepage",
+          onPressed: () {
+            Navigator.pushReplacementNamed(
+              context,
+              '/admin',
+              arguments: new AdminView(),
+            );
+          },
         ),
-        backgroundColor: Colors.red[600],
-        onPressed: () {
-          Navigator.pushReplacementNamed(
-            context,
-            '/admin/updateuser/recap',
-            arguments: new AdminUpdateRecapArgs(
-              widget.oldMail,
-              this._password,
-              widget.role,
-            ),
-          );
-        },
-      );
-    } else {
-      return SizedBox();
-    }
+      ],
+    );
   }
 
   @override

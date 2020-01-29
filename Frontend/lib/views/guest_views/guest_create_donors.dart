@@ -3,6 +3,7 @@ import 'package:anavis/models/donor.dart';
 import 'package:anavis/services/office_service.dart';
 
 import 'package:anavis/viewargs/guest_create_donor_recap_args.dart';
+import 'package:anavis/views/login_view.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
 import 'package:anavis/views/widgets/loading_circular.dart';
@@ -183,28 +184,62 @@ class _GuestCreateDonorViewState extends State<GuestCreateDonorView> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    leading: Icon(
-                                      Icons.warning,
-                                      color: Colors.white,
-                                      size: 52,
-                                    ),
-                                    subtitle: Text(
-                                      "Una volta completati tutti i campi potrai cliccare sul pulsante in basso a destra per terminare la registrazione",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
+                                  child: Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.warning,
+                                          color: Colors.white,
+                                          size: 52,
+                                        ),
+                                        subtitle: Text(
+                                          "Una volta completati tutti i campi potrai cliccare sul pulsante in basso a destra per terminare la registrazione",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        dense: true,
+                                        title: Text(
+                                          "Attenzione!",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    dense: true,
-                                    title: Text(
-                                      "Attenzione!",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                      ButtonBar(
+                                        children: <Widget>[
+                                          RaisedButton.icon(
+                                              elevation: 4,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(18.0),
+                                                ),
+                                              ),
+                                              color: Colors.orange,
+                                              icon: Icon(
+                                                Icons.home,
+                                                color: Colors.white,
+                                              ),
+                                              label: Text(
+                                                "Torna alla homepage",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  '/',
+                                                  arguments: new LoginView(),
+                                                );
+                                              })
+                                        ],
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ),
                               ),

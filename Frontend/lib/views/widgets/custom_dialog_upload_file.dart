@@ -7,6 +7,8 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../office_view.dart';
+
 class CustomDialogUploadFile extends StatefulWidget {
   final ActivePrenotation prenotation;
 
@@ -106,6 +108,30 @@ class _CustomDialogUploadFileState extends State<CustomDialogUploadFile> {
                   ),
                 ),
                 color: Colors.indigo,
+              ),
+              RaisedButton.icon(
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.white,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(26),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/office',
+                    arguments: new OfficeView(),
+                  );
+                },
+                label: Text(
+                  "Torna alla homepage",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+                color: Colors.grey,
               ),
             ],
           ),

@@ -9,6 +9,7 @@ import 'package:anavis/views/widgets/loading_circular.dart';
 import 'package:anavis/views/widgets/message_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
+import '../donor_view.dart';
 import 'donor_request_office_view.dart';
 
 class DonorRequestTimeView extends StatefulWidget {
@@ -99,25 +100,44 @@ class _DonorRequestTimeViewState extends State<DonorRequestTimeView> {
               );
             } else
               return Scaffold(
-                floatingActionButton: _timeSelected != null
-                    ? FABRightArrow(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, '/donor/officerequest/recap',
-                              arguments: new DonorRequestRecapArgs(
-                                  this.widget.office,
-                                  this._timeSelected,
-                                  this._timeFormatted));
-                        },
-                      )
-                    : FABLeftArrow(
-                        nameOffice: this._officeName,
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, '/donor/officerequest',
-                              arguments: new DonorRequestOfficeView());
-                        },
-                      ),
+                floatingActionButton: Stack(
+                  children: <Widget>[
+                    _timeSelected != null
+                        ? FABRightArrow(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, '/donor/officerequest/recap',
+                                  arguments: new DonorRequestRecapArgs(
+                                      this.widget.office,
+                                      this._timeSelected,
+                                      this._timeFormatted));
+                            },
+                          )
+                        : SizedBox(),
+                    FABLeftArrow(
+                      nameOffice: "Homepage",
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/donor',
+                          arguments: new DonorView(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                // floatingActionButton: _timeSelected != null
+                //     ? FABRightArrow(
+                //         onPressed: () {
+                //           Navigator.pushReplacementNamed(
+                //               context, '/donor/officerequest/recap',
+                //               arguments: new DonorRequestRecapArgs(
+                //                   this.widget.office,
+                //                   this._timeSelected,
+                //                   this._timeFormatted));
+                //         },
+                //       )
+                //     : SizedBox(),
                 body: BuildDonorRequestWidget(
                   fetchItems: createListItem(),
                   title: "Orario",

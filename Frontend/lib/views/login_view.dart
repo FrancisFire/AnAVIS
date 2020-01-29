@@ -26,8 +26,8 @@ class _LoginViewState extends State<LoginView> {
         AppState().setPass(data.password);
         AppState().setRole(role);
         _newDonor = false;
-        return null;
       }
+      return null;
     });
   }
 

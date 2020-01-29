@@ -1,9 +1,12 @@
 import 'package:anavis/viewargs/admin_create_users_recap_args.dart';
 import 'package:anavis/views/widgets/creation_field.dart';
+import 'package:anavis/views/widgets/fab_button.dart';
 import 'package:anavis/views/widgets/painter.dart';
 import 'package:anavis/views/widgets/remove_glow.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+
+import '../admin_view.dart';
 
 class AdminCreateUserView extends StatefulWidget {
   @override
@@ -16,25 +19,35 @@ class _AdminCreateUserViewState extends State<AdminCreateUserView> {
   String _password;
 
   Widget fab(String a, String b, String c) {
-    if (a != null && b != null && c != null) {
-      return FloatingActionButton(
-        child: Icon(
-          Icons.person_add,
-          color: Colors.white,
+    return Stack(
+      children: <Widget>[
+        a != null && b != null && c != null
+            ? FABRightArrow(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/admin/createuser/recap',
+                    arguments: new AdminCreateRecapArgs(
+                      this._city,
+                      this._email,
+                      this._password,
+                    ),
+                  );
+                },
+              )
+            : SizedBox(),
+        FABLeftArrow(
+          nameOffice: "Homepage",
+          onPressed: () {
+            Navigator.pushReplacementNamed(
+              context,
+              '/admin',
+              arguments: new AdminView(),
+            );
+          },
         ),
-        backgroundColor: Colors.red[600],
-        onPressed: () {
-          Navigator.pushReplacementNamed(
-            context,
-            '/admin/createuser/recap',
-            arguments: new AdminCreateRecapArgs(
-                this._city, this._email, this._password),
-          );
-        },
-      );
-    } else {
-      return SizedBox();
-    }
+      ],
+    );
   }
 
   @override

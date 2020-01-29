@@ -211,17 +211,18 @@ class _BottomCardWidgetState extends State<BottomCardWidget> {
                           "Non è stata confermata nessuna prenotazione in quanto i valori inseriti erano nulli",
                           false)
                       .show(context);
+                } else {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/office/insertdateslotview/recap',
+                    arguments: new OfficeAddDateslotRecapArgs(
+                      numberValue,
+                      dateValue,
+                      nicerTime(dateValue.toString()),
+                      widget.office,
+                    ),
+                  );
                 }
-                Navigator.pushReplacementNamed(
-                  context,
-                  '/office/insertdateslotview/recap',
-                  arguments: new OfficeAddDateslotRecapArgs(
-                    numberValue,
-                    dateValue,
-                    nicerTime(dateValue.toString()),
-                    widget.office,
-                  ),
-                );
               },
             ),
           )

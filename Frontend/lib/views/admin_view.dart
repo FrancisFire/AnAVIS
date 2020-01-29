@@ -1,6 +1,7 @@
 import 'package:anavis/providers/app_state.dart';
 import 'package:anavis/views/widgets/button_card_bottom.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:liquid_swipe/Constants/Helpers.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
@@ -208,12 +209,18 @@ class _AdminViewState extends State<AdminView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LiquidSwipe(
-        pages: returnPages(context),
-        fullTransitionValue: 500,
-        enableSlideIcon: false,
-        enableLoop: true,
-        waveType: WaveType.liquidReveal,
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.light,
+          systemNavigationBarColor: Colors.white,
+        ),
+        child: LiquidSwipe(
+          pages: returnPages(context),
+          fullTransitionValue: 500,
+          enableSlideIcon: false,
+          enableLoop: true,
+          waveType: WaveType.liquidReveal,
+        ),
       ),
     );
   }

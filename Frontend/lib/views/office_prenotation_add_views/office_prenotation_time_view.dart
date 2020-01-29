@@ -2,6 +2,7 @@ import 'package:anavis/models/office.dart';
 import 'package:anavis/models/timeslot.dart';
 import 'package:anavis/services/office_service.dart';
 import 'package:anavis/viewargs/office_prenotation_recap_args.dart';
+import 'package:anavis/views/office_view.dart';
 import 'package:anavis/views/widgets/confirmation_flushbar.dart';
 import 'package:anavis/views/widgets/donor_request_widget.dart';
 import 'package:anavis/views/widgets/fab_button.dart';
@@ -95,27 +96,33 @@ class _OfficePrenotationTimeViewState extends State<OfficePrenotationTimeView> {
               );
             } else
               return Scaffold(
-                floatingActionButton: _timeSelected != null
-                    ? FABRightArrow(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, '/office/prenotations/recap',
-                              arguments: new OfficePrenotationRecapArgs(
-                                  widget.donorMail,
-                                  this._timeSelected,
-                                  this._timeFormatted,
-                                  widget.office));
-                        },
-                      )
-                    : FABLeftArrow(
-                        nameOffice: widget.donorMail
-                            .split('@')
-                            .map((String text) => text)
-                            .elementAt(0),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                floatingActionButton: Stack(
+                  children: <Widget>[
+                    _timeSelected != null
+                        ? FABRightArrow(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, '/office/prenotations/recap',
+                                  arguments: new OfficePrenotationRecapArgs(
+                                      widget.donorMail,
+                                      this._timeSelected,
+                                      this._timeFormatted,
+                                      widget.office));
+                            },
+                          )
+                        : SizedBox(),
+                    FABLeftArrow(
+                      nameOffice: "Homepage",
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/office',
+                          arguments: new OfficeView(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
                 backgroundColor: Colors.white,
                 body: BuildDonorRequestWidget(
                   fetchItems: createListItem(),
