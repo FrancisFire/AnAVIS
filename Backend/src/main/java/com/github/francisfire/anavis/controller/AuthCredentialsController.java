@@ -22,6 +22,7 @@ import com.github.francisfire.anavis.services.AuthCredentialsServices;
 import com.github.francisfire.anavis.services.DonorServices;
 import com.github.francisfire.anavis.services.OfficeServices;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -64,17 +65,7 @@ public class AuthCredentialsController {
 	@PreAuthorize("permitAll")
 	@PostMapping("/donor")
 	public boolean addDonorCredentials(@RequestBody UserAndDonor userAndDonor) {
-		int leftDonationsInYear = 4;
-		switch (userAndDonor.donor.getCategory()) {
-		case MAN:
-		case NONFERTILEWOMAN:
-			leftDonationsInYear = 4;
-			break;
-		case FERTILEWOMAN:
-			leftDonationsInYear = 2;
-			break;
-		}
-		userAndDonor.donor.setLeftDonationsInYear(leftDonationsInYear);
+		userAndDonor.donor.setLeftDonationsInYear(userAndDonor.donor.getCategory().getDonationPerYear());
 		userAndDonor.donor.setCanDonate(true);
 		return (donorServices.addDonor(userAndDonor.donor))
 				? authCredentialsServices.addCredentials(userAndDonor.authCredentials)
@@ -105,26 +96,18 @@ public class AuthCredentialsController {
 	@Setter
 	@Getter
 	@NoArgsConstructor
+	@AllArgsConstructor
 	static class UserAndDonor {
 		private Donor donor;
 		private AuthCredentials authCredentials;
-
-		public UserAndDonor(Donor donor, AuthCredentials authCredentials) {
-			this.donor = donor;
-			this.authCredentials = authCredentials;
-		}
 	}
 
 	@Setter
 	@Getter
 	@NoArgsConstructor
+	@AllArgsConstructor
 	static class UserAndOffice {
 		private Office office;
 		private AuthCredentials authCredentials;
-
-		public UserAndOffice(Office office, AuthCredentials authCredentials) {
-			this.office = office;
-			this.authCredentials = authCredentials;
-		}
 	}
 }

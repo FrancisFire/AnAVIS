@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,24 +69,19 @@ public class Donor {
 	public void setLastDonation(Date lastDonation) {
 		if (this.lastDonation == null || lastDonation.after(this.lastDonation)) {
 			this.lastDonation = lastDonation;
-			switch (category) {
-			case MAN:
-			case NONFERTILEWOMAN:
-				if (leftDonationsInYear == 4) {
-					firstDonationInYear = lastDonation;
-				}
-				break;
-			case FERTILEWOMAN:
-				if (leftDonationsInYear == 2) {
-					firstDonationInYear = lastDonation;
-				}
-				break;
+			if (leftDonationsInYear == category.getDonationPerYear()) {
+				firstDonationInYear = lastDonation;
 			}
 			leftDonationsInYear--;
 		}
 	}
 
+	@AllArgsConstructor
 	public enum DonorCategory {
-		MAN, FERTILEWOMAN, NONFERTILEWOMAN
+		
+		MAN(4), FERTILEWOMAN(2), NONFERTILEWOMAN(4);
+		
+		@Getter
+		private int donationPerYear;
 	}
 }
