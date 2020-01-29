@@ -76,18 +76,16 @@ public class AuthCredentialsController {
 		}
 		userAndDonor.donor.setLeftDonationsInYear(leftDonationsInYear);
 		userAndDonor.donor.setCanDonate(true);
-		return (donorServices.addDonor(userAndDonor.donor))
-				? authCredentialsServices.addCredentials(userAndDonor.authCredentials)
-				: false;
+		donorServices.addDonor(userAndDonor.donor);
+		return authCredentialsServices.addCredentials(userAndDonor.authCredentials);
 
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/office")
 	public boolean addOfficeCredentials(@RequestBody UserAndOffice userAndOffice) {
-		return (officeServices.addOffice(userAndOffice.office))
-				? authCredentialsServices.addCredentials(userAndOffice.authCredentials)
-				: false;
+		officeServices.addOffice(userAndOffice.office);
+		return authCredentialsServices.addCredentials(userAndOffice.authCredentials);
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
