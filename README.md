@@ -20,6 +20,7 @@
 # 📝 Tabella dei contenuti
 
 - [Panoramica](#panoramica)
+  -  [Utilizzo dell'applicazione](#app)
 - [Tecnologie di base](#tecno)
 - [Storico incontri](#history)
 - [Consegne](#consegne)
@@ -32,6 +33,10 @@ Attualmente per poter prenotare una donazione **AVIS**, i donatori devono telefo
 Il sistema proposto renderebbe più **veloce** e **smart** la pratica di **prenotazione** e risulterebbe più comodo per i donatori scegliere fra tutte le date e gli orari disponibili nelle varie sedi AVIS.
 
 Le sedi AVIS risparmieranno tempo in quanto interagiranno con il sistema solo per inserire gli orari e le date disponibili per le donazioni, senza più occuparsi _direttamente_ delle prenotazioni che vedranno in un elenco.
+
+## 🤖 Utilizzo dell'applicazione <a name = "app"></a>
+
+Work in progress
 
 # 🔨 Tecnologie di base <a name = "tecno"></a>
 
