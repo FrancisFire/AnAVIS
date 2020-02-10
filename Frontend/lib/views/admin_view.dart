@@ -65,7 +65,7 @@ class _AdminViewState extends State<AdminView> {
                               color: Colors.grey,
                               onTap: () {
                                 AppState().logout();
-                                Navigator.pushNamed(context, '/');
+                                Navigator.pushReplacementNamed(context, '/');
                               },
                               title: 'Logout',
                             ),
@@ -161,7 +161,7 @@ class _AdminViewState extends State<AdminView> {
                               color: Colors.grey,
                               onTap: () {
                                 AppState().logout();
-                                Navigator.pushNamed(context, '/');
+                                Navigator.pushReplacementNamed(context, '/');
                               },
                               title: 'Logout',
                             ),
