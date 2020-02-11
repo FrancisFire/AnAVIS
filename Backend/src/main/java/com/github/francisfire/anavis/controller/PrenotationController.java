@@ -28,7 +28,7 @@ public class PrenotationController {
 	private PrenotationServices prenotationServices;
 
 	@Autowired
-	private DonationReportServices closedPrenotationReportServices;
+	private DonationReportServices donationReportServices;
 
 	@SuppressWarnings("unused")
 	@Autowired
@@ -82,7 +82,7 @@ public class PrenotationController {
 	@PutMapping("/{prenotationId}/close")
 	public boolean closePrenotation(@PathVariable("prenotationId") String prenotationId,
 			@RequestParam("file") MultipartFile reportFile) {
-		String reportId = closedPrenotationReportServices.addReport(prenotationId, reportFile);
+		String reportId = donationReportServices.addReport(prenotationId, reportFile);
 		return prenotationServices.closePrenotation(prenotationId, reportId);
 	}
 }

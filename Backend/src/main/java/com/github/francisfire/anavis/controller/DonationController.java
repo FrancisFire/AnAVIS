@@ -23,7 +23,7 @@ public class DonationController {
 	private DonationServices donationServices;
 	
 	@Autowired
-	private DonationReportServices closedPrenotationReportServices;
+	private DonationReportServices donationReportServices;
 	
 	@SuppressWarnings("unused")
 	@Autowired
@@ -39,6 +39,6 @@ public class DonationController {
 	@GetMapping("/report/{donationId}")
 	public DonationReport getDonationReport(@PathVariable("donationId") String donationId) {
 		String reportId = donationServices.getDonationInstance(donationId).getReportId();
-		return closedPrenotationReportServices.getReportInstance(reportId);
+		return donationReportServices.getReportInstance(reportId);
 	}
 }
